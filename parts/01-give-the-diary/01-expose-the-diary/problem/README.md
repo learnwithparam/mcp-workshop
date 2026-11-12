@@ -5,8 +5,7 @@
 The Millbrook front desk hears "when can you see my dog?" all the time. To answer, staff click into the PIMS, pick
 a vet, and scan the vet's diary. Claude could answer in one line, but it cannot see the diary.
 
-The PIMS already has a "find a slot" search: `clinic.freeSlots`. Nothing connects it to a model yet. You build that
-connection: an MCP server with one tool.
+The PIMS already has a "find a slot" search: `clinic.freeSlots`. Nothing connects it to a model yet.
 
 ## Your challenge
 
@@ -27,8 +26,7 @@ bun run try find_free_slots '{"site":"millbrook"}' --server parts/01-give-the-di
 
 Expect: `Result from find_free_slots:` and six start times, three for Dr Sam Reyes and three for Dr Hannah Cole.
 
-For example, the sample solution prints this for Millbrook. The starter prints `Protocol error: Method not found`,
-because it has no tool yet.
+For example, the sample solution prints this. The starter has no tool yet, so it prints `Protocol error: Method not found`.
 
 ```text
 Result from find_free_slots:
@@ -68,7 +66,7 @@ Expect: `Done. All 8 rules pass.` once your work meets every Done when line. Bef
   every call against it before your handler runs.
 - Old tutorials use `server.tool(...)` and `@modelcontextprotocol/sdk`. That is SDK v1. Use `registerTool` from
   `@modelcontextprotocol/server`.
-- Stuck for a long time? Compare with `../solution/server.ts`. A worked first tool teaches more than a blank page.
+- Stuck for a long time? Compare with `../solution/server.ts`.
 
 ## Words you will use
 

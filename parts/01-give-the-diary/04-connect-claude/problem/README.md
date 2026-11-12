@@ -2,9 +2,11 @@
 
 ## The problem
 
-A server nobody can use helps nobody. Ola at the Millbrook desk will not type JSON into a terminal. She will ask
-Claude. The last step is to tell a real host how to start your server, and to see the model use your tools to
-answer a real question from the live diary.
+A server that nobody can use helps nobody. Ola at the Millbrook desk will not type JSON into a terminal. She asks
+Claude. A host is the app she talks to, such as Claude Code or Claude Desktop.
+
+In this last step, you tell a real host how to start your server. Then you watch the model use your tools. It
+answers a real question from the live diary.
 
 ```mermaid
 flowchart LR
@@ -23,12 +25,12 @@ flowchart LR
    ```
 
 2. Connect a host.
-   - Claude Code: open a terminal in this folder, run `claude`, approve the `harrow-lane` server, and check it with `/mcp`.
+   - Claude Code: open a terminal in this folder and run `claude`. Approve the `harrow-lane` server, and check it with `/mcp`.
    - Claude Desktop: add the same entry to its config file under Settings, Developer. Use full paths there, for
-     example `"args": ["/full/path/to/this/folder/server.ts"]`, because Desktop does not start in this folder.
+     example `"args": ["/full/path/to/this/folder/server.ts"]`. Desktop does not start in this folder.
 3. Ask: "Who can see Biscuit at Millbrook?" Paste the whole answer after `Answer:` in `notes/connect-claude.md`.
 
-Run the command from your config yourself first. If it starts and waits quietly, the host can start it too:
+First, run the command from your config yourself. Does it start and wait quietly? Then the host can start it too:
 
 ```bash
 cd parts/01-give-the-diary/04-connect-claude/problem && bun server.ts
@@ -36,8 +38,16 @@ cd parts/01-give-the-diary/04-connect-claude/problem && bun server.ts
 
 Expect: `harrow-lane server running on stdio`, then nothing. Press Ctrl+C to stop it.
 
-If you already know this: the check launches exactly the command and args in `.mcp.json`, with this folder as the
-working directory, and compares every time in Claude's answer with the diary.
+For example, the sample solution's `notes/connect-claude.md` ends with this answer. Every time in it is a free slot
+in the diary:
+
+```text
+Answer: Claude called find_free_slots for millbrook and said: Dr Sam Reyes is free at 10:20, 11:40 and 15:00,
+and Dr Hannah Cole is free at 09:00, 14:40 and 16:20. Would you like me to book one of these for Biscuit?
+```
+
+If you already know this: the check starts exactly the command and args in `.mcp.json`, in this folder. Then it
+compares every time in Claude's answer with the diary.
 
 ## Done when
 
@@ -56,9 +66,9 @@ Expect: `Done. All 6 rules pass.` once your work meets every Done when line. Bef
 
 ## If you get stuck
 
-- Claude says it cannot see the diary: the server is not connected. In Claude Code run `/mcp`; in Claude Desktop open
-  Settings, Developer, and read the server's log.
-- Times in the answer that are not free: you booked some while testing. Run `bun run world reset` and ask again.
+- Claude says it cannot see the diary: the server is not connected. In Claude Code, run `/mcp`. In Claude Desktop,
+  open Settings, Developer, and read the server's log.
+- The answer has times that are not free: you booked some while you tested. Run `bun run world reset` and ask again.
 - Any MCP host works (VS Code, Cursor, others). The check only reads `.mcp.json` and your notes.
 
 ## Words you will use
