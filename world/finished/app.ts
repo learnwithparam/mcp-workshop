@@ -15,7 +15,7 @@ import { ISSUER, RESOURCE, readToken } from "../auth";
 import { callerFrom, createServer } from "./server";
 
 const resourceUrl = new URL(RESOURCE);
-// biome-ignore lint/style/useNamingConvention: OAuth metadata field names are fixed by the standard
+// biome-ignore-start lint/style/useNamingConvention: OAuth metadata field names are fixed
 const oauthMetadata = {
   issuer: ISSUER,
   authorization_endpoint: `${ISSUER}/authorize`,
@@ -24,6 +24,7 @@ const oauthMetadata = {
   code_challenge_methods_supported: ["S256"],
   scopes_supported: ["diary:read", "diary:write", "notes:read", "drugs:read"],
 };
+// biome-ignore-end lint/style/useNamingConvention: the OAuth field names end here
 
 // A token can name several audiences; we keep the one that points at this server.
 function audienceForThisServer(audience: string | string[]): URL | undefined {
