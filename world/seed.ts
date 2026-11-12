@@ -222,7 +222,13 @@ const TABLES = [
   { name: "staff", columns: ["id TEXT PRIMARY KEY", "name TEXT", "role TEXT", "site TEXT"] },
   {
     name: "owners",
-    columns: ["id TEXT PRIMARY KEY", "name TEXT", "phone TEXT", "email TEXT", "reminderConsent INTEGER"],
+    columns: [
+      "id TEXT PRIMARY KEY",
+      "name TEXT",
+      "phone TEXT",
+      "email TEXT",
+      "reminderConsent INTEGER",
+    ],
   },
   {
     name: "patients",
@@ -391,7 +397,12 @@ function insertSitesAndStaff(db: Database) {
     ]);
   }
   for (const member of STAFF) {
-    db.run("INSERT INTO staff VALUES (?,?,?,?)", [member.id, member.name, member.role, member.site]);
+    db.run("INSERT INTO staff VALUES (?,?,?,?)", [
+      member.id,
+      member.name,
+      member.role,
+      member.site,
+    ]);
   }
 }
 
@@ -521,10 +532,10 @@ type DiaryDay = {
   book: (appointment: NewAppointment) => void;
 };
 
-/** Appointments: four weeks back and four weeks forward from the clinic clock. */
-function insertAppointments(db: Database, chance: Chance, patients: SeededPatient[]) {
+/** A function that writes one appointment, numbering them A-00001, A-00002, and so on. */
+function appointmentWriter(db: Database) {
   let booked = 0;
-  const book = (appointment: NewAppointment) => {
+  return (appointment: NewAppointment) => {
     booked += 1;
     db.run("INSERT INTO appointments VALUES (?,?,?,?,?,?,?,?,?)", [
       numberedId("A", booked, 5),
@@ -538,6 +549,11 @@ function insertAppointments(db: Database, chance: Chance, patients: SeededPatien
       appointment.status,
     ]);
   };
+}
+
+/** Appointments: four weeks back and four weeks forward from the clinic clock. */
+function insertAppointments(db: Database, chance: Chance, patients: SeededPatient[]) {
+  const book = appointmentWriter(db);
   for (let dayOffset = -28; dayOffset < 28; dayOffset++) {
     const date = addDays(CLOCK.date, dayOffset);
     for (const vet of VETS) {
@@ -546,12 +562,15 @@ function insertAppointments(db: Database, chance: Chance, patients: SeededPatien
       const localPatients = patients.filter((patient) => patient.site === vet.site);
       const open = minutesSinceMidnight(hours[0]);
       const close = minutesSinceMidnight(hours[1]);
-      const day = { chance, vet, date, open, close, localPatients, book };
-      const plantedGaps = MILLBROOK_GAPS[vet.id];
-      if (date === CLOCK.date && plantedGaps) fillPlantedDay(day, plantedGaps);
-      else fillOrdinaryDay(day);
+      fillDiaryDay({ chance, vet, date, open, close, localPatients, book });
     }
   }
+}
+
+function fillDiaryDay(day: DiaryDay) {
+  const plantedGaps = MILLBROOK_GAPS[day.vet.id];
+  if (day.date === CLOCK.date && plantedGaps) fillPlantedDay(day, plantedGaps);
+  else fillOrdinaryDay(day);
 }
 
 /** A random appointment for this day: a local patient and a random reason. */

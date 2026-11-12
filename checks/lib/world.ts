@@ -1,5 +1,6 @@
 // The world a check runs against: a fresh copy of the seeded practice system and an empty log, per
-// run. Checks read the diary and the log to see what really changed. They never read the model's reply.
+// run. Checks read the diary and the log to see what really changed. They never read the model's
+// reply.
 import { Database, type SQLQueryBindings } from "bun:sqlite";
 import { copyFileSync, existsSync, mkdtempSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -59,7 +60,7 @@ function busyPeriods(databasePath: string, vetId: string, date: string): [number
   const busy = readRows<{ start: string; length: number }>(
     databasePath,
     "SELECT start, length FROM appointments " +
-      "WHERE vetId = ? AND date = ? AND status IN ('booked','arrived')",
+      "WHERE vetId = ?1 AND date = ?2 AND status IN ('booked','arrived')",
     [vetId, date],
   );
   return busy.map((appointment) => {
@@ -115,7 +116,7 @@ export function freshWorld() {
     rows<Row = Record<string, unknown>>(sql: string, ...params: SQLQueryBindings[]): Row[] {
       return readRows<Row>(db, sql, params);
     },
-    /** Write to the world's diary directly, as another member of staff would through the PIMS screen. */
+    /** Write to the world's diary directly, as other staff would through the PIMS screen. */
     exec(sql: string, ...params: SQLQueryBindings[]) {
       writeRows(db, sql, params);
     },

@@ -6,8 +6,8 @@
 // squeeze in emergencies. Keeping the front desk's bookings clean is the job of the layer you build
 // on top.
 //
-// Every call is written as one JSON line to the world log (CLINIC_LOG), so a check can see what your
-// server did.
+// Every call is written as one JSON line to the world log (CLINIC_LOG), so a check can see what
+// your server did.
 import { Database, type SQLQueryBindings } from "bun:sqlite";
 import { appendFileSync, existsSync, mkdirSync } from "node:fs";
 import { dirname, join } from "node:path";
@@ -157,9 +157,10 @@ const FIND_APPOINTMENTS = [
 ].join(" ");
 
 const BUSY_APPOINTMENTS =
-  "SELECT * FROM appointments WHERE vetId = ? AND date = ? AND status IN ('booked','arrived')";
+  "SELECT * FROM appointments WHERE vetId = ?1 AND date = ?2 AND status IN ('booked','arrived')";
 
-const CONTROLLED_DRUGS = "SELECT * FROM controlled_drugs WHERE (?1 IS NULL OR drug = ?1) ORDER BY id";
+const CONTROLLED_DRUGS =
+  "SELECT * FROM controlled_drugs WHERE (?1 IS NULL OR drug = ?1) ORDER BY id";
 
 const appointmentById = (id: string) =>
   firstRow<Appointment>("SELECT * FROM appointments WHERE id = ?", id);
@@ -179,7 +180,7 @@ function earliestStartOn(date: string): number {
   return 0;
 }
 
-/** Busy periods for one vet on one date, as [start, end) in minutes. Cancelled ones do not count. */
+/** One vet's busy periods on one date, as [start, end) in minutes. Cancelled ones do not count. */
 function busyPeriods(vetId: string, date: string): [number, number][] {
   const busy = allRows<Appointment>(BUSY_APPOINTMENTS, vetId, date);
   return busy.map((appointment) => {
