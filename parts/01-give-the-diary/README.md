@@ -43,28 +43,28 @@ own code instead, copy your `server.ts` into the next step's `problem/` folder.
 bun run verify expose-the-diary
 ```
 
-Expect: `Done. All 8 rules pass.`
+Expect: `Done. All 8 rules pass.` once your work meets every Done when line. Before that, each FAIL line has a `Try next:`.
 
 ```bash
 bun run verify book-an-appointment
 ```
 
-Expect: `Done. All 7 rules pass.`
+Expect: `Done. All 7 rules pass.` once your work meets every Done when line. Before that, each FAIL line has a `Try next:`.
 
 ```bash
 bun run verify return-errors-the-model-can-fix
 ```
 
-Expect: `Done. All 7 rules pass.`
+Expect: `Done. All 7 rules pass.` once your work meets every Done when line. Before that, each FAIL line has a `Try next:`.
 
 ```bash
 bun run verify connect-claude
 ```
 
-Expect: `Done. All 6 rules pass.`
+Expect: `Done. All 6 rules pass.` once your work meets every Done when line. Before that, each FAIL line has a `Try next:`.
 
 ```bash
 bun run verify part give-the-diary
 ```
 
-Expect: `Part give-the-diary is done: 4/4 steps pass.`
+Expect: `Part give-the-diary is done: 4/4 steps pass.` once every step passes.

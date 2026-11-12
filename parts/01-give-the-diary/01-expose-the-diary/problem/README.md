@@ -45,7 +45,7 @@ stdout passes the SDK client here but breaks other hosts.
 bun run verify expose-the-diary
 ```
 
-Expect: `Done. All 8 rules pass.`
+Expect: `Done. All 8 rules pass.` once your work meets every Done when line. Before that, each FAIL line has a `Try next:`.
 
 ## If you get stuck
 

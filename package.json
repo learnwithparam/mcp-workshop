@@ -15,7 +15,8 @@
     "try": "bun world/try.ts",
     "token": "bun world/token.ts",
     "models": "bun config/check-models.ts",
-    "shots": "bun images/shots.ts"
+    "shots": "bun images/shots.ts",
+    "test": "bun test"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "4.0.103",

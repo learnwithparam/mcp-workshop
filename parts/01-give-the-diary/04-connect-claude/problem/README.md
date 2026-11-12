@@ -52,7 +52,7 @@ working directory, and compares every time in Claude's answer with the diary.
 bun run verify connect-claude
 ```
 
-Expect: `Done. All 6 rules pass.`
+Expect: `Done. All 6 rules pass.` once your work meets every Done when line. Before that, each FAIL line has a `Try next:`.
 
 ## If you get stuck
 

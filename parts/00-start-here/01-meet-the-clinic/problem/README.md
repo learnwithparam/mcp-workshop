@@ -59,7 +59,7 @@ If you already know MCP well, read `world/finished/server.ts` now: it is the ser
 bun run verify meet-the-clinic
 ```
 
-Expect: `Done. All 4 rules pass.`
+Expect: `Done. All 4 rules pass.` once your work meets every Done when line. Before that, each FAIL line has a `Try next:`.
 
 ## If you get stuck
 

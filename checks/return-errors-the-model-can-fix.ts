@@ -42,7 +42,7 @@ export default [
     const listed = timesIn(r!.clash.text.split("Free slots:")[1] ?? "");
     return listed.length > 0 && listed.every((t) => r!.truthReyes.includes(t));
   }, "on a clash, call clinic.freeSlots({ site, date, length, vet_id }) and write the times after \"Free slots:\"; never type times in by hand"),
-  rule("Outside opening hours: the error gives the opening and closing times", async (dir) => err((await ok(dir))?.closed, "08:00", "18:00"),
+  rule("Outside opening times: the error gives the opening and closing times", async (dir) => err((await ok(dir))?.closed, "08:00", "18:00"),
     "read clinic.openingHours(site, date) and write both times into the error"),
   rule("A length of 25 minutes: the error names length and the values that work (10 to 60)", async (dir) => err((await ok(dir))?.badLength, "length", "10", "60"),
     "give the Zod length field a message, for example .multipleOf(10, { error: \"length must be 10 to 60 minutes, in steps of 10\" })"),

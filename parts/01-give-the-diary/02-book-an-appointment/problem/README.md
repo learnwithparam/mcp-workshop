@@ -57,7 +57,7 @@ If you already know this: compare minutes, not strings, and test an overlap that
 bun run verify book-an-appointment
 ```
 
-Expect: `Done. All 7 rules pass.`
+Expect: `Done. All 7 rules pass.` once your work meets every Done when line. Before that, each FAIL line has a `Try next:`.
 
 ## If you get stuck
 

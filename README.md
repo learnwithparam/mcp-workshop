@@ -85,8 +85,8 @@ flowchart LR
 | Grow the server (extension) | [parts/05-grow-the-server](parts/05-grow-the-server/README.md) | 5 | 95 | two servers behind one front |
 
 Every step has one command: `bun run verify <step-name>`. It prints each rule as PASS or FAIL, and a `Try next:`
-line for each FAIL. `PARTS.md` lists every step and what its check reads. `schedules.toml` maps the parts onto a
-one-day workshop, five evenings, or a four-session cohort.
+line for each FAIL. `PARTS.md` lists every step and what its check reads. `schedules.toml` maps the parts onto formats,
+from one long sitting to a cohort that meets several times.
 
 ## The project
 
@@ -100,8 +100,8 @@ and the same checks work for another business with real roles and a risky action
 
 1. [Writing effective tools for agents](https://www.anthropic.com/engineering/writing-tools-for-agents), Anthropic
    Engineering. Tools are designed and measured; Part 2 grades exactly this.
-2. [The 2026-07-28 Specification](https://blog.modelcontextprotocol.io/posts/2026-07-28/), the MCP maintainers. The
-   current revision: no `initialize`, `server/discover` instead, multi round-trip requests. It resets anyone who
+2. [The current MCP specification revision](https://blog.modelcontextprotocol.io/posts/2026-07-28/), the MCP maintainers. What
+   changed: no `initialize`, `server/discover` instead, multi round-trip requests. It resets anyone who
    learned MCP from an older tutorial.
 3. [Security Best Practices](https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/docs/docs/2026-07-28/tutorials/security/security_best_practices.mdx),
    the MCP maintainers. Read the sections on the confused deputy and token passthrough before Part 3.

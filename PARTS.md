@@ -52,4 +52,4 @@ grow-the-server 95. Core 255, with the extension 350. `schedules.toml` maps thes
 Versions to pin when a part is built, read from npm on the build date of the spine: `@modelcontextprotocol/server`
 and `client` 2.4.0, `@modelcontextprotocol/conformance` 0.1.16 (latest) or 0.2.0-alpha.12 (the alpha tag, which
 carries the newer spec scenarios), `@modelcontextprotocol/ext-tasks` 0.2.3, `@modelcontextprotocol/codemod` 2.4.0,
-`wrangler` 4.161.0. Re-read each from the registry on the day a part is built.
+`wrangler` 4.161.0. Re-read each from the registry when a part is built.

@@ -40,7 +40,7 @@ hand fail even when they look right.
 - An unknown patient: the error names `patient_id` and the id that was sent.
 - A start in the past: the error says it is in the past and gives the clinic clock.
 - A clash: the error names the vet and lists real free slots after "Free slots:".
-- Outside opening hours: the error gives the opening and closing times.
+- Outside opening times: the error gives the opening and closing times.
 - A length of 25 minutes: the error names `length` and the values that work (10 to 60).
 - None of the five bad calls wrote to the diary, and a good booking still adds one row.
 
@@ -48,7 +48,7 @@ hand fail even when they look right.
 bun run verify return-errors-the-model-can-fix
 ```
 
-Expect: `Done. All 7 rules pass.`
+Expect: `Done. All 7 rules pass.` once your work meets every Done when line. Before that, each FAIL line has a `Try next:`.
 
 ## If you get stuck
 
@@ -60,4 +60,4 @@ Expect: `Done. All 7 rules pass.`
 
 - **Actionable error**: an error that tells the reader the next step, not only that something failed.
 - **Clinic clock**: the world's "now", from `clinic.clock()`. The course never reads your computer's clock, so every run gets the same answers.
-- **Opening hours**: when a site takes appointments. `clinic.openingHours(site, date)` returns `null` when the site is closed.
+- **Opening times**: when a site takes appointments. `clinic.openingHours(site, date)` returns `null` when the site is closed.
