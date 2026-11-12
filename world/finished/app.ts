@@ -1,9 +1,21 @@
-// The finished server's HTTP front: Host check, protected resource metadata, token check, then MCP.
-import { OAuthError, OAuthErrorCode, createMcpHandler, getOAuthProtectedResourceMetadataUrl, hostHeaderValidationResponse, localhostAllowedHostnames, oauthMetadataResponse, requireBearerAuth, type AuthInfo } from "@modelcontextprotocol/server";
+// The finished server's HTTP front. It checks the Host header, serves the protected resource
+// metadata, checks the access token, and then hands the request to MCP.
+import {
+  type AuthInfo,
+  createMcpHandler,
+  getOAuthProtectedResourceMetadataUrl,
+  hostHeaderValidationResponse,
+  localhostAllowedHostnames,
+  OAuthError,
+  OAuthErrorCode,
+  oauthMetadataResponse,
+  requireBearerAuth,
+} from "@modelcontextprotocol/server";
 import { ISSUER, RESOURCE, readToken } from "../auth";
 import { callerFrom, createServer } from "./server";
 
 const resourceUrl = new URL(RESOURCE);
+// biome-ignore-start lint/style/useNamingConvention: OAuth metadata field names are fixed
 const oauthMetadata = {
   issuer: ISSUER,
   authorization_endpoint: `${ISSUER}/authorize`,
@@ -12,29 +24,54 @@ const oauthMetadata = {
   code_challenge_methods_supported: ["S256"],
   scopes_supported: ["diary:read", "diary:write", "notes:read", "drugs:read"],
 };
+// biome-ignore-end lint/style/useNamingConvention: the OAuth field names end here
+
+// A token can name several audiences; we keep the one that points at this server.
+function audienceForThisServer(audience: string | string[]): URL | undefined {
+  const audiences = [audience].flat();
+  const ours = audiences.find(
+    (candidate) => URL.canParse(candidate) && new URL(candidate).origin === resourceUrl.origin,
+  );
+  return ours ? new URL(ours) : undefined;
+}
 
 async function verifyAccessToken(token: string): Promise<AuthInfo> {
   try {
-    const t = await readToken(token);
-    const aud = [t.aud].flat().find((a) => URL.canParse(a) && new URL(a).origin === resourceUrl.origin);
-    return { token, clientId: t.sub, scopes: t.scope.split(" "), expiresAt: t.exp, resource: aud ? new URL(aud) : undefined, extra: { role: t.role, site: t.site } };
-  } catch (e) {
-    throw new OAuthError(OAuthErrorCode.InvalidToken, `token rejected: ${(e as Error).message}`);
+    const claims = await readToken(token);
+    return {
+      token,
+      clientId: claims.sub,
+      scopes: claims.scope.split(" "),
+      expiresAt: claims.exp,
+      resource: audienceForThisServer(claims.aud),
+      extra: { role: claims.role, site: claims.site },
+    };
+  } catch (error) {
+    const reason = (error as Error).message;
+    throw new OAuthError(OAuthErrorCode.InvalidToken, `token rejected: ${reason}`);
   }
 }
 
-const gate = requireBearerAuth({ verifier: { verifyAccessToken }, resourceMetadataUrl: getOAuthProtectedResourceMetadataUrl(resourceUrl).toString(), expectedResource: resourceUrl });
-const handler = createMcpHandler(({ authInfo }) => createServer(callerFrom(authInfo)));
+const checkBearerToken = requireBearerAuth({
+  verifier: { verifyAccessToken },
+  resourceMetadataUrl: getOAuthProtectedResourceMetadataUrl(resourceUrl).toString(),
+  expectedResource: resourceUrl,
+});
+const mcpHandler = createMcpHandler(({ authInfo }) => createServer(callerFrom(authInfo)));
 
 export const app = {
   async fetch(request: Request): Promise<Response> {
     const badHost = hostHeaderValidationResponse(request, localhostAllowedHostnames());
     if (badHost) return badHost;
-    const meta = oauthMetadataResponse(request, { oauthMetadata, resourceServerUrl: resourceUrl });
-    if (meta) return meta;
-    if (new URL(request.url).pathname !== "/mcp") return new Response("Not found", { status: 404 });
-    const auth = await gate(request);
+    const metadata = oauthMetadataResponse(request, {
+      oauthMetadata,
+      resourceServerUrl: resourceUrl,
+    });
+    if (metadata) return metadata;
+    const path = new URL(request.url).pathname;
+    if (path !== "/mcp") return new Response("Not found", { status: 404 });
+    const auth = await checkBearerToken(request);
     if (auth instanceof Response) return auth;
-    return handler.fetch(request, { authInfo: auth });
+    return mcpHandler.fetch(request, { authInfo: auth });
   },
 };
