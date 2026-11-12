@@ -35,7 +35,7 @@ Handle them in this order, before the clash check:
 
 | Bad call                 | Your error must contain                                                   |
 | ------------------------ | ------------------------------------------------------------------------- |
-| Unknown patient `P-9999` | `patientId` and the id that was sent                                     |
+| Unknown patient `P-9999` | `patientId` and the id that was sent                                      |
 | A start in the past      | the word "past" and the clinic clock's date and time (`clinic.clock()`)   |
 | A clash with Dr Reyes    | the vet's name, then `Free slots:` and real times from `clinic.freeSlots` |
 | 18:30 at Millbrook       | the opening and closing times (`clinic.openingHours(site, date)`)         |
