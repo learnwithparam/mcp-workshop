@@ -5,22 +5,33 @@ import type { Rule } from "../../scripts/verify";
 export function scenario<T>(fn: (dir: string) => Promise<T>) {
   const cache = new Map<string, Promise<T | { failed: string }>>();
   return (dir: string) => {
-    if (!cache.has(dir)) cache.set(dir, fn(dir).catch((e: Error) => ({ failed: e.message })));
+    if (!cache.has(dir))
+      cache.set(
+        dir,
+        fn(dir).catch((e: Error) => ({ failed: e.message })),
+      );
     return cache.get(dir)!;
   };
 }
 
-export const failed = (x: unknown): x is { failed: string } => typeof x === "object" && x !== null && "failed" in x;
+export const failed = (x: unknown): x is { failed: string } =>
+  typeof x === "object" && x !== null && "failed" in x;
 
 /**
  * A rule whose try-next line can name what went wrong. `tryNext` may be a function: verify reads it after the test,
  * so it can include the server's own error.
  */
-export function rule(says: string, test: (dir: string) => boolean | Promise<boolean>, tryNext: string | (() => string)): Rule {
+export function rule(
+  says: string,
+  test: (dir: string) => boolean | Promise<boolean>,
+  tryNext: string | (() => string),
+): Rule {
   return {
     says,
     test,
-    get tryNext() { return typeof tryNext === "function" ? tryNext() : tryNext; },
+    get tryNext() {
+      return typeof tryNext === "function" ? tryNext() : tryNext;
+    },
   } as Rule;
 }
 
@@ -35,6 +46,7 @@ export async function threeRuns(run: (i: number) => Promise<boolean>): Promise<b
     for (let i = 0; i < 3; i++) if (!(await run(i))) return false;
     return true;
   } finally {
-    if (prev === undefined) delete process.env.LLM_PROVIDER; else process.env.LLM_PROVIDER = prev;
+    if (prev === undefined) delete process.env.LLM_PROVIDER;
+    else process.env.LLM_PROVIDER = prev;
   }
 }

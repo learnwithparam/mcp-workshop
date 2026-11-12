@@ -16,9 +16,9 @@ flowchart LR
 
 ## Steps
 
-| Step | Minutes | You produce | The check reads |
-|---|---|---|---|
-| `meet-the-clinic` | 15 | `answers.md`: three facts read off the finished system | a fresh copy of the diary |
+| Step              | Minutes | You produce                                            | The check reads           |
+| ----------------- | ------- | ------------------------------------------------------ | ------------------------- |
+| `meet-the-clinic` | 15      | `answers.md`: three facts read off the finished system | a fresh copy of the diary |
 
 ## Walkthrough
 

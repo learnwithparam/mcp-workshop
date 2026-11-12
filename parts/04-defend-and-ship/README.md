@@ -27,12 +27,12 @@ flowchart TB
 
 ## Steps
 
-| Step | Minutes | You produce | The check reads |
-|---|---|---|---|
-| `pin-third-party-tools` | 15 | `pins.ts`: hash every tool's full definition and compare with `pins.json` | the shipped insurance server: clean version passes, changed description fails and names the tool, payload hidden in a parameter name fails |
-| `break-the-lethal-trifecta` | 15 | one cut leg, named in `notes/trifecta.md` | the planted note on Pepper (P-0042) run through the recorded agent 3 times; no owner contact detail in any outbound tool argument |
-| `deploy-the-server` | 15 | a deploy to Cloudflare Workers or a Docker image | `bun run verify deploy-the-server --url <url>`: discover, 401 without a token, audience check, receptionist cannot read notes |
-| `write-the-handover` | 10 | `HANDOVER.md`: tools with annotations, scopes, eval scores, threats and defences | six required sections; scores match the eval JSON; every tool from `tools/list` named |
+| Step                        | Minutes | You produce                                                                      | The check reads                                                                                                                            |
+| --------------------------- | ------- | -------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| `pin-third-party-tools`     | 15      | `pins.ts`: hash every tool's full definition and compare with `pins.json`        | the shipped insurance server: clean version passes, changed description fails and names the tool, payload hidden in a parameter name fails |
+| `break-the-lethal-trifecta` | 15      | one cut leg, named in `notes/trifecta.md`                                        | the planted note on Pepper (P-0042) run through the recorded agent 3 times; no owner contact detail in any outbound tool argument          |
+| `deploy-the-server`         | 15      | a deploy to Cloudflare Workers or a Docker image                                 | `bun run verify deploy-the-server --url <url>`: discover, 401 without a token, audience check, receptionist cannot read notes              |
+| `write-the-handover`        | 10      | `HANDOVER.md`: tools with annotations, scopes, eval scores, threats and defences | six required sections; scores match the eval JSON; every tool from `tools/list` named                                                      |
 
 Total: 55 minutes.
 

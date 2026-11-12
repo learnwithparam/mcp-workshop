@@ -26,14 +26,14 @@ flowchart LR
 
 ## Steps
 
-| Step | Minutes | You produce | The check reads |
-|---|---|---|---|
-| `eval-tool-choice` | 15 | a baseline score for the 14-tool "API mirror" server | `evals/baseline.json`: per task tool, arguments, pass or fail, tokens |
-| `shape-tools-around-jobs` | 15 | 5 job tools: `find_patient`, `find_free_slots`, `book_appointment`, `move_appointment`, `vaccines_due` | `tools/list` (at most 6 tools, name pattern, distinct descriptions, stable order) and the eval score, at least 18 of 20 and 4 above baseline, over 3 replay runs |
-| `return-structured-results` | 10 | `outputSchema` and `structuredContent`, plus a `concise` or `full` detail argument | 10 fixture calls validated against `outputSchema`; concise answer under 150 tokens; text still present |
-| `mark-risky-tools` | 5 | tool annotations: read-only, idempotent, destructive | annotations per tool against the table in the step README |
-| `add-records-as-resources` | 10 | a `clinic://patients/{id}/summary` resource template, a `resource_link` from `find_patient`, one prompt | `resources/templates/list`, `resources/read` on a fixture id, error `-32602` on an unknown id |
-| `test-the-server` | 10 | `test/server.test.ts` with an in-process client and at least 4 tests | `bun test` passes, then fails against a mutated server with the clash check removed |
+| Step                        | Minutes | You produce                                                                                             | The check reads                                                                                                                                                  |
+| --------------------------- | ------- | ------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `eval-tool-choice`          | 15      | a baseline score for the 14-tool "API mirror" server                                                    | `evals/baseline.json`: per task tool, arguments, pass or fail, tokens                                                                                            |
+| `shape-tools-around-jobs`   | 15      | 5 job tools: `find_patient`, `find_free_slots`, `book_appointment`, `move_appointment`, `vaccines_due`  | `tools/list` (at most 6 tools, name pattern, distinct descriptions, stable order) and the eval score, at least 18 of 20 and 4 above baseline, over 3 replay runs |
+| `return-structured-results` | 10      | `outputSchema` and `structuredContent`, plus a `concise` or `full` detail argument                      | 10 fixture calls validated against `outputSchema`; concise answer under 150 tokens; text still present                                                           |
+| `mark-risky-tools`          | 5       | tool annotations: read-only, idempotent, destructive                                                    | annotations per tool against the table in the step README                                                                                                        |
+| `add-records-as-resources`  | 10      | a `clinic://patients/{id}/summary` resource template, a `resource_link` from `find_patient`, one prompt | `resources/templates/list`, `resources/read` on a fixture id, error `-32602` on an unknown id                                                                    |
+| `test-the-server`           | 10      | `test/server.test.ts` with an in-process client and at least 4 tests                                    | `bun test` passes, then fails against a mutated server with the clash check removed                                                                              |
 
 Total: 65 minutes. Models come from `config/models.ts` by role; replay is the default, so the eval runs with no key.
 

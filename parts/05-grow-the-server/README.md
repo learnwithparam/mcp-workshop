@@ -23,13 +23,13 @@ flowchart LR
 
 ## Steps
 
-| Step | Minutes | You produce | The check reads |
-|---|---|---|---|
-| `build-a-small-client` | 20 | a client that discovers, lists and calls, with version negotiation | its output against your server and against a shipped legacy server |
-| `report-lab-results-later` | 20 | `order_blood_panel` that returns a task handle (tasks extension) | the task moving from working to completed; cancel works |
-| `front-two-servers` | 25 | a proxy that prefixes tools, mints a token per upstream and drops unpinned tools | the tool list through the proxy; upstream logs show each upstream's own audience |
-| `publish-to-the-registry` | 15 | a valid `server.json` for the MCP Registry, no real publish | the file against the registry schema |
-| `upgrade-a-v1-server` | 15 | a shipped SDK v1 server moved to v2 with the codemod | Part 1 checks pass on it; no `@mcp-codemod-error` left |
+| Step                       | Minutes | You produce                                                                      | The check reads                                                                  |
+| -------------------------- | ------- | -------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| `build-a-small-client`     | 20      | a client that discovers, lists and calls, with version negotiation               | its output against your server and against a shipped legacy server               |
+| `report-lab-results-later` | 20      | `order_blood_panel` that returns a task handle (tasks extension)                 | the task moving from working to completed; cancel works                          |
+| `front-two-servers`        | 25      | a proxy that prefixes tools, mints a token per upstream and drops unpinned tools | the tool list through the proxy; upstream logs show each upstream's own audience |
+| `publish-to-the-registry`  | 15      | a valid `server.json` for the MCP Registry, no real publish                      | the file against the registry schema                                             |
+| `upgrade-a-v1-server`      | 15      | a shipped SDK v1 server moved to v2 with the codemod                             | Part 1 checks pass on it; no `@mcp-codemod-error` left                           |
 
 Total: 95 minutes.
 

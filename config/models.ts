@@ -6,9 +6,17 @@ export type Provider = "replay" | "anthropic" | "openrouter" | "openai" | "ollam
 
 export const MODELS: Record<Exclude<Provider, "replay">, Record<Role, string>> = {
   anthropic: { fast: "claude-haiku-5-5", smart: "claude-sonnet-5-5", judge: "claude-haiku-5-5" },
-  openrouter: { fast: "nvidia/nemotron-3.5-lightning", smart: "anthropic/claude-sonnet-5.5", judge: "anthropic/claude-haiku-5.5" },
+  openrouter: {
+    fast: "nvidia/nemotron-3.5-lightning",
+    smart: "anthropic/claude-sonnet-5.5",
+    judge: "anthropic/claude-haiku-5.5",
+  },
   openai: { fast: "gpt-6-luna", smart: "gpt-6-luna-pro", judge: "gpt-6-luna" },
-  ollama: { fast: process.env.OLLAMA_MODEL ?? "qwen3", smart: process.env.OLLAMA_MODEL ?? "qwen3", judge: process.env.OLLAMA_MODEL ?? "qwen3" },
+  ollama: {
+    fast: process.env.OLLAMA_MODEL ?? "qwen3",
+    smart: process.env.OLLAMA_MODEL ?? "qwen3",
+    judge: process.env.OLLAMA_MODEL ?? "qwen3",
+  },
 };
 
 // USD per million tokens, input and output, where the price was read from the provider's page.
@@ -24,6 +32,9 @@ export const KEY_NAMES: Record<Exclude<Provider, "replay" | "ollama">, string> =
 
 export function provider(): Provider {
   const p = (process.env.LLM_PROVIDER ?? "replay").toLowerCase();
-  if (!["replay", "anthropic", "openrouter", "openai", "ollama"].includes(p)) throw new Error(`LLM_PROVIDER="${p}" is not one of replay, anthropic, openrouter, openai, ollama`);
+  if (!["replay", "anthropic", "openrouter", "openai", "ollama"].includes(p))
+    throw new Error(
+      `LLM_PROVIDER="${p}" is not one of replay, anthropic, openrouter, openai, ollama`,
+    );
   return p as Provider;
 }

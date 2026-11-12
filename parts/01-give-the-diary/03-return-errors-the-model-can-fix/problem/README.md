@@ -20,13 +20,13 @@ flowchart LR
 Make every refusal in `book_appointment` name what is wrong and what to do next. The check sends five planted bad
 calls. Handle them in this order, before the clash check:
 
-| Bad call | Your error must contain |
-|---|---|
-| Unknown patient `P-9999` | `patient_id` and the id that was sent |
-| A start in the past | the word "past" and the clinic clock's date and time (`clinic.clock()`) |
-| A clash with Dr Reyes | the vet's name, then `Free slots:` and real times from `clinic.freeSlots` |
-| 18:30 at Millbrook | the opening and closing times (`clinic.openingHours(site, date)`) |
-| `length` of 25 | `length` and the values that work, 10 to 60 |
+| Bad call                 | Your error must contain                                                   |
+| ------------------------ | ------------------------------------------------------------------------- |
+| Unknown patient `P-9999` | `patient_id` and the id that was sent                                     |
+| A start in the past      | the word "past" and the clinic clock's date and time (`clinic.clock()`)   |
+| A clash with Dr Reyes    | the vet's name, then `Free slots:` and real times from `clinic.freeSlots` |
+| 18:30 at Millbrook       | the opening and closing times (`clinic.openingHours(site, date)`)         |
+| `length` of 25           | `length` and the values that work, 10 to 60                               |
 
 For the length, put the message on the Zod rule, for example
 `.multipleOf(10, { error: "length must be 10 to 60 minutes, in steps of 10" })`. The SDK sends that text to the model.

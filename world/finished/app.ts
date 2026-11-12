@@ -1,5 +1,15 @@
 // The finished server's HTTP front: Host check, protected resource metadata, token check, then MCP.
-import { OAuthError, OAuthErrorCode, createMcpHandler, getOAuthProtectedResourceMetadataUrl, hostHeaderValidationResponse, localhostAllowedHostnames, oauthMetadataResponse, requireBearerAuth, type AuthInfo } from "@modelcontextprotocol/server";
+import {
+  type AuthInfo,
+  createMcpHandler,
+  getOAuthProtectedResourceMetadataUrl,
+  hostHeaderValidationResponse,
+  localhostAllowedHostnames,
+  OAuthError,
+  OAuthErrorCode,
+  oauthMetadataResponse,
+  requireBearerAuth,
+} from "@modelcontextprotocol/server";
 import { ISSUER, RESOURCE, readToken } from "../auth";
 import { callerFrom, createServer } from "./server";
 
@@ -16,14 +26,27 @@ const oauthMetadata = {
 async function verifyAccessToken(token: string): Promise<AuthInfo> {
   try {
     const t = await readToken(token);
-    const aud = [t.aud].flat().find((a) => URL.canParse(a) && new URL(a).origin === resourceUrl.origin);
-    return { token, clientId: t.sub, scopes: t.scope.split(" "), expiresAt: t.exp, resource: aud ? new URL(aud) : undefined, extra: { role: t.role, site: t.site } };
+    const aud = [t.aud]
+      .flat()
+      .find((a) => URL.canParse(a) && new URL(a).origin === resourceUrl.origin);
+    return {
+      token,
+      clientId: t.sub,
+      scopes: t.scope.split(" "),
+      expiresAt: t.exp,
+      resource: aud ? new URL(aud) : undefined,
+      extra: { role: t.role, site: t.site },
+    };
   } catch (e) {
     throw new OAuthError(OAuthErrorCode.InvalidToken, `token rejected: ${(e as Error).message}`);
   }
 }
 
-const gate = requireBearerAuth({ verifier: { verifyAccessToken }, resourceMetadataUrl: getOAuthProtectedResourceMetadataUrl(resourceUrl).toString(), expectedResource: resourceUrl });
+const gate = requireBearerAuth({
+  verifier: { verifyAccessToken },
+  resourceMetadataUrl: getOAuthProtectedResourceMetadataUrl(resourceUrl).toString(),
+  expectedResource: resourceUrl,
+});
 const handler = createMcpHandler(({ authInfo }) => createServer(callerFrom(authInfo)));
 
 export const app = {

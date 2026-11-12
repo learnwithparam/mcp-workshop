@@ -1,5 +1,5 @@
 // The world and the finished server behave the way the course text says they do.
-import { afterAll, beforeAll, expect, test } from "bun:test";
+import { expect, test } from "bun:test";
 import { freshWorld } from "../checks/lib/world";
 
 const world = freshWorld();
@@ -10,8 +10,19 @@ const { mintToken } = await import("../world/auth");
 
 test("the seed plants six free 20-minute slots at Millbrook, three per vet", () => {
   const slots = world.freeSlots({ site: "millbrook", length: 20 });
-  expect(slots.map((s) => s.start).sort()).toEqual(["09:00", "10:20", "11:40", "14:40", "15:00", "16:20"]);
-  expect(slots.filter((s) => s.vet_id === "S-05").map((s) => s.start)).toEqual(["10:20", "11:40", "15:00"]);
+  expect(slots.map((s) => s.start).sort()).toEqual([
+    "09:00",
+    "10:20",
+    "11:40",
+    "14:40",
+    "15:00",
+    "16:20",
+  ]);
+  expect(slots.filter((s) => s.vet_id === "S-05").map((s) => s.start)).toEqual([
+    "10:20",
+    "11:40",
+    "15:00",
+  ]);
 });
 
 test("Biscuit and Pepper are unique, and the counts match the README", () => {
@@ -22,7 +33,14 @@ test("Biscuit and Pepper are unique, and the counts match the README", () => {
 });
 
 test("Ola sees no notes tool; Dr Reyes reads Millbrook notes only; Joon reads the drugs log", async () => {
-  const names = async (as: string) => { const c = await connectFinished({ as }); try { return (await c.client.listTools()).tools.map((t) => t.name); } finally { await c.close(); } };
+  const names = async (as: string) => {
+    const c = await connectFinished({ as });
+    try {
+      return (await c.client.listTools()).tools.map((t) => t.name);
+    } finally {
+      await c.close();
+    }
+  };
   expect(await names("ola")).not.toContain("read_notes");
   expect(await names("sam")).toContain("read_notes");
   expect(await names("sam")).not.toContain("controlled_drugs_log");
@@ -35,20 +53,31 @@ test("Ola sees no notes tool; Dr Reyes reads Millbrook notes only; Joon reads th
 });
 
 test("a token minted for another server is refused", async () => {
-  const token = await mintToken({ staff_id: "S-08", role: "receptionist", site: "millbrook", audience: "https://lab-results.harrowlane.test/mcp" });
+  const token = await mintToken({
+    staff_id: "S-08",
+    role: "receptionist",
+    site: "millbrook",
+    audience: "https://lab-results.harrowlane.test/mcp",
+  });
   await expect(connectFinished({ token })).rejects.toThrow();
 });
 
 test("the finished server refuses a clash and lists real free slots", async () => {
   const c = await connectFinished({ as: "ola" });
-  const r = await c.client.callTool({ name: "book_appointment", arguments: { patient_id: "P-0001", vet_id: "S-05", start: "10:40", reason: "Booster" } });
+  const r = await c.client.callTool({
+    name: "book_appointment",
+    arguments: { patient_id: "P-0001", vet_id: "S-05", start: "10:40", reason: "Booster" },
+  });
   await c.close();
   expect(r.isError).toBe(true);
   expect((r.content as any)[0].text).toContain("Free slots: 10:20, 11:40, 15:00");
 });
 
 test("cancel waits for a yes", async () => {
-  const id = world.rows("SELECT id FROM appointments WHERE vet_id = 'S-05' AND date = ? AND status = 'booked' LIMIT 1", world.clock.date)[0].id;
+  const id = world.rows(
+    "SELECT id FROM appointments WHERE vet_id = 'S-05' AND date = ? AND status = 'booked' LIMIT 1",
+    world.clock.date,
+  )[0].id;
   const no = await connectFinished({ as: "ola", confirm: "no" });
   await no.client.callTool({ name: "cancel_appointment", arguments: { appointment_id: id } });
   await no.close();
@@ -56,5 +85,7 @@ test("cancel waits for a yes", async () => {
   const yes = await connectFinished({ as: "ola", confirm: "yes" });
   await yes.client.callTool({ name: "cancel_appointment", arguments: { appointment_id: id } });
   await yes.close();
-  expect(world.rows("SELECT status FROM appointments WHERE id = ?", id)[0].status).toBe("cancelled");
+  expect(world.rows("SELECT status FROM appointments WHERE id = ?", id)[0].status).toBe(
+    "cancelled",
+  );
 });

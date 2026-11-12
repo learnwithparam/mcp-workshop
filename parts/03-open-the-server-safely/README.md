@@ -32,14 +32,14 @@ sequenceDiagram
 
 ## Steps
 
-| Step | Minutes | You produce | The check reads |
-|---|---|---|---|
-| `serve-over-http` | 15 | `createMcpHandler` served by Bun on `127.0.0.1:8787/mcp`, with a Host check | a stateless `tools/list` with no session, 403 for `Host: evil.example`, a legacy-era client still served |
-| `pass-conformance` | 10 | nothing new unless it fails | `@modelcontextprotocol/conformance` exit code against the server, with a shipped expected-failures file (pin the exact version at build) |
-| `require-a-token` | 15 | `requireBearerAuth` and protected resource metadata | 401 with `WWW-Authenticate` naming the metadata URL; the metadata JSON; a token in the query string refused |
-| `check-the-audience` | 10 | token checks for issuer, expiry and audience; no passthrough to the PIMS | tokens minted for another server and expired tokens get 401; the world log shows no inbound token sent on |
-| `limit-by-role` | 10 | scopes `diary:read`, `diary:write`, `notes:read`, `drugs:read`, with tools hidden or refused by scope | Ola's token lists no notes tool and gets 403 on a direct call; Dr Reyes reads notes for her site only; only Joon reads the drugs log |
-| `confirm-before-cancel` | 10 | `cancel_appointment` that returns `input_required` and cancels only on a yes | the diary row after a first call, a retry with no, a retry with yes, and a tampered `requestState` |
+| Step                    | Minutes | You produce                                                                                           | The check reads                                                                                                                          |
+| ----------------------- | ------- | ----------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| `serve-over-http`       | 15      | `createMcpHandler` served by Bun on `127.0.0.1:8787/mcp`, with a Host check                           | a stateless `tools/list` with no session, 403 for `Host: evil.example`, a legacy-era client still served                                 |
+| `pass-conformance`      | 10      | nothing new unless it fails                                                                           | `@modelcontextprotocol/conformance` exit code against the server, with a shipped expected-failures file (pin the exact version at build) |
+| `require-a-token`       | 15      | `requireBearerAuth` and protected resource metadata                                                   | 401 with `WWW-Authenticate` naming the metadata URL; the metadata JSON; a token in the query string refused                              |
+| `check-the-audience`    | 10      | token checks for issuer, expiry and audience; no passthrough to the PIMS                              | tokens minted for another server and expired tokens get 401; the world log shows no inbound token sent on                                |
+| `limit-by-role`         | 10      | scopes `diary:read`, `diary:write`, `notes:read`, `drugs:read`, with tools hidden or refused by scope | Ola's token lists no notes tool and gets 403 on a direct call; Dr Reyes reads notes for her site only; only Joon reads the drugs log     |
+| `confirm-before-cancel` | 10      | `cancel_appointment` that returns `input_required` and cancels only on a yes                          | the diary row after a first call, a retry with no, a retry with yes, and a tampered `requestState`                                       |
 
 Total: 70 minutes. The finished server in `world/finished/` already does all six; tokens come from `world/auth.ts`.
 

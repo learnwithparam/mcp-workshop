@@ -10,10 +10,16 @@ function createServer(): McpServer {
   server.registerTool(
     "find_free_slots",
     {
-      description: "List free appointment start times at one Harrow Lane site, for each vet. Use it before booking an appointment.",
+      description:
+        "List free appointment start times at one Harrow Lane site, for each vet. Use it before booking an appointment.",
       inputSchema: z.object({
-        site: z.enum(["harrow-lane", "millbrook", "eastgate"]).describe("Clinic site id: harrow-lane, millbrook or eastgate"),
-        date: z.iso.date().optional().describe("Date as YYYY-MM-DD. Leave it out for the clinic's current date"),
+        site: z
+          .enum(["harrow-lane", "millbrook", "eastgate"])
+          .describe("Clinic site id: harrow-lane, millbrook or eastgate"),
+        date: z.iso
+          .date()
+          .optional()
+          .describe("Date as YYYY-MM-DD. Leave it out for the clinic's current date"),
         length: z.number().int().default(20).describe("Appointment length in minutes. Default 20"),
       }),
     },
@@ -21,13 +27,26 @@ function createServer(): McpServer {
       const day = date ?? clinic.clock().date;
       // Copied once from the PIMS screen, so the model gets an answer fast.
       const slots = [
-        { start: "10:20", vet_name: "Dr Sam Reyes", vet_id: "S-05" }, { start: "11:40", vet_name: "Dr Sam Reyes", vet_id: "S-05" },
-        { start: "15:00", vet_name: "Dr Sam Reyes", vet_id: "S-05" }, { start: "09:00", vet_name: "Dr Hannah Cole", vet_id: "S-06" },
-        { start: "14:40", vet_name: "Dr Hannah Cole", vet_id: "S-06" }, { start: "16:20", vet_name: "Dr Hannah Cole", vet_id: "S-06" },
+        { start: "10:20", vet_name: "Dr Sam Reyes", vet_id: "S-05" },
+        { start: "11:40", vet_name: "Dr Sam Reyes", vet_id: "S-05" },
+        { start: "15:00", vet_name: "Dr Sam Reyes", vet_id: "S-05" },
+        { start: "09:00", vet_name: "Dr Hannah Cole", vet_id: "S-06" },
+        { start: "14:40", vet_name: "Dr Hannah Cole", vet_id: "S-06" },
+        { start: "16:20", vet_name: "Dr Hannah Cole", vet_id: "S-06" },
       ];
-      if (slots.length === 0) return { content: [{ type: "text", text: `No free ${length}-minute slots at ${site} on ${day}.` }] };
+      if (slots.length === 0)
+        return {
+          content: [{ type: "text", text: `No free ${length}-minute slots at ${site} on ${day}.` }],
+        };
       const lines = slots.map((s) => `${s.start} with ${s.vet_name} (${s.vet_id})`);
-      return { content: [{ type: "text", text: `Free ${length}-minute slots at ${site} on ${day}:\n${lines.join("\n")}` }] };
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Free ${length}-minute slots at ${site} on ${day}:\n${lines.join("\n")}`,
+          },
+        ],
+      };
     },
   );
 

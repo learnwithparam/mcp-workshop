@@ -1,28 +1,41 @@
 // Turns a role into a Vercel AI SDK model for the chosen provider. Replay needs no key and no network:
 // it plays back recorded model turns from world/replays/, so the course, its checks and CI run for free.
+
+import { existsSync, readFileSync } from "node:fs";
+import { join } from "node:path";
 import { createAnthropic } from "@ai-sdk/anthropic";
 import { createOpenAI } from "@ai-sdk/openai";
 import { createOpenRouter } from "@openrouter/ai-sdk-provider";
 import type { LanguageModel } from "ai";
-import { existsSync, readFileSync } from "node:fs";
-import { join } from "node:path";
 import { KEY_NAMES, MODELS, provider, type Role } from "./models";
 
-export type ReplayStep = { tool_calls?: { name: string; input: Record<string, unknown> }[]; text?: string };
+export type ReplayStep = {
+  tool_calls?: { name: string; input: Record<string, unknown> }[];
+  text?: string;
+};
 export type ReplayConversation = { question: string; as?: string; steps: ReplayStep[] };
 export const REPLAY_DIR = join(import.meta.dir, "..", "world", "replays");
 export const PROBE = "Reply with the single word: ok";
 
-export const norm = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+export const norm = (s: string) =>
+  s
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
 
 export function loadReplays(file = "front-desk.json"): ReplayConversation[] {
   const p = join(REPLAY_DIR, file);
-  return existsSync(p) ? (JSON.parse(readFileSync(p, "utf8")).conversations as ReplayConversation[]) : [];
+  return existsSync(p)
+    ? (JSON.parse(readFileSync(p, "utf8")).conversations as ReplayConversation[])
+    : [];
 }
 
 function key(name: string) {
   const k = process.env[name];
-  if (!k) throw new Error(`${name} is not set. Add it to .env (see .env.example), or use LLM_PROVIDER=replay.`);
+  if (!k)
+    throw new Error(
+      `${name} is not set. Add it to .env (see .env.example), or use LLM_PROVIDER=replay.`,
+    );
   return k;
 }
 
@@ -41,19 +54,36 @@ function replayModel(ctx: { as?: string; file?: string }): LanguageModel {
     async doGenerate(options: any) {
       const prompt = options.prompt as { role: string; content: any }[];
       const firstUser = prompt.find((m) => m.role === "user");
-      const question = Array.isArray(firstUser?.content) ? firstUser!.content.filter((c: any) => c.type === "text").map((c: any) => c.text).join(" ") : String(firstUser?.content ?? "");
+      const question = Array.isArray(firstUser?.content)
+        ? firstUser?.content
+            .filter((c: any) => c.type === "text")
+            .map((c: any) => c.text)
+            .join(" ")
+        : String(firstUser?.content ?? "");
       const turn = prompt.filter((m) => m.role === "assistant").length;
       let step: ReplayStep | undefined;
       if (norm(question) === norm(PROBE)) step = { text: "ok" };
       else {
-        const convo = loadReplays(ctx.file).find((c) => norm(c.question) === norm(question) && (!c.as || !ctx.as || c.as === ctx.as));
+        const convo = loadReplays(ctx.file).find(
+          (c) => norm(c.question) === norm(question) && (!c.as || !ctx.as || c.as === ctx.as),
+        );
         if (!convo) throw new ReplayMissing(question, ctx.as);
         step = convo.steps[turn] ?? { text: "" };
       }
       const content = step.tool_calls?.length
-        ? step.tool_calls.map((c, i) => ({ type: "tool-call", toolCallId: `replay-${turn}-${i}`, toolName: c.name, input: JSON.stringify(c.input) }))
+        ? step.tool_calls.map((c, i) => ({
+            type: "tool-call",
+            toolCallId: `replay-${turn}-${i}`,
+            toolName: c.name,
+            input: JSON.stringify(c.input),
+          }))
         : [{ type: "text", text: step.text ?? "" }];
-      return { content, finishReason: { unified: step.tool_calls?.length ? "tool-calls" : "stop", raw: undefined }, usage: usage(0, 0), warnings: [] };
+      return {
+        content,
+        finishReason: { unified: step.tool_calls?.length ? "tool-calls" : "stop", raw: undefined },
+        usage: usage(0, 0),
+        warnings: [],
+      };
     },
     async doStream() {
       throw new Error("The replay model does not stream. Use generateText.");
@@ -62,8 +92,13 @@ function replayModel(ctx: { as?: string; file?: string }): LanguageModel {
 }
 
 export class ReplayMissing extends Error {
-  constructor(public question: string, public as?: string) {
-    super(`There is no recorded reply for "${question}"${as ? ` as ${as}` : ""}. Ask a recorded question, or set LLM_PROVIDER and a key in .env to ask anything.`);
+  constructor(
+    public question: string,
+    public as?: string,
+  ) {
+    super(
+      `There is no recorded reply for "${question}"${as ? ` as ${as}` : ""}. Ask a recorded question, or set LLM_PROVIDER and a key in .env to ask anything.`,
+    );
   }
 }
 
@@ -71,8 +106,15 @@ export class ReplayMissing extends Error {
 export function model(role: Role, ctx: { as?: string; file?: string } = {}): LanguageModel {
   const p = provider();
   if (p === "replay") return replayModel(ctx);
-  if (p === "anthropic") return createAnthropic({ apiKey: key(KEY_NAMES.anthropic) })(MODELS.anthropic[role]);
+  if (p === "anthropic")
+    return createAnthropic({ apiKey: key(KEY_NAMES.anthropic) })(MODELS.anthropic[role]);
   if (p === "openai") return createOpenAI({ apiKey: key(KEY_NAMES.openai) })(MODELS.openai[role]);
-  if (p === "openrouter") return createOpenRouter({ apiKey: key(KEY_NAMES.openrouter) })(MODELS.openrouter[role]) as unknown as LanguageModel;
-  return createOpenAI({ baseURL: process.env.OLLAMA_BASE_URL ?? "http://127.0.0.1:11434/v1", apiKey: "ollama" }).chat(MODELS.ollama[role]);
+  if (p === "openrouter")
+    return createOpenRouter({ apiKey: key(KEY_NAMES.openrouter) })(
+      MODELS.openrouter[role],
+    ) as unknown as LanguageModel;
+  return createOpenAI({
+    baseURL: process.env.OLLAMA_BASE_URL ?? "http://127.0.0.1:11434/v1",
+    apiKey: "ollama",
+  }).chat(MODELS.ollama[role]);
 }

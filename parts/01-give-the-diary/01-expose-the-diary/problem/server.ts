@@ -1,8 +1,6 @@
 // Your Harrow Lane MCP server. Check it with: bun run verify expose-the-diary
 import { McpServer } from "@modelcontextprotocol/server";
 import { serveStdio } from "@modelcontextprotocol/server/stdio";
-import * as z from "zod/v4";
-import { clinic } from "#clinic";
 
 function createServer(): McpServer {
   const server = new McpServer({ name: "harrow-lane", version: "0.1.0" });

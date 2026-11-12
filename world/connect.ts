@@ -1,19 +1,26 @@
 // Connect an MCP client to a server: the finished one (in this process, over Streamable HTTP with a token),
 // or a learner's server in a folder (spawned over stdio). Used by `bun run try`, `bun run ask` and the checks.
-import { Client, StreamableHTTPClientTransport } from "@modelcontextprotocol/client";
-import { StdioClientTransport } from "@modelcontextprotocol/client/stdio";
+
 import { existsSync, readFileSync } from "node:fs";
 import { join, resolve } from "node:path";
-import { DEMO, RESOURCE, mintToken } from "./auth";
+import { Client, StreamableHTTPClientTransport } from "@modelcontextprotocol/client";
+import { StdioClientTransport } from "@modelcontextprotocol/client/stdio";
 import { clinic } from "#clinic";
+import { DEMO, mintToken, RESOURCE } from "./auth";
 
 export type Confirm = "yes" | "no" | "decline";
 export type Connected = { client: Client; stderr: () => string; close: () => Promise<void> };
 
 function newClient(confirm: Confirm) {
-  const client = new Client({ name: "harrow-lane-course", version: "1.0.0" }, { capabilities: { elicitation: {} }, versionNegotiation: { mode: "auto" } });
+  const client = new Client(
+    { name: "harrow-lane-course", version: "1.0.0" },
+    { capabilities: { elicitation: {} }, versionNegotiation: { mode: "auto" } },
+  );
   client.setRequestHandler("elicitation/create", async () =>
-    confirm === "decline" ? { action: "decline" } : { action: "accept", content: { confirm: confirm === "yes" } });
+    confirm === "decline"
+      ? { action: "decline" }
+      : { action: "accept", content: { confirm: confirm === "yes" } },
+  );
   return client;
 }
 
@@ -25,7 +32,9 @@ export async function tokenFor(who: string) {
 }
 
 /** The finished server, served in this process: no port, no second terminal. */
-export async function connectFinished(opts: { as?: string; token?: string; confirm?: Confirm } = {}): Promise<Connected> {
+export async function connectFinished(
+  opts: { as?: string; token?: string; confirm?: Confirm } = {},
+): Promise<Connected> {
   const { app } = await import("./finished/app");
   const token = opts.token ?? (await tokenFor(opts.as ?? "ola"));
   const client = newClient(opts.confirm ?? "yes");
@@ -49,20 +58,42 @@ export function launchFor(dir: string): { command: string; args: string[] } {
 }
 
 /** A server in a folder, spawned over stdio the way Claude Code or Claude Desktop would start it. */
-export async function connectFolder(dir: string, opts: { env?: Record<string, string>; confirm?: Confirm; launch?: { command: string; args: string[] } } = {}): Promise<Connected> {
+export async function connectFolder(
+  dir: string,
+  opts: {
+    env?: Record<string, string>;
+    confirm?: Confirm;
+    launch?: { command: string; args: string[] };
+  } = {},
+): Promise<Connected> {
   const abs = resolve(dir);
   const launch = opts.launch ?? launchFor(abs);
   const command = launch.command === "bun" ? process.execPath : launch.command;
   const client = newClient(opts.confirm ?? "yes");
-  const transport = new StdioClientTransport({ command, args: launch.args, cwd: abs, env: { ...(process.env as Record<string, string>), ...opts.env }, stderr: "pipe" });
+  const transport = new StdioClientTransport({
+    command,
+    args: launch.args,
+    cwd: abs,
+    env: { ...(process.env as Record<string, string>), ...opts.env },
+    stderr: "pipe",
+  });
   let err = "";
-  transport.stderr?.on("data", (b: Buffer) => { err += b.toString(); });
-  const timeout = new Promise<never>((_, rej) => setTimeout(() => rej(new Error("the server did not answer within 15 seconds")), 15000));
+  transport.stderr?.on("data", (b: Buffer) => {
+    err += b.toString();
+  });
+  const timeout = new Promise<never>((_, rej) =>
+    setTimeout(() => rej(new Error("the server did not answer within 15 seconds")), 15000),
+  );
   try {
     await Promise.race([client.connect(transport), timeout]);
   } catch (e) {
     await transport.close().catch(() => {});
-    throw Object.assign(new Error(`${(e as Error).message}${err ? ` Server said: ${err.trim().split("\n").slice(-3).join(" | ")}` : ""}`), { stderr: err });
+    throw Object.assign(
+      new Error(
+        `${(e as Error).message}${err ? ` Server said: ${err.trim().split("\n").slice(-3).join(" | ")}` : ""}`,
+      ),
+      { stderr: err },
+    );
   }
   return { client, stderr: () => err, close: () => client.close() };
 }

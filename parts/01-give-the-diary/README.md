@@ -27,12 +27,12 @@ flowchart LR
 
 ## Steps
 
-| Step | Minutes | You produce | The check reads |
-|---|---|---|---|
-| `expose-the-diary` | 15 | a stdio server with `find_free_slots` | `tools/list`, a live call, stdout before any request, a slot booked behind the server's back |
-| `book-an-appointment` | 15 | `book_appointment` with a clash check | the diary rows after each of five calls |
-| `return-errors-the-model-can-fix` | 10 | errors that name the field and the fix | five planted bad calls, the free slots in the diary |
-| `connect-claude` | 10 | `.mcp.json` and Claude's answer | the server started from your config, every time in the answer |
+| Step                              | Minutes | You produce                            | The check reads                                                                              |
+| --------------------------------- | ------- | -------------------------------------- | -------------------------------------------------------------------------------------------- |
+| `expose-the-diary`                | 15      | a stdio server with `find_free_slots`  | `tools/list`, a live call, stdout before any request, a slot booked behind the server's back |
+| `book-an-appointment`             | 15      | `book_appointment` with a clash check  | the diary rows after each of five calls                                                      |
+| `return-errors-the-model-can-fix` | 10      | errors that name the field and the fix | five planted bad calls, the free slots in the diary                                          |
+| `connect-claude`                  | 10      | `.mcp.json` and Claude's answer        | the server started from your config, every time in the answer                                |
 
 Each step's starter is the previous step's sample solution, so you can start any step fresh. To carry on with your
 own code instead, copy your `server.ts` into the next step's `problem/` folder.
