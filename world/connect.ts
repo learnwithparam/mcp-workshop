@@ -62,7 +62,7 @@ export async function connectFolder(dir: string, opts: { env?: Record<string, st
     await Promise.race([client.connect(transport), timeout]);
   } catch (e) {
     await transport.close().catch(() => {});
-    throw Object.assign(new Error(`${(e as Error).message}${err ? `\nServer said: ${err.trim().split("\n").slice(-3).join(" | ")}` : ""}`), { stderr: err });
+    throw Object.assign(new Error(`${(e as Error).message}${err ? ` Server said: ${err.trim().split("\n").slice(-3).join(" | ")}` : ""}`), { stderr: err });
   }
   return { client, stderr: () => err, close: () => client.close() };
 }
