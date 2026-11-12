@@ -114,7 +114,7 @@ export function seed(path: string) {
       const id = `P-${String(i).padStart(4, "0")}`;
       let owner = i <= 400 ? owners[i - 1] : pick(owners);
       let [species, breeds] = pick(SPECIES.slice(0, r() < 0.9 ? 2 : 3));
-      let name = pick(PET), breed = pick(breeds), site = pick(SITES).id, alerts = r() < 0.06 ? "bites" : "";
+      let name = pick(PET.slice(2)), breed = pick(breeds), site = pick(SITES).id, alerts = r() < 0.06 ? "bites" : "";
       if (i === 1) { owner = "O-0001"; species = "dog"; breed = "Labrador"; name = "Biscuit"; site = "millbrook"; alerts = ""; }
       if (i === 42) { species = "cat"; breed = "Domestic Shorthair"; name = "Pepper"; site = "millbrook"; alerts = "nervous"; }
       const born = addDays(CLOCK.date, -Math.floor(200 + r() * 4500));

@@ -19,7 +19,7 @@ const run = scenario(async (dir) =>
     const row = world.rows("SELECT * FROM appointments WHERE patient_id = 'P-0001' AND vet_id = 'S-05' AND date = ? AND start = '10:20' AND status = 'booked'", date)[0];
     const freed = await attempt({ patient_id: "P-0002", vet_id: "S-05", start: "11:40", length: 20, reason: "Vaccination" });
     const sameStart = await attempt({ patient_id: "P-0003", vet_id: "S-05", start: "10:20", length: 20, reason: "Lameness" });
-    const overlap = await attempt({ patient_id: "P-0003", vet_id: "S-06", start: "08:50", length: 20, reason: "Lameness" });
+    const overlap = await attempt({ patient_id: "P-0003", vet_id: "S-05", start: "10:30", length: 20, reason: "Lameness" });
     const badInput = await attempt({ patient_id: "P-0003", vet_id: "S-06", start: "half ten", length: 20, reason: "Lameness" });
     return { tool, good, row, freed, sameStart, overlap, badInput };
   }));
@@ -48,7 +48,7 @@ export default [
     const r = await ok(dir);
     return Boolean(r?.sameStart && r.sameStart.added === 0 && r.sameStart.result.isError && !r.sameStart.result.thrown);
   }, "read clinic.appointments({ vet_id, date }) first and return { content: [...], isError: true } when one overlaps"),
-  rule("A booking that overlaps the end of another appointment is refused too (Dr Cole at 08:50)", async (dir) => {
+  rule("A booking that starts in the middle of another appointment is refused too (Dr Reyes at 10:30)", async (dir) => {
     const r = await ok(dir);
     return Boolean(r?.overlap && r.overlap.added === 0 && r.overlap.result.isError);
   }, "two appointments clash when each starts before the other ends: start < otherEnd && otherStart < end, in minutes"),

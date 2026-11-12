@@ -58,6 +58,7 @@ needPicture(join(ROOT, "00-orientation", "README.md"), "the orientation", false,
 
 // 3. Parts and steps.
 const seen = new Set<string>();
+let skeletons = 0;
 const ps = parts();
 if (ps.length === 0) fail(join(ROOT, "parts"), "no parts");
 for (const p of ps) {
@@ -70,7 +71,11 @@ for (const p of ps) {
     if (walk === undefined) fail(readme, `part README needs a "## Walkthrough" section`);
     else if (!walk.includes("```bash")) fail(readme, "the walkthrough needs the commands, each with an Expect: line");
   }
-  if (p.steps.length === 0) fail(p.dir, "part has no steps");
+  // A skeleton part waits for its own build session: README only, marked TODO(part session), steps named in PARTS.md.
+  const skeleton = existsSync(readme) && read(readme).includes("TODO(part session)");
+  if (skeleton) skeletons++;
+  if (p.steps.length === 0 && !skeleton) fail(p.dir, "part has no steps");
+  if (p.steps.length > 0 && skeleton) fail(readme, "a part with steps must not keep TODO(part session)");
   for (const s of p.steps) {
     if (!VERB_THING.test(s.name)) fail(s.dir, `step name "${s.name}" must be verb-thing in lower case`);
     if (seen.has(s.name)) fail(s.dir, `step name "${s.name}" is used twice`);
@@ -157,4 +162,4 @@ if (errors.length) {
   for (const e of errors) console.log(`  - ${e}`);
   process.exit(1);
 }
-console.log(`The repo meets the standard: ${ps.length} part(s), ${allSteps().length} step(s).`);
+console.log(`The repo meets the standard: ${ps.length} part(s), ${allSteps().length} step(s)${skeletons ? `, ${skeletons} skeleton part(s) waiting for a part session` : ""}.`);
