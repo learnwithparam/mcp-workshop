@@ -14,6 +14,7 @@ Every message a script prints on failure is in this table.
 | `Client.listTools() called but server does not advertise tools capability` | The server has no tools yet. | Register a tool with `server.registerTool`. |
 | `Could not connect: ...` from `bun run try` | The server in `--server <folder>` did not start. | Run `bun server.ts` in that folder and read its error. |
 | `Protocol error: Tool ... not found` | The server has no tool by that name, or your role cannot see it. | Run `bun run try` with no tool name to list the tools, or add `--as sam` or `--as joon`. |
+| `Protocol error: Method not found` from `bun run try --server` | That server has no tools yet, so it does not answer `tools/call`. | Register a tool; a fresh starter has none. |
 | `The arguments are not valid JSON` | The tool arguments are not JSON. | Wrap them in single quotes: `'{"site":"millbrook"}'`. |
 | `Tool error from ...` | The tool refused the call and says why. | Read the message; it names the field and the fix. |
 | `There is no recorded reply for "..."` | With `LLM_PROVIDER=replay`, only recorded questions have answers. | Run `bun run ask` with no question to list them, or set a provider and key in `.env`. |
