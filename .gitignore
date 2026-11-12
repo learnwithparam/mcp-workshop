@@ -1,2 +1,6 @@
-verify-report.json
 node_modules
+verify-report.json
+world/data/
+.env
+.env.*
+!.env.example
