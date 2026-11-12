@@ -1,6 +1,8 @@
 // The only file that names a model. Code asks for a role (fast, smart, judge), never an id.
-// Pick the provider with LLM_PROVIDER in .env: replay (default, no key), anthropic, openrouter, openai or ollama.
-// Ids read from the providers' live lists on 12 Nov 2026 (curriculum briefs/MODELS.md). Recheck when you change them.
+// Pick the provider with LLM_PROVIDER in .env: replay (the default, needs no key), anthropic,
+// openrouter, openai or ollama.
+// The ids were read from the providers' live lists on 12 Nov 2026 (curriculum briefs/MODELS.md).
+// Check them again when you change them.
 export type Role = "fast" | "smart" | "judge";
 export type Provider = "replay" | "anthropic" | "openrouter" | "openai" | "ollama";
 
@@ -30,11 +32,18 @@ export const KEY_NAMES: Record<Exclude<Provider, "replay" | "ollama">, string> =
   openai: "OPENAI_API_KEY",
 };
 
+const PROVIDER_NAMES: Provider[] = ["replay", "anthropic", "openrouter", "openai", "ollama"];
+
+function isProvider(name: string): name is Provider {
+  return (PROVIDER_NAMES as string[]).includes(name);
+}
+
 export function provider(): Provider {
-  const p = (process.env.LLM_PROVIDER ?? "replay").toLowerCase();
-  if (!["replay", "anthropic", "openrouter", "openai", "ollama"].includes(p))
+  const chosen = (process.env.LLM_PROVIDER ?? "replay").toLowerCase();
+  if (!isProvider(chosen)) {
     throw new Error(
-      `LLM_PROVIDER="${p}" is not one of replay, anthropic, openrouter, openai, ollama`,
+      `LLM_PROVIDER="${chosen}" is not one of replay, anthropic, openrouter, openai, ollama`,
     );
-  return p as Provider;
+  }
+  return chosen;
 }

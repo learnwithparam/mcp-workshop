@@ -2,9 +2,11 @@
 
 ## The problem
 
-The Millbrook front desk answers "when can you see my dog?" all the time. The answer means clicking into
-the PIMS, picking a vet, and scanning their diary. Claude could answer in one line, but it cannot see the diary.
-The PIMS already has a "find a slot" search (`clinic.freeSlots`). Nothing connects it to a model.
+The Millbrook front desk hears "when can you see my dog?" all the time. To answer, staff click into the PIMS, pick
+a vet, and scan the vet's diary. Claude could answer in one line, but it cannot see the diary.
+
+The PIMS already has a "find a slot" search: `clinic.freeSlots`. Nothing connects it to a model yet. You build that
+connection: an MCP server with one tool.
 
 ## Your challenge
 
@@ -12,12 +14,12 @@ Turn `server.ts` in this folder into an MCP server with one read tool, `find_fre
 
 1. Register the tool with `server.registerTool(name, { description, inputSchema }, handler)`.
 2. Arguments: `site` (one of `harrow-lane`, `millbrook`, `eastgate`), an optional `date` (YYYY-MM-DD), and
-   `length` in minutes (default 20). Use a Zod object and give every field a `.describe("...")`.
-3. The handler calls `clinic.freeSlots({ site, date, length })` on every call and returns each start time and vet
-   as text. Leave `date` out and use `clinic.clock().date`.
+   `length` in minutes (default 20). Use a Zod object. Give every field a `.describe("...")`.
+3. The handler calls `clinic.freeSlots({ site, date, length })` on every call. It returns each start time and vet
+   as text. When `date` is missing, use `clinic.clock().date`.
 4. Log only with `console.error`. Over stdio, stdout belongs to the protocol.
 
-Try your server as a client would, before you run the check:
+Before you run the check, try your server the way a client does:
 
 ```bash
 bun run try find_free_slots '{"site":"millbrook"}' --server parts/01-give-the-diary/01-expose-the-diary/problem
@@ -25,10 +27,22 @@ bun run try find_free_slots '{"site":"millbrook"}' --server parts/01-give-the-di
 
 Expect: `Result from find_free_slots:` and six start times, three for Dr Sam Reyes and three for Dr Hannah Cole.
 
+For example, the sample solution prints this for Millbrook. The starter prints `Protocol error: Method not found`,
+because it has no tool yet.
+
+```text
+Result from find_free_slots:
+Free 20-minute slots at millbrook on 2026-11-16:
+10:20 with Dr Sam Reyes (S-05)
+11:40 with Dr Sam Reyes (S-05)
+...
+16:20 with Dr Hannah Cole (S-06)
+```
+
 ![The tool answering for Millbrook](../images/expected.png)
 
-If you already know this: the check also spawns your server raw and reads stdout before any request. A banner on
-stdout passes the SDK client here but breaks other hosts.
+If you already know this: the check also starts your server raw and reads stdout before any request. A banner on
+stdout passes the SDK client here, but it breaks other hosts.
 
 ## Done when
 
@@ -49,17 +63,17 @@ Expect: `Done. All 8 rules pass.` once your work meets every Done when line. Bef
 
 ## If you get stuck
 
-- The SDK's own first-server guide is short: https://ts.sdk.modelcontextprotocol.io/v2/ (Get started, Build your first server).
-- `inputSchema` is the only schema you write. The SDK turns it into the JSON Schema the model sees, and checks every
-  call against it before your handler runs.
+- The SDK's own guide to a first server is short: https://ts.sdk.modelcontextprotocol.io/v2/ (Get started, Build your first server).
+- `inputSchema` is the only schema you write. The SDK turns it into the JSON Schema the model sees. It also checks
+  every call against it before your handler runs.
 - Old tutorials use `server.tool(...)` and `@modelcontextprotocol/sdk`. That is SDK v1. Use `registerTool` from
   `@modelcontextprotocol/server`.
-- Compare with `../solution/server.ts` if you are stuck for long. A worked first tool teaches more than a blank page.
+- Stuck for a long time? Compare with `../solution/server.ts`. A worked first tool teaches more than a blank page.
 
 ## Words you will use
 
-- **stdio**: standard input and output. The host starts your server as a child process and talks JSON-RPC over its stdin and stdout.
-- **JSON-RPC**: the message format MCP uses: a request with a `method` and `params`, and a reply with a `result` or an `error`.
+- **stdio**: standard input and output. The host starts your server as a child process. It talks JSON-RPC over the server's stdin and stdout.
+- **JSON-RPC**: the message format MCP uses. A request has a `method` and `params`. A reply has a `result` or an `error`.
 - **`tools/list`**: the request a host sends to learn your tools, their descriptions and their argument schemas.
 - **`server/discover`**: the first request in the current spec revision. The server says which versions and features it supports.
 - **Zod**: the TypeScript schema library the SDK uses for tool arguments.
