@@ -2,16 +2,32 @@
 
 ## The problem
 
-A year on, the group adds a lab-results service, a second team wants one URL for both servers, blood results take
-minutes to come back, and old servers still run on the previous SDK. This extension part grows the server without
-giving up anything Parts 1 to 4 proved.
+A year later, the clinic group grows, and the server must grow too:
+
+- the group adds a lab-results service;
+- a second team wants one URL for both servers;
+- blood results take minutes to come back, so a tool cannot wait for them;
+- some old servers still run on the previous SDK.
+
+This is an extension part. It grows the server and keeps everything Parts 1 to 4 proved.
+
+For example, Dr Sam Reyes orders a blood panel for Biscuit (P-0001). The lab needs a few minutes. So
+`order_blood_panel` returns a task handle at once: an id the client can ask about later. The client asks again until
+the task moves from working to completed.
 
 ## Why it matters
 
-Every tool a host loads costs context before any work starts. Anthropic measured about 77K tokens of tool
-definitions before any work in a multi-server setup, and about 8.7K once tools were loaded on demand
-([Introducing advanced tool use](https://www.anthropic.com/engineering/advanced-tool-use)). Putting two servers
-behind one front has to keep that cost and the trust boundary under control.
+Every tool a host loads costs context before any work starts. Context is the text the model reads on each turn.
+
+Anthropic measured one setup with several servers. The tool definitions alone took about 77K tokens before any work.
+When tools were loaded only when needed, they took about 8.7K tokens
+([Introducing advanced tool use](https://www.anthropic.com/engineering/advanced-tool-use)).
+
+So when you put two servers behind one front, you must keep that cost under control. You must also keep the trust
+boundary: each server only trusts tokens made for it.
+
+The diagram shows the plan. A thin proxy sits in front. It gets a new token for each server behind it, and it lets
+through only pinned lab tools.
 
 ```mermaid
 flowchart LR
@@ -42,3 +58,5 @@ bun run verify part grow-the-server
 ```
 
 Expect: `Part grow-the-server is done: 5/5 steps pass.` once the part session has built the steps.
+
+A later build session adds the steps of this part. Until then, the table above shows what each step asks of you.

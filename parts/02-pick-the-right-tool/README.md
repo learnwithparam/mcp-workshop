@@ -2,18 +2,37 @@
 
 ## The problem
 
-The first version of a clinic server usually mirrors the PIMS API: one tool per endpoint, fourteen in all. The model
-confuses `search_patients` with `list_owners`, books under the owner's id, and reads every note to find one vaccine
-date. Each wrong call costs tokens and a receptionist's trust. In this part you measure tool choice on twenty
-front-desk tasks, redesign the tools around jobs, and prove the score went up.
+The first version of a clinic server often copies the PIMS API. It has one tool for each endpoint, fourteen tools in
+all. With so many similar tools, the model makes mistakes:
+
+- it mixes up `search_patients` and `list_owners`;
+- it books under the owner's id, not the patient's id;
+- it reads every note to find one vaccine date.
+
+Each wrong call costs tokens and a receptionist's trust. A token here is a small piece of text; models count their
+input and cost in tokens.
+
+For example, Ola asks "When is Biscuit's booster due?". With the copied API, the model may call `list_owners` first
+and then read all of Biscuit's notes. With a tool shaped around the job, it calls `vaccines_due` once with
+`{"patientId":"P-0001"}`. The answer is one line: `Biscuit: DHP due 2026-11-19; Lepto due 2026-11-19`.
+
+In this part you measure how well the model picks tools on twenty front-desk tasks. This test is called an eval.
+Then you redesign the tools around jobs, and you prove the score went up.
 
 ## Why it matters
 
-GitHub cut the default toolset of its own MCP server from 102 tools and 64.6k tokens to 52 tools and 30.3k tokens
+Fewer, clearer tools work better, and the numbers show it. GitHub cut the default tools of its own MCP server from
+102 tools to 52. The tool descriptions went from 64.6k tokens to 30.3k tokens
 ([github/github-mcp-server pull request 1159](https://github.com/github/github-mcp-server/pull/1159), "Adding default
-toolset grouping"). Anthropic reports that tool use examples raised accuracy on complex parameters from 72% to 90% in
-its internal testing, and that with its Tool Search Tool an MCP evaluation rose from 49% to 74%
-([Introducing advanced tool use](https://www.anthropic.com/engineering/advanced-tool-use)). Tool design is measurable.
+toolset grouping").
+
+Anthropic tested this inside the company too. Showing the model examples of tool use raised accuracy on complex
+inputs from 72% to 90%. With its Tool Search Tool, one MCP eval rose from 49% to 74%
+([Introducing advanced tool use](https://www.anthropic.com/engineering/advanced-tool-use)). So you can measure tool
+design, and you can improve it.
+
+The diagram shows how the eval runs. A runner gives each task to the model. The model calls your server. A scorer
+checks the tool and the key inputs, and writes a score.
 
 ```mermaid
 flowchart LR
@@ -35,7 +54,8 @@ flowchart LR
 | `add-records-as-resources`  | 10      | a `clinic://patients/{id}/summary` resource template, a `resource_link` from `find_patient`, one prompt | `resources/templates/list`, `resources/read` on a fixture id, error `-32602` on an unknown id                                                                    |
 | `test-the-server`           | 10      | `test/server.test.ts` with an in-process client and at least 4 tests                                    | `bun test` passes, then fails against a mutated server with the clash check removed                                                                              |
 
-Total: 65 minutes. Models come from `config/models.ts` by role; replay is the default, so the eval runs with no key.
+Total: 65 minutes. Each role gets its model from `config/models.ts`. Replay is the default, so the eval runs with no
+key.
 
 ## Walkthrough
 
@@ -46,3 +66,5 @@ bun run verify part pick-the-right-tool
 ```
 
 Expect: `Part pick-the-right-tool is done: 6/6 steps pass.` once the part session has built the steps.
+
+A later build session adds the steps of this part. Until then, the table above shows what each step asks of you.
