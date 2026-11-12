@@ -71,8 +71,7 @@ export default [
       return !failed(outcome);
     },
     () =>
-      'run "bun server.ts" in the problem folder and fix the first error it prints.' +
-      checkerSaw(),
+      `run "bun server.ts" in the problem folder and fix the first error it prints.${checkerSaw()}`,
   ),
   rule(
     "tools/list has book_appointment with patientId, vetId, start and reason",

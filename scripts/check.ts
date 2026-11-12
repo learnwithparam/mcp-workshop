@@ -145,7 +145,8 @@ function checkStep(step: Step, seenNames: Set<string>) {
     fail(step.dir, "step.toml says solution but there is no solution/");
   const checksDir = join(ROOT, "checks");
   const hasCheck =
-    existsSync(join(checksDir, `${step.name}.ts`)) || existsSync(join(checksDir, `${step.name}.py`));
+    existsSync(join(checksDir, `${step.name}.ts`)) ||
+    existsSync(join(checksDir, `${step.name}.py`));
   if (!hasCheck) fail(step.dir, `no check at checks/${step.name}.ts`);
 }
 
@@ -160,12 +161,15 @@ function checkStepReadme(step: Step, stepReadme: string) {
     fail(stepReadme, "a step shows a picture: a screenshot or a Mermaid diagram");
   const doneWhen = text.split("## Done when")[1]?.split("\n## ")[0] ?? "";
   if (!/^- /m.test(doneWhen)) fail(stepReadme, "Done when needs at least one bullet");
-  if (step.meta.screen) {
-    if (!existsSync(join(step.dir, "images", "expected.png")))
-      fail(step.dir, "screen step needs images/expected.png");
-    if (!text.includes("images/expected.png"))
-      fail(stepReadme, "screen step must show ../images/expected.png");
-  }
+  if (step.meta.screen) checkScreenshot(step, stepReadme, text);
+}
+
+// A step that happens on screen shows the learner what they should see.
+function checkScreenshot(step: Step, stepReadme: string, text: string) {
+  if (!existsSync(join(step.dir, "images", "expected.png")))
+    fail(step.dir, "screen step needs images/expected.png");
+  if (!text.includes("images/expected.png"))
+    fail(stepReadme, "screen step must show ../images/expected.png");
 }
 
 /** Checks every part and returns how many are skeletons. */
@@ -258,15 +262,26 @@ function checkSchedules(allParts: Part[]) {
   const partMinutes: Record<string, number> = Object.fromEntries(
     allParts.map((part) => [part.name, sumMinutes(part.steps)]),
   );
-  for (const [format, schedule] of Object.entries(schedules)) {
-    const listed = schedule.sessions.flatMap((session) => session.parts);
-    for (const part of allParts)
-      if (!listed.includes(part.name)) fail(schedulePath, `${format} leaves out part "${part.name}"`);
-    for (const session of schedule.sessions) {
-      const need = session.parts.reduce((total, name) => total + (partMinutes[name] ?? 0), 0);
-      if (need > session.minutes)
-        fail(schedulePath, `${format}: a session needs ${need} min but has ${session.minutes}`);
-    }
+  for (const [format, schedule] of Object.entries(schedules))
+    checkSchedule({ schedulePath, format, schedule, allParts, partMinutes });
+}
+
+type ScheduleCheck = {
+  schedulePath: string;
+  format: string;
+  schedule: Schedule;
+  allParts: Part[];
+  partMinutes: Record<string, number>;
+};
+
+function checkSchedule({ schedulePath, format, schedule, allParts, partMinutes }: ScheduleCheck) {
+  const listed = schedule.sessions.flatMap((session) => session.parts);
+  for (const part of allParts)
+    if (!listed.includes(part.name)) fail(schedulePath, `${format} leaves out part "${part.name}"`);
+  for (const session of schedule.sessions) {
+    const need = session.parts.reduce((total, name) => total + (partMinutes[name] ?? 0), 0);
+    if (need > session.minutes)
+      fail(schedulePath, `${format}: a session needs ${need} min but has ${session.minutes}`);
   }
 }
 
@@ -290,9 +305,7 @@ if (errors.length) {
   for (const error of errors) console.log(`  - ${error}`);
   process.exit(1);
 }
-const skeletonNote = skeletons
-  ? `, ${skeletons} skeleton part(s) waiting for a part session`
-  : "";
+const skeletonNote = skeletons ? `, ${skeletons} skeleton part(s) waiting for a part session` : "";
 console.log(
   `The repo meets the standard: ${allParts.length} part(s), ${allSteps().length} step(s)` +
     `${skeletonNote}.`,

@@ -32,7 +32,7 @@ const SHOTS: Shot[] = [
     out: "parts/01-give-the-diary/01-expose-the-diary/images/expected.png",
     title: "expose-the-diary",
     commands: [
-      "bun run try find_free_slots '{\"site\":\"millbrook\"}' " +
+      'bun run try find_free_slots \'{"site":"millbrook"}\' ' +
         "--server parts/01-give-the-diary/01-expose-the-diary/solution",
     ],
   },

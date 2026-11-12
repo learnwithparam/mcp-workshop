@@ -60,8 +60,8 @@ export default [
       return !failed(outcome);
     },
     () =>
-      'start it by hand with "bun server.ts" in the problem folder and read the error.' +
-      checkerSaw(),
+      'start it by hand with "bun server.ts" in the problem folder ' +
+      `and read the error.${checkerSaw()}`,
   ),
   rule(
     "It writes nothing to stdout until a client asks something",
@@ -77,7 +77,8 @@ export default [
   rule(
     "tools/list has a tool called find_free_slots",
     async (dir) => Boolean((await ok(dir))?.tool),
-    'register it with server.registerTool("find_free_slots", { description, inputSchema }, handler)',
+    'register it with server.registerTool("find_free_slots", ' +
+      "{ description, inputSchema }, handler)",
   ),
   rule(
     "Its description is one to three sentences of at least 8 words",
@@ -104,7 +105,7 @@ export default [
       return JSON.stringify(answered) === JSON.stringify(outcome.truth);
     },
     "call clinic.freeSlots({ site, date, length }) and put every start time in the text; " +
-      "try it with bun run try find_free_slots '{\"site\":\"millbrook\"}' --server <your folder>",
+      'try it with bun run try find_free_slots \'{"site":"millbrook"}\' --server <your folder>',
   ),
   rule(
     "It reads the live diary: a slot booked behind its back disappears from the next answer",

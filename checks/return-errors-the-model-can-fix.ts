@@ -65,8 +65,7 @@ export default [
       return !failed(outcome);
     },
     () =>
-      'run "bun server.ts" in the problem folder and fix the first error it prints.' +
-      checkerSaw(),
+      `run "bun server.ts" in the problem folder and fix the first error it prints.${checkerSaw()}`,
   ),
   rule(
     "An unknown patient: the error names patientId and the id that was sent",
