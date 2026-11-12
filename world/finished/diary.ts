@@ -8,19 +8,19 @@ const toMin = (t: string) => {
 };
 
 export function checkBooking(a: {
-  patient_id: string;
-  vet_id: string;
+  patientId: string;
+  vetId: string;
   date: string;
   start: string;
   length: number;
   ignore?: string;
 }): string | undefined {
-  const patient = clinic.patient(a.patient_id);
+  const patient = clinic.patient(a.patientId);
   if (!patient)
-    return `No patient with patient_id "${a.patient_id}". Look the id up with find_patient before booking.`;
-  const vet = clinic.staffMember(a.vet_id);
+    return `No patient with patientId "${a.patientId}". Look the id up with find_patient before booking.`;
+  const vet = clinic.staffMember(a.vetId);
   if (!vet || (vet.role !== "vet" && vet.role !== "director"))
-    return `No vet with vet_id "${a.vet_id}". Vet ids look like S-05; find_free_slots lists them.`;
+    return `No vet with vetId "${a.vetId}". Vet ids look like S-05; find_free_slots lists them.`;
   const now = clinic.clock();
   if (a.date < now.date || (a.date === now.date && a.start < now.time))
     return `The start ${a.date} ${a.start} is in the past. The clinic clock reads ${now.date} ${now.time}; pick a later start.`;
@@ -32,12 +32,12 @@ export function checkBooking(a: {
   const s = toMin(a.start),
     e = s + a.length;
   const clash = clinic
-    .appointments({ vet_id: vet.id, date: a.date })
+    .appointments({ vetId: vet.id, date: a.date })
     .filter((x) => x.id !== a.ignore && (x.status === "booked" || x.status === "arrived"))
     .find((x) => s < toMin(x.start) + x.length && toMin(x.start) < e);
   if (clash) {
     const free = clinic
-      .freeSlots({ site: vet.site, date: a.date, length: a.length, vet_id: vet.id })
+      .freeSlots({ site: vet.site, date: a.date, length: a.length, vetId: vet.id })
       .map((f) => f.start);
     return `${vet.name} is booked at ${clash.start} for ${clash.length} minutes, which clashes with ${a.start}. Free slots: ${free.slice(0, 6).join(", ") || "none on this date"}.`;
   }

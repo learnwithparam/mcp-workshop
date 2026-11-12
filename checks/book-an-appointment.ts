@@ -16,40 +16,40 @@ const run = scenario(async (dir) =>
     if (!tool) return { tool };
     const date = world.clock.date;
     const good = await attempt({
-      patient_id: "P-0001",
-      vet_id: "S-05",
+      patientId: "P-0001",
+      vetId: "S-05",
       start: "10:20",
       length: 20,
       reason: "Booster",
     });
     const row = world.rows(
-      "SELECT * FROM appointments WHERE patient_id = 'P-0001' AND vet_id = 'S-05' AND date = ? AND start = '10:20' AND status = 'booked'",
+      "SELECT * FROM appointments WHERE patientId = 'P-0001' AND vetId = 'S-05' AND date = ? AND start = '10:20' AND status = 'booked'",
       date,
     )[0];
     const freed = await attempt({
-      patient_id: "P-0002",
-      vet_id: "S-05",
+      patientId: "P-0002",
+      vetId: "S-05",
       start: "11:40",
       length: 20,
       reason: "Vaccination",
     });
     const sameStart = await attempt({
-      patient_id: "P-0003",
-      vet_id: "S-05",
+      patientId: "P-0003",
+      vetId: "S-05",
       start: "10:20",
       length: 20,
       reason: "Lameness",
     });
     const overlap = await attempt({
-      patient_id: "P-0003",
-      vet_id: "S-05",
+      patientId: "P-0003",
+      vetId: "S-05",
       start: "10:30",
       length: 20,
       reason: "Lameness",
     });
     const badInput = await attempt({
-      patient_id: "P-0003",
-      vet_id: "S-06",
+      patientId: "P-0003",
+      vetId: "S-06",
       start: "half ten",
       length: 20,
       reason: "Lameness",
@@ -75,12 +75,12 @@ export default [
       `run "bun server.ts" in the problem folder and fix the first error it prints.${lastError ? ` The checker saw: ${lastError}` : ""}`,
   ),
   rule(
-    "tools/list has book_appointment with patient_id, vet_id, start and reason",
+    "tools/list has book_appointment with patientId, vetId, start and reason",
     async (dir) => {
       const props = ((await ok(dir))?.tool?.inputSchema as any)?.properties ?? {};
-      return ["patient_id", "vet_id", "start", "reason"].every((k) => k in props);
+      return ["patientId", "vetId", "start", "reason"].every((k) => k in props);
     },
-    "register book_appointment with a Zod object that has patient_id, vet_id, start and reason (and an optional date and length)",
+    "register book_appointment with a Zod object that has patientId, vetId, start and reason (and an optional date and length)",
   ),
   rule(
     "Booking Biscuit with Dr Reyes at 10:20 adds exactly one matching row to the diary",
@@ -94,7 +94,7 @@ export default [
           r.row?.reason,
       );
     },
-    "call clinic.createAppointment once with patient_id, vet_id, the date, start, length and reason",
+    "call clinic.createAppointment once with patientId, vetId, the date, start, length and reason",
   ),
   rule(
     "A slot freed by a cancellation can be booked (Dr Reyes at 11:40)",
@@ -115,7 +115,7 @@ export default [
           !r.sameStart.result.thrown,
       );
     },
-    "read clinic.appointments({ vet_id, date }) first and return { content: [...], isError: true } when one overlaps",
+    "read clinic.appointments({ vetId, date }) first and return { content: [...], isError: true } when one overlaps",
   ),
   rule(
     "A booking that starts in the middle of another appointment is refused too (Dr Reyes at 10:30)",

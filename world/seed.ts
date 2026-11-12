@@ -217,13 +217,13 @@ export function seed(path: string) {
     PRAGMA journal_mode = DELETE;
     CREATE TABLE sites (id TEXT PRIMARY KEY, name TEXT, weekday_open TEXT, weekday_close TEXT, saturday_open TEXT, saturday_close TEXT);
     CREATE TABLE staff (id TEXT PRIMARY KEY, name TEXT, role TEXT, site TEXT);
-    CREATE TABLE owners (id TEXT PRIMARY KEY, name TEXT, phone TEXT, email TEXT, reminder_consent INTEGER);
-    CREATE TABLE patients (id TEXT PRIMARY KEY, owner_id TEXT, name TEXT, species TEXT, breed TEXT, born TEXT, home_site TEXT, alerts TEXT, weights TEXT);
-    CREATE TABLE appointments (id TEXT PRIMARY KEY, patient_id TEXT, vet_id TEXT, site TEXT, date TEXT, start TEXT, length INTEGER, reason TEXT, status TEXT);
-    CREATE TABLE clinical_notes (id TEXT PRIMARY KEY, patient_id TEXT, vet_id TEXT, date TEXT, soap TEXT, plan TEXT);
-    CREATE TABLE vaccinations (id TEXT PRIMARY KEY, patient_id TEXT, vaccine TEXT, given TEXT, due TEXT);
-    CREATE TABLE controlled_drugs (id TEXT PRIMARY KEY, date TEXT, drug TEXT, batch TEXT, patient_id TEXT, vet_id TEXT, amount_ml REAL, balance_ml REAL);
-    CREATE INDEX appt_vet_date ON appointments (vet_id, date);
+    CREATE TABLE owners (id TEXT PRIMARY KEY, name TEXT, phone TEXT, email TEXT, reminderConsent INTEGER);
+    CREATE TABLE patients (id TEXT PRIMARY KEY, ownerId TEXT, name TEXT, species TEXT, breed TEXT, born TEXT, homeSite TEXT, alerts TEXT, weights TEXT);
+    CREATE TABLE appointments (id TEXT PRIMARY KEY, patientId TEXT, vetId TEXT, site TEXT, date TEXT, start TEXT, length INTEGER, reason TEXT, status TEXT);
+    CREATE TABLE clinical_notes (id TEXT PRIMARY KEY, patientId TEXT, vetId TEXT, date TEXT, soap TEXT, plan TEXT);
+    CREATE TABLE vaccinations (id TEXT PRIMARY KEY, patientId TEXT, vaccine TEXT, given TEXT, due TEXT);
+    CREATE TABLE controlled_drugs (id TEXT PRIMARY KEY, date TEXT, drug TEXT, batch TEXT, patientId TEXT, vetId TEXT, amountMl REAL, balanceMl REAL);
+    CREATE INDEX appt_vet_date ON appointments (vetId, date);
   `);
   const tx = db.transaction(() => {
     for (const s of SITES)

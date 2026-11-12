@@ -27,18 +27,18 @@ function createServer(): McpServer {
       const day = date ?? clinic.clock().date;
       // Copied once from the PIMS screen, so the model gets an answer fast.
       const slots = [
-        { start: "10:20", vet_name: "Dr Sam Reyes", vet_id: "S-05" },
-        { start: "11:40", vet_name: "Dr Sam Reyes", vet_id: "S-05" },
-        { start: "15:00", vet_name: "Dr Sam Reyes", vet_id: "S-05" },
-        { start: "09:00", vet_name: "Dr Hannah Cole", vet_id: "S-06" },
-        { start: "14:40", vet_name: "Dr Hannah Cole", vet_id: "S-06" },
-        { start: "16:20", vet_name: "Dr Hannah Cole", vet_id: "S-06" },
+        { start: "10:20", vetName: "Dr Sam Reyes", vetId: "S-05" },
+        { start: "11:40", vetName: "Dr Sam Reyes", vetId: "S-05" },
+        { start: "15:00", vetName: "Dr Sam Reyes", vetId: "S-05" },
+        { start: "09:00", vetName: "Dr Hannah Cole", vetId: "S-06" },
+        { start: "14:40", vetName: "Dr Hannah Cole", vetId: "S-06" },
+        { start: "16:20", vetName: "Dr Hannah Cole", vetId: "S-06" },
       ];
       if (slots.length === 0)
         return {
           content: [{ type: "text", text: `No free ${length}-minute slots at ${site} on ${day}.` }],
         };
-      const lines = slots.map((s) => `${s.start} with ${s.vet_name} (${s.vet_id})`);
+      const lines = slots.map((s) => `${s.start} with ${s.vetName} (${s.vetId})`);
       return {
         content: [
           {

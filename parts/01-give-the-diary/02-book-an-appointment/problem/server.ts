@@ -30,7 +30,7 @@ function createServer(): McpServer {
         return {
           content: [{ type: "text", text: `No free ${length}-minute slots at ${site} on ${day}.` }],
         };
-      const lines = slots.map((s) => `${s.start} with ${s.vet_name} (${s.vet_id})`);
+      const lines = slots.map((s) => `${s.start} with ${s.vetName} (${s.vetId})`);
       return {
         content: [
           {
@@ -42,9 +42,9 @@ function createServer(): McpServer {
     },
   );
 
-  // TODO: register a tool called book_appointment(patient_id, vet_id, date?, start, length, reason).
+  // TODO: register a tool called book_appointment(patientId, vetId, date?, start, length, reason).
   // The PIMS will double-book a vet if you let it: before clinic.createAppointment, read the vet's
-  // appointments with clinic.appointments({ vet_id, date }) and refuse a time that overlaps one.
+  // appointments with clinic.appointments({ vetId, date }) and refuse a time that overlaps one.
   // Refuse by returning a result with isError: true, so the model can read why and try again.
 
   return server;

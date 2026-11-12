@@ -10,7 +10,7 @@ import type { LanguageModel } from "ai";
 import { KEY_NAMES, MODELS, provider, type Role } from "./models";
 
 export type ReplayStep = {
-  tool_calls?: { name: string; input: Record<string, unknown> }[];
+  toolCalls?: { name: string; input: Record<string, unknown> }[];
   text?: string;
 };
 export type ReplayConversation = { question: string; as?: string; steps: ReplayStep[] };
@@ -70,8 +70,8 @@ function replayModel(ctx: { as?: string; file?: string }): LanguageModel {
         if (!convo) throw new ReplayMissing(question, ctx.as);
         step = convo.steps[turn] ?? { text: "" };
       }
-      const content = step.tool_calls?.length
-        ? step.tool_calls.map((c, i) => ({
+      const content = step.toolCalls?.length
+        ? step.toolCalls.map((c, i) => ({
             type: "tool-call",
             toolCallId: `replay-${turn}-${i}`,
             toolName: c.name,
@@ -80,7 +80,7 @@ function replayModel(ctx: { as?: string; file?: string }): LanguageModel {
         : [{ type: "text", text: step.text ?? "" }];
       return {
         content,
-        finishReason: { unified: step.tool_calls?.length ? "tool-calls" : "stop", raw: undefined },
+        finishReason: { unified: step.toolCalls?.length ? "tool-calls" : "stop", raw: undefined },
         usage: usage(0, 0),
         warnings: [],
       };

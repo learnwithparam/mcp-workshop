@@ -9,20 +9,20 @@ const run = scenario(async (dir) =>
     const before = world.appointmentCount();
     const book = (args: Record<string, unknown>) =>
       call(client, "book_appointment", {
-        patient_id: "P-0001",
-        vet_id: "S-05",
+        patientId: "P-0001",
+        vetId: "S-05",
         length: 20,
         reason: "Booster",
         ...args,
       });
-    const unknownPatient = await book({ patient_id: "P-9999", start: "10:20" });
+    const unknownPatient = await book({ patientId: "P-9999", start: "10:20" });
     const past = await book({ date: addDays(world.clock.date, -3), start: "10:00" });
     const clash = await book({ start: "10:40" });
     const closed = await book({ start: "18:30" });
     const badLength = await book({ start: "10:20", length: 25 });
     const planted = world.appointmentCount() - before;
     const truthReyes = world
-      .freeSlots({ site: "millbrook", length: 20, vet_id: "S-05" })
+      .freeSlots({ site: "millbrook", length: 20, vetId: "S-05" })
       .map((s) => s.start);
     const good = await book({ start: "10:20" });
     const added = world.appointmentCount() - before;
@@ -64,9 +64,9 @@ export default [
       `run "bun server.ts" in the problem folder and fix the first error it prints.${lastError ? ` The checker saw: ${lastError}` : ""}`,
   ),
   rule(
-    "An unknown patient: the error names patient_id and the id that was sent",
-    async (dir) => err((await ok(dir))?.unknownPatient, "patient_id", "P-9999"),
-    "check clinic.patient(patient_id) first and say which id was not found and what an id looks like",
+    "An unknown patient: the error names patientId and the id that was sent",
+    async (dir) => err((await ok(dir))?.unknownPatient, "patientId", "P-9999"),
+    "check clinic.patient(patientId) first and say which id was not found and what an id looks like",
   ),
   rule(
     "A start in the past: the error says it is in the past and gives the clinic clock",
@@ -84,7 +84,7 @@ export default [
       const listed = timesIn(r?.clash.text.split("Free slots:")[1] ?? "");
       return listed.length > 0 && listed.every((t) => r?.truthReyes.includes(t));
     },
-    'on a clash, call clinic.freeSlots({ site, date, length, vet_id }) and write the times after "Free slots:"; never type times in by hand',
+    'on a clash, call clinic.freeSlots({ site, date, length, vetId }) and write the times after "Free slots:"; never type times in by hand',
   ),
   rule(
     "Outside opening times: the error gives the opening and closing times",

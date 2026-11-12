@@ -52,7 +52,7 @@ export async function runAgent(
     calls: seen,
     steps: r.steps.map((s) =>
       s.toolCalls.length
-        ? { tool_calls: s.toolCalls.map((c: any) => ({ name: c.toolName, input: c.input })) }
+        ? { toolCalls: s.toolCalls.map((c: any) => ({ name: c.toolName, input: c.input })) }
         : { text: s.text },
     ),
   };

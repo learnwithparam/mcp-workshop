@@ -30,7 +30,7 @@ function createServer(): McpServer {
         return {
           content: [{ type: "text", text: `No free ${length}-minute slots at ${site} on ${day}.` }],
         };
-      const lines = slots.map((s) => `${s.start} with ${s.vet_name} (${s.vet_id})`);
+      const lines = slots.map((s) => `${s.start} with ${s.vetName} (${s.vetId})`);
       return {
         content: [
           {

@@ -19,7 +19,7 @@ const read = (dir: string) => {
 const world = freshWorld();
 const slots = world.freeSlots({ site: "millbrook", length: 20 });
 const reyesFirst = slots
-  .filter((s) => s.vet_id === "S-05")
+  .filter((s) => s.vetId === "S-05")
   .map((s) => s.start)
   .sort()[0];
 

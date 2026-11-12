@@ -37,7 +37,7 @@ function createServer(): McpServer {
         return {
           content: [{ type: "text", text: `No free ${length}-minute slots at ${site} on ${day}.` }],
         };
-      const lines = slots.map((s) => `${s.start} with ${s.vet_name} (${s.vet_id})`);
+      const lines = slots.map((s) => `${s.start} with ${s.vetName} (${s.vetId})`);
       return {
         content: [
           {
@@ -55,8 +55,8 @@ function createServer(): McpServer {
       description:
         "Book one appointment for a patient with a vet. It refuses a time that clashes with the vet's diary.",
       inputSchema: z.object({
-        patient_id: z.string().describe("Patient id, for example P-0001"),
-        vet_id: z.string().describe("Vet id, for example S-05"),
+        patientId: z.string().describe("Patient id, for example P-0001"),
+        vetId: z.string().describe("Vet id, for example S-05"),
         date: z.iso
           .date()
           .optional()
@@ -83,15 +83,15 @@ function createServer(): McpServer {
         isError: true,
       });
 
-      if (!clinic.patient(a.patient_id)) {
+      if (!clinic.patient(a.patientId)) {
         return fail(
-          `No patient with patient_id "${a.patient_id}". Ids look like P-0001; ask for the pet's name and look it up.`,
+          `No patient with patientId "${a.patientId}". Ids look like P-0001; ask for the pet's name and look it up.`,
         );
       }
-      const vet = clinic.staffMember(a.vet_id);
+      const vet = clinic.staffMember(a.vetId);
       if (!vet || (vet.role !== "vet" && vet.role !== "director")) {
         return fail(
-          `No vet with vet_id "${a.vet_id}". Vet ids look like S-05; find_free_slots lists each vet's id.`,
+          `No vet with vetId "${a.vetId}". Vet ids look like S-05; find_free_slots lists each vet's id.`,
         );
       }
       const now = clinic.clock();
@@ -115,12 +115,12 @@ function createServer(): McpServer {
       const end = start + a.length;
       // Cancelled and no-show appointments stay in the diary but do not hold the vet's time.
       const clash = clinic
-        .appointments({ vet_id: a.vet_id, date })
+        .appointments({ vetId: a.vetId, date })
         .filter((x) => x.status === "booked" || x.status === "arrived")
         .find((x) => start < toMinutes(x.start) + x.length && toMinutes(x.start) < end);
       if (clash) {
         const _free = clinic
-          .freeSlots({ site: vet.site, date, length: a.length, vet_id: vet.id })
+          .freeSlots({ site: vet.site, date, length: a.length, vetId: vet.id })
           .map((s) => s.start);
         return fail(
           `${vet.name} is booked at ${clash.start}, which clashes with ${a.start}. Free slots: 09:00, 09:20, 09:40.`,

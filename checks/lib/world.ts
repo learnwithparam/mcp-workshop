@@ -60,18 +60,18 @@ export function freshWorld() {
       return this.rows<{ n: number }>("SELECT COUNT(*) AS n FROM appointments")[0].n;
     },
     /** The true free slots, computed here from the diary rows, independent of the PIMS code. */
-    freeSlots(q: { site: string; date?: string; length: number; vet_id?: string }) {
+    freeSlots(q: { site: string; date?: string; length: number; vetId?: string }) {
       const date = q.date ?? CLOCK.date;
       const hours = hoursFor(q.site, date);
-      if (!hours) return [] as { vet_id: string; start: string }[];
+      if (!hours) return [] as { vetId: string; start: string }[];
       const vets = this.rows<{ id: string }>(
         "SELECT id FROM staff WHERE role IN ('vet','director') AND site = ? ORDER BY id",
         q.site,
-      ).filter((v) => !q.vet_id || v.id === q.vet_id);
-      const out: { vet_id: string; start: string }[] = [];
+      ).filter((v) => !q.vetId || v.id === q.vetId);
+      const out: { vetId: string; start: string }[] = [];
       for (const v of vets) {
         const busy = this.rows<{ start: string; length: number }>(
-          "SELECT start, length FROM appointments WHERE vet_id = ? AND date = ? AND status IN ('booked','arrived')",
+          "SELECT start, length FROM appointments WHERE vetId = ? AND date = ? AND status IN ('booked','arrived')",
           v.id,
           date,
         );
@@ -79,7 +79,7 @@ export function freshWorld() {
           if (date === CLOCK.date && t < toMin(CLOCK.time)) continue;
           if (busy.some((b) => t < toMin(b.start) + b.length && toMin(b.start) < t + q.length))
             continue;
-          out.push({ vet_id: v.id, start: toHHMM(t) });
+          out.push({ vetId: v.id, start: toHHMM(t) });
         }
       }
       return out;

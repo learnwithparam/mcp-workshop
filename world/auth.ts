@@ -18,7 +18,7 @@ export const ROLE_SCOPES: Record<string, string[]> = {
 export const DEMO = { ola: "S-08", sam: "S-05", joon: "S-01" } as const;
 
 export async function mintToken(opts: {
-  staff_id: string;
+  staffId: string;
   role: string;
   site: string;
   audience?: string;
@@ -32,7 +32,7 @@ export async function mintToken(opts: {
   })
     .setProtectedHeader({ alg: "HS256" })
     .setIssuer(ISSUER)
-    .setSubject(opts.staff_id)
+    .setSubject(opts.staffId)
     .setAudience(opts.audience ?? RESOURCE)
     .setIssuedAt()
     .setExpirationTime(opts.expiresIn ?? "8h")

@@ -28,7 +28,7 @@ export async function tokenFor(who: string) {
   const id = (DEMO as Record<string, string>)[who] ?? who;
   const s = clinic.staffMember(id);
   if (!s) throw new Error(`No staff member called "${who}". Use ola, sam or joon.`);
-  return mintToken({ staff_id: s.id, role: s.role, site: s.site });
+  return mintToken({ staffId: s.id, role: s.role, site: s.site });
 }
 
 /** The finished server, served in this process: no port, no second terminal. */

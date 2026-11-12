@@ -18,7 +18,7 @@ test("the seed plants six free 20-minute slots at Millbrook, three per vet", () 
     "15:00",
     "16:20",
   ]);
-  expect(slots.filter((s) => s.vet_id === "S-05").map((s) => s.start)).toEqual([
+  expect(slots.filter((s) => s.vetId === "S-05").map((s) => s.start)).toEqual([
     "10:20",
     "11:40",
     "15:00",
@@ -46,15 +46,15 @@ test("Ola sees no notes tool; Dr Reyes reads Millbrook notes only; Joon reads th
   expect(await names("sam")).not.toContain("controlled_drugs_log");
   expect(await names("joon")).toContain("controlled_drugs_log");
   const sam = await connectFinished({ as: "sam" });
-  const other = world.rows("SELECT id FROM patients WHERE home_site = 'eastgate' LIMIT 1")[0].id;
-  const r = await sam.client.callTool({ name: "read_notes", arguments: { patient_id: other } });
+  const other = world.rows("SELECT id FROM patients WHERE homeSite = 'eastgate' LIMIT 1")[0].id;
+  const r = await sam.client.callTool({ name: "read_notes", arguments: { patientId: other } });
   await sam.close();
   expect(r.isError).toBe(true);
 });
 
 test("a token minted for another server is refused", async () => {
   const token = await mintToken({
-    staff_id: "S-08",
+    staffId: "S-08",
     role: "receptionist",
     site: "millbrook",
     audience: "https://lab-results.harrowlane.test/mcp",
@@ -66,7 +66,7 @@ test("the finished server refuses a clash and lists real free slots", async () =
   const c = await connectFinished({ as: "ola" });
   const r = await c.client.callTool({
     name: "book_appointment",
-    arguments: { patient_id: "P-0001", vet_id: "S-05", start: "10:40", reason: "Booster" },
+    arguments: { patientId: "P-0001", vetId: "S-05", start: "10:40", reason: "Booster" },
   });
   await c.close();
   expect(r.isError).toBe(true);
@@ -75,15 +75,15 @@ test("the finished server refuses a clash and lists real free slots", async () =
 
 test("cancel waits for a yes", async () => {
   const id = world.rows(
-    "SELECT id FROM appointments WHERE vet_id = 'S-05' AND date = ? AND status = 'booked' LIMIT 1",
+    "SELECT id FROM appointments WHERE vetId = 'S-05' AND date = ? AND status = 'booked' LIMIT 1",
     world.clock.date,
   )[0].id;
   const no = await connectFinished({ as: "ola", confirm: "no" });
-  await no.client.callTool({ name: "cancel_appointment", arguments: { appointment_id: id } });
+  await no.client.callTool({ name: "cancel_appointment", arguments: { appointmentId: id } });
   await no.close();
   expect(world.rows("SELECT status FROM appointments WHERE id = ?", id)[0].status).toBe("booked");
   const yes = await connectFinished({ as: "ola", confirm: "yes" });
-  await yes.client.callTool({ name: "cancel_appointment", arguments: { appointment_id: id } });
+  await yes.client.callTool({ name: "cancel_appointment", arguments: { appointmentId: id } });
   await yes.close();
   expect(world.rows("SELECT status FROM appointments WHERE id = ?", id)[0].status).toBe(
     "cancelled",

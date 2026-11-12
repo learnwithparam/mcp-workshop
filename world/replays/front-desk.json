@@ -5,10 +5,10 @@
       "question": "Can Biscuit get her booster at Millbrook?",
       "as": "ola",
       "steps": [
-        { "tool_calls": [{ "name": "find_patient", "input": { "name": "Biscuit" } }] },
+        { "toolCalls": [{ "name": "find_patient", "input": { "name": "Biscuit" } }] },
         {
-          "tool_calls": [
-            { "name": "vaccines_due", "input": { "patient_id": "P-0001" } },
+          "toolCalls": [
+            { "name": "vaccines_due", "input": { "patientId": "P-0001" } },
             { "name": "find_free_slots", "input": { "site": "millbrook", "length": 20 } }
           ]
         },
@@ -22,12 +22,12 @@
       "as": "ola",
       "steps": [
         {
-          "tool_calls": [
+          "toolCalls": [
             {
               "name": "book_appointment",
               "input": {
-                "patient_id": "P-0001",
-                "vet_id": "S-05",
+                "patientId": "P-0001",
+                "vetId": "S-05",
                 "start": "10:20",
                 "length": 20,
                 "reason": "Booster"
@@ -43,12 +43,12 @@
       "as": "ola",
       "steps": [
         {
-          "tool_calls": [
+          "toolCalls": [
             {
               "name": "book_appointment",
               "input": {
-                "patient_id": "P-0001",
-                "vet_id": "S-05",
+                "patientId": "P-0001",
+                "vetId": "S-05",
                 "start": "10:30",
                 "length": 20,
                 "reason": "Booster"
@@ -57,12 +57,12 @@
           ]
         },
         {
-          "tool_calls": [
+          "toolCalls": [
             {
               "name": "book_appointment",
               "input": {
-                "patient_id": "P-0001",
-                "vet_id": "S-05",
+                "patientId": "P-0001",
+                "vetId": "S-05",
                 "start": "11:40",
                 "length": 20,
                 "reason": "Booster"
@@ -89,7 +89,7 @@
       "as": "sam",
       "steps": [
         {
-          "tool_calls": [{ "name": "read_notes", "input": { "patient_id": "P-0001", "limit": 3 } }]
+          "toolCalls": [{ "name": "read_notes", "input": { "patientId": "P-0001", "limit": 3 } }]
         },
         {
           "text": "Biscuit's latest notes are shown above, newest first. None of them needs action from the front desk."

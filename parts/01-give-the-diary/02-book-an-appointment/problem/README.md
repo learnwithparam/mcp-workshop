@@ -14,8 +14,8 @@ sequenceDiagram
   participant H as Host (Claude)
   participant S as Your server
   participant P as PIMS (clinic.ts)
-  H->>S: tools/call book_appointment {patient_id, vet_id, start, reason}
-  S->>P: appointments({ vet_id, date })
+  H->>S: tools/call book_appointment {patientId, vetId, start, reason}
+  S->>P: appointments({ vetId, date })
   P-->>S: rows, including cancelled ones
   alt overlaps a booked or arrived appointment
     S-->>H: result with isError: true, no write
@@ -27,16 +27,16 @@ sequenceDiagram
 
 ## Your challenge
 
-Add a tool `book_appointment(patient_id, vet_id, date?, start, length, reason)` to `server.ts`.
+Add a tool `book_appointment(patientId, vetId, date?, start, length, reason)` to `server.ts`.
 
-1. Read the vet's appointments for that date with `clinic.appointments({ vet_id, date })`.
+1. Read the vet's appointments for that date with `clinic.appointments({ vetId, date })`.
 2. Keep only `booked` and `arrived` rows. Two appointments clash when each starts before the other ends.
 3. On a clash, return `{ content: [...], isError: true }` and write nothing.
 4. Otherwise call `clinic.createAppointment(...)` once and say what was booked.
 5. Give `start` a Zod rule (`HH:MM`), so bad input is refused before your handler runs.
 
 ```bash
-bun run try book_appointment '{"patient_id":"P-0001","vet_id":"S-05","start":"10:20","reason":"Booster"}' --server parts/01-give-the-diary/02-book-an-appointment/problem
+bun run try book_appointment '{"patientId":"P-0001","vetId":"S-05","start":"10:20","reason":"Booster"}' --server parts/01-give-the-diary/02-book-an-appointment/problem
 ```
 
 Expect: `Result from book_appointment:` and a booking line. `bun run world reset` undoes it.
@@ -46,7 +46,7 @@ If you already know this: compare minutes, not strings, and test an overlap that
 ## Done when
 
 - The server starts and answers an MCP client.
-- `tools/list` has `book_appointment` with `patient_id`, `vet_id`, `start` and `reason`.
+- `tools/list` has `book_appointment` with `patientId`, `vetId`, `start` and `reason`.
 - Booking Biscuit with Dr Reyes at 10:20 adds exactly one matching row to the diary.
 - A slot freed by a cancellation can be booked (Dr Reyes at 11:40).
 - Booking a time that is already taken adds no row and returns `isError: true`.
