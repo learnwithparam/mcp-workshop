@@ -17,7 +17,7 @@ export type ReplayConversation = { question: string; as?: string; steps: ReplayS
 export const REPLAY_DIR = join(import.meta.dir, "..", "world", "replays");
 export const PROBE = "Reply with the single word: ok";
 
-export const norm = (s: string) =>
+export const normalizedQuestion = (s: string) =>
   s
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, " ")
@@ -62,10 +62,10 @@ function replayModel(ctx: { as?: string; file?: string }): LanguageModel {
         : String(firstUser?.content ?? "");
       const turn = prompt.filter((m) => m.role === "assistant").length;
       let step: ReplayStep | undefined;
-      if (norm(question) === norm(PROBE)) step = { text: "ok" };
+      if (normalizedQuestion(question) === normalizedQuestion(PROBE)) step = { text: "ok" };
       else {
         const convo = loadReplays(ctx.file).find(
-          (c) => norm(c.question) === norm(question) && (!c.as || !ctx.as || c.as === ctx.as),
+          (c) => normalizedQuestion(c.question) === normalizedQuestion(question) && (!c.as || !ctx.as || c.as === ctx.as),
         );
         if (!convo) throw new ReplayMissing(question, ctx.as);
         step = convo.steps[turn] ?? { text: "" };

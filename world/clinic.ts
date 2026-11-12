@@ -8,7 +8,7 @@
 import { Database } from "bun:sqlite";
 import { appendFileSync, existsSync, mkdirSync } from "node:fs";
 import { dirname, join } from "node:path";
-import { CLOCK, hoursFor, SLOT_STEP, seed, toHHMM, toMin } from "./seed";
+import { CLOCK, hoursFor, SLOT_STEP, seed, clockTimeFromMinutes, minutesSinceMidnight } from "./seed";
 
 export const WORLD_DIR = join(import.meta.dir, "data");
 const dbPath = () => process.env.CLINIC_DB ?? join(WORLD_DIR, "clinic.sqlite");
@@ -260,14 +260,14 @@ export const clinic = {
         q.site,
       ).filter((v) => !q.vetId || v.id === q.vetId);
       const earliest =
-        q.date === CLOCK.date ? toMin(CLOCK.time) : q.date < CLOCK.date ? Infinity : 0;
+        q.date === CLOCK.date ? minutesSinceMidnight(CLOCK.time) : q.date < CLOCK.date ? Infinity : 0;
       for (const v of vets) {
         const busy = all<Appointment>(
           "SELECT * FROM appointments WHERE vetId = ? AND date = ? AND status IN ('booked','arrived')",
           v.id,
           q.date,
-        ).map((a) => [toMin(a.start), toMin(a.start) + a.length]);
-        for (let t = toMin(hours[0]); t + q.length <= toMin(hours[1]); t += SLOT_STEP) {
+        ).map((a) => [minutesSinceMidnight(a.start), minutesSinceMidnight(a.start) + a.length]);
+        for (let t = minutesSinceMidnight(hours[0]); t + q.length <= minutesSinceMidnight(hours[1]); t += SLOT_STEP) {
           if (t < earliest) continue;
           if (busy.some(([s, e]) => t < e && s < t + q.length)) continue;
           out.push({
@@ -275,7 +275,7 @@ export const clinic = {
             vetName: v.name,
             site: q.site,
             date: q.date,
-            start: toHHMM(t),
+            start: clockTimeFromMinutes(t),
             length: q.length,
           });
         }

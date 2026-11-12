@@ -3,7 +3,7 @@
 //   --record                           with a live provider, save this conversation to world/replays/
 import { readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import { loadReplays, norm, REPLAY_DIR, ReplayMissing } from "../config/llm";
+import { loadReplays, normalizedQuestion, REPLAY_DIR, ReplayMissing } from "../config/llm";
 import { provider } from "../config/models";
 import { runAgent } from "./agent";
 import { connectFinished } from "./connect";
@@ -35,7 +35,7 @@ try {
     const f = join(REPLAY_DIR, "front-desk.json");
     const data = JSON.parse(readFileSync(f, "utf8"));
     data.conversations = data.conversations.filter(
-      (c: any) => !(norm(c.question) === norm(question) && c.as === as),
+      (c: any) => !(normalizedQuestion(c.question) === normalizedQuestion(question) && c.as === as),
     );
     data.conversations.push({ question, as, steps: r.steps });
     writeFileSync(f, `${JSON.stringify(data, null, 2)}\n`);

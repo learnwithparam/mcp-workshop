@@ -4,7 +4,7 @@ import { Database } from "bun:sqlite";
 import { copyFileSync, existsSync, mkdtempSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { CLOCK, hoursFor, SLOT_STEP, seed, toHHMM, toMin } from "../../world/seed";
+import { CLOCK, hoursFor, SLOT_STEP, seed, clockTimeFromMinutes, minutesSinceMidnight } from "../../world/seed";
 
 let template: string | undefined;
 function seeded() {
@@ -75,11 +75,11 @@ export function freshWorld() {
           v.id,
           date,
         );
-        for (let t = toMin(hours[0]); t + q.length <= toMin(hours[1]); t += SLOT_STEP) {
-          if (date === CLOCK.date && t < toMin(CLOCK.time)) continue;
-          if (busy.some((b) => t < toMin(b.start) + b.length && toMin(b.start) < t + q.length))
+        for (let t = minutesSinceMidnight(hours[0]); t + q.length <= minutesSinceMidnight(hours[1]); t += SLOT_STEP) {
+          if (date === CLOCK.date && t < minutesSinceMidnight(CLOCK.time)) continue;
+          if (busy.some((b) => t < minutesSinceMidnight(b.start) + b.length && minutesSinceMidnight(b.start) < t + q.length))
             continue;
-          out.push({ vetId: v.id, start: toHHMM(t) });
+          out.push({ vetId: v.id, start: clockTimeFromMinutes(t) });
         }
       }
       return out;

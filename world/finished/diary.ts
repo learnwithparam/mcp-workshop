@@ -2,7 +2,7 @@
 // Each error names the field and says what to do next, so a model can fix its own call.
 import { clinic } from "#clinic";
 
-const toMin = (t: string) => {
+const minutesSinceMidnight = (t: string) => {
   const [h, m] = t.split(":").map(Number);
   return h * 60 + m;
 };
@@ -27,14 +27,14 @@ export function checkBooking(a: {
   const hours = clinic.openingHours(vet.site, a.date);
   if (!hours)
     return `${vet.site} is closed on ${a.date}. Pick another date; find_free_slots shows open times.`;
-  if (a.start < hours.open || toMin(a.start) + a.length > toMin(hours.close))
+  if (a.start < hours.open || minutesSinceMidnight(a.start) + a.length > minutesSinceMidnight(hours.close))
     return `${a.start} is outside ${vet.site} opening hours on ${a.date}: it opens at ${hours.open} and closes at ${hours.close}.`;
-  const s = toMin(a.start),
+  const s = minutesSinceMidnight(a.start),
     e = s + a.length;
   const clash = clinic
     .appointments({ vetId: vet.id, date: a.date })
     .filter((x) => x.id !== a.ignore && (x.status === "booked" || x.status === "arrived"))
-    .find((x) => s < toMin(x.start) + x.length && toMin(x.start) < e);
+    .find((x) => s < minutesSinceMidnight(x.start) + x.length && minutesSinceMidnight(x.start) < e);
   if (clash) {
     const free = clinic
       .freeSlots({ site: vet.site, date: a.date, length: a.length, vetId: vet.id })

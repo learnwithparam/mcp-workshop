@@ -185,11 +185,11 @@ function rng(seed: number) {
   };
 }
 
-export const toMin = (hhmm: string) => {
+export const minutesSinceMidnight = (hhmm: string) => {
   const [h, m] = hhmm.split(":").map(Number);
   return h * 60 + m;
 };
-export const toHHMM = (m: number) =>
+export const clockTimeFromMinutes = (m: number) =>
   `${String(Math.floor(m / 60)).padStart(2, "0")}:${String(m % 60).padStart(2, "0")}`;
 export function addDays(date: string, n: number) {
   const d = new Date(`${date}T12:00:00Z`);
@@ -326,16 +326,16 @@ export function seed(path: string) {
       for (const v of vets) {
         const hours = hoursFor(v.site, date);
         if (!hours) continue;
-        const open = toMin(hours[0]),
-          close = toMin(hours[1]);
+        const open = minutesSinceMidnight(hours[0]),
+          close = minutesSinceMidnight(hours[1]);
         const local = sitePatients(v.site);
         if (date === CLOCK.date && MILLBROOK_GAPS[v.id]) {
           // The planted day: the diary is full except the listed gaps.
-          const gaps = MILLBROOK_GAPS[v.id].map(toMin);
+          const gaps = MILLBROOK_GAPS[v.id].map(minutesSinceMidnight);
           let t = open;
           while (t < close) {
             if (gaps.includes(t)) {
-              if (v.id === "S-05" && t === toMin("11:40"))
+              if (v.id === "S-05" && t === minutesSinceMidnight("11:40"))
                 appt("P-0042", v.id, v.site, date, "11:40", 20, "Booster", "cancelled");
               t += 20;
               continue;
@@ -343,7 +343,7 @@ export function seed(path: string) {
             const nextGap = Math.min(...gaps.filter((g) => g > t), close);
             let len = pick([10, 20, 20, 30]);
             if (t + len > nextGap) len = nextGap - t;
-            appt(pick(local).id, v.id, v.site, date, toHHMM(t), len, pick(REASONS), "booked");
+            appt(pick(local).id, v.id, v.site, date, clockTimeFromMinutes(t), len, pick(REASONS), "booked");
             t += len;
           }
           continue;
@@ -365,7 +365,7 @@ export function seed(path: string) {
             : roll < 0.05
               ? "cancelled"
               : "booked";
-          appt(pick(local).id, v.id, v.site, date, toHHMM(slot), 20, pick(REASONS), status);
+          appt(pick(local).id, v.id, v.site, date, clockTimeFromMinutes(slot), 20, pick(REASONS), status);
         }
       }
     }
