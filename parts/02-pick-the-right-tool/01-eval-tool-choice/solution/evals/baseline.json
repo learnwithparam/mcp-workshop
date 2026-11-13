@@ -1,0 +1,416 @@
+{
+  "server": "api-mirror",
+  "provider": "replay",
+  "toolCount": 14,
+  "toolNames": [
+    "search_patients",
+    "list_owners",
+    "getPatient",
+    "getOwner",
+    "list_vaccinations",
+    "list_clinical_notes",
+    "list_vets",
+    "get_site",
+    "list_appointments",
+    "get_appointment",
+    "create_appointment",
+    "update_appointment",
+    "delete_appointment",
+    "get_availability"
+  ],
+  "score": 12,
+  "total": 20,
+  "estimatedTokens": 50440,
+  "tasks": [
+    {
+      "id": "T01",
+      "task": "Find the patient record for Biscuit.",
+      "expectedTool": "find_patient",
+      "calls": [
+        {
+          "tool": "search_patients",
+          "args": {
+            "query": "Biscuit"
+          },
+          "isError": false
+        }
+      ],
+      "pass": true,
+      "estimatedTokens": 1986
+    },
+    {
+      "id": "T02",
+      "task": "When is Biscuit's booster due? Her patient id is P-0001.",
+      "expectedTool": "vaccines_due",
+      "calls": [
+        {
+          "tool": "list_clinical_notes",
+          "args": {
+            "id": "P-0001"
+          },
+          "isError": false
+        }
+      ],
+      "pass": false,
+      "estimatedTokens": 2075
+    },
+    {
+      "id": "T03",
+      "task": "Which free 20-minute slots does Millbrook have today?",
+      "expectedTool": "find_free_slots",
+      "calls": [
+        {
+          "tool": "get_availability",
+          "args": {
+            "site": "millbrook"
+          },
+          "isError": false
+        }
+      ],
+      "pass": true,
+      "estimatedTokens": 1992
+    },
+    {
+      "id": "T04",
+      "task": "Book Biscuit (P-0001) in with Dr Reyes (S-05) at 10:20 today for her booster.",
+      "expectedTool": "book_appointment",
+      "calls": [
+        {
+          "tool": "create_appointment",
+          "args": {
+            "id": "P-0001",
+            "vet": "S-05",
+            "time": "10:20",
+            "duration": 20,
+            "reason": "Booster"
+          },
+          "isError": false
+        }
+      ],
+      "pass": true,
+      "estimatedTokens": 1987
+    },
+    {
+      "id": "T05",
+      "task": "Book Pepper in with Dr Cole (S-06) at 14:40 today for a weight check.",
+      "expectedTool": "book_appointment",
+      "calls": [
+        {
+          "tool": "search_patients",
+          "args": {
+            "query": "Pepper"
+          },
+          "isError": false
+        },
+        {
+          "tool": "create_appointment",
+          "args": {
+            "id": "O-0042",
+            "vet": "S-06",
+            "time": "14:40",
+            "duration": 20,
+            "reason": "Weight check"
+          },
+          "isError": false
+        }
+      ],
+      "pass": false,
+      "estimatedTokens": 2987
+    },
+    {
+      "id": "T06",
+      "task": "Is Pepper due any vaccines?",
+      "expectedTool": "vaccines_due",
+      "calls": [
+        {
+          "tool": "search_patients",
+          "args": {
+            "query": "Pepper"
+          },
+          "isError": false
+        },
+        {
+          "tool": "list_clinical_notes",
+          "args": {
+            "id": "P-0042"
+          },
+          "isError": false
+        }
+      ],
+      "pass": false,
+      "estimatedTokens": 3238
+    },
+    {
+      "id": "T07",
+      "task": "Find the pets of the owner Maya Collins.",
+      "expectedTool": "find_patient",
+      "calls": [
+        {
+          "tool": "list_owners",
+          "args": {
+            "query": "Maya Collins"
+          },
+          "isError": false
+        },
+        {
+          "tool": "getOwner",
+          "args": {
+            "id": "O-0001"
+          },
+          "isError": false
+        }
+      ],
+      "pass": false,
+      "estimatedTokens": 2991
+    },
+    {
+      "id": "T08",
+      "task": "A caller on 07700 900006 wants their pet's patient id.",
+      "expectedTool": "find_patient",
+      "calls": [
+        {
+          "tool": "list_owners",
+          "args": {
+            "query": "07700 900006"
+          },
+          "isError": false
+        },
+        {
+          "tool": "getOwner",
+          "args": {
+            "id": "O-0007"
+          },
+          "isError": false
+        }
+      ],
+      "pass": false,
+      "estimatedTokens": 2995
+    },
+    {
+      "id": "T09",
+      "task": "Move appointment A-00981 to 15:00 today.",
+      "expectedTool": "move_appointment",
+      "calls": [
+        {
+          "tool": "create_appointment",
+          "args": {
+            "id": "P-0001",
+            "vet": "S-05",
+            "time": "15:00",
+            "duration": 20,
+            "reason": "Booster"
+          },
+          "isError": false
+        }
+      ],
+      "pass": false,
+      "estimatedTokens": 1978
+    },
+    {
+      "id": "T10",
+      "task": "What free 30-minute slots does Eastgate have on 2026-11-17?",
+      "expectedTool": "find_free_slots",
+      "calls": [
+        {
+          "tool": "list_appointments",
+          "args": {
+            "site": "eastgate",
+            "date": "2026-11-17"
+          },
+          "isError": false
+        }
+      ],
+      "pass": false,
+      "estimatedTokens": 2211
+    },
+    {
+      "id": "T11",
+      "task": "Who is free at Millbrook this afternoon?",
+      "expectedTool": "find_free_slots",
+      "calls": [
+        {
+          "tool": "list_vets",
+          "args": {
+            "site": "millbrook"
+          },
+          "isError": false
+        },
+        {
+          "tool": "list_appointments",
+          "args": {
+            "site": "millbrook"
+          },
+          "isError": false
+        }
+      ],
+      "pass": false,
+      "estimatedTokens": 3956
+    },
+    {
+      "id": "T12",
+      "task": "Is Harrow Lane open on Saturday 2026-11-21?",
+      "expectedTool": "find_free_slots",
+      "calls": [
+        {
+          "tool": "get_site",
+          "args": {
+            "id": "harrow-lane"
+          },
+          "isError": false
+        }
+      ],
+      "pass": true,
+      "estimatedTokens": 2012
+    },
+    {
+      "id": "T13",
+      "task": "Find Poppy, the cat who bites.",
+      "expectedTool": "find_patient",
+      "calls": [
+        {
+          "tool": "search_patients",
+          "args": {
+            "query": "Poppy"
+          },
+          "isError": false
+        }
+      ],
+      "pass": true,
+      "estimatedTokens": 2424
+    },
+    {
+      "id": "T14",
+      "task": "When are Otis's vaccines due? His id is P-0006.",
+      "expectedTool": "vaccines_due",
+      "calls": [
+        {
+          "tool": "list_vaccinations",
+          "args": {
+            "id": "P-0006"
+          },
+          "isError": false
+        }
+      ],
+      "pass": true,
+      "estimatedTokens": 2095
+    },
+    {
+      "id": "T15",
+      "task": "Book Otis (P-0006) with Dr Cole (S-06) at 09:00 today for an annual check.",
+      "expectedTool": "book_appointment",
+      "calls": [
+        {
+          "tool": "create_appointment",
+          "args": {
+            "id": "P-0006",
+            "vet": "S-06",
+            "time": "09:00",
+            "duration": 20,
+            "reason": "Annual check"
+          },
+          "isError": false
+        }
+      ],
+      "pass": true,
+      "estimatedTokens": 1986
+    },
+    {
+      "id": "T16",
+      "task": "Are there any 10-minute slots left at Millbrook on 2026-11-18?",
+      "expectedTool": "find_free_slots",
+      "calls": [
+        {
+          "tool": "get_availability",
+          "args": {
+            "site": "millbrook",
+            "date": "2026-11-18",
+            "duration": 10
+          },
+          "isError": false
+        }
+      ],
+      "pass": true,
+      "estimatedTokens": 2242
+    },
+    {
+      "id": "T17",
+      "task": "Find the patients called Maple.",
+      "expectedTool": "find_patient",
+      "calls": [
+        {
+          "tool": "search_patients",
+          "args": {
+            "query": "Maple"
+          },
+          "isError": false
+        }
+      ],
+      "pass": true,
+      "estimatedTokens": 2279
+    },
+    {
+      "id": "T18",
+      "task": "Move appointment A-00966 to 11:40.",
+      "expectedTool": "move_appointment",
+      "calls": [
+        {
+          "tool": "update_appointment",
+          "args": {
+            "id": "A-00966",
+            "time": "11:40"
+          },
+          "isError": false
+        }
+      ],
+      "pass": true,
+      "estimatedTokens": 1988
+    },
+    {
+      "id": "T19",
+      "task": "Biscuit's lump check today needs to move to 16:20.",
+      "expectedTool": "move_appointment",
+      "calls": [
+        {
+          "tool": "list_appointments",
+          "args": {
+            "site": "millbrook"
+          },
+          "isError": false
+        },
+        {
+          "tool": "update_appointment",
+          "args": {
+            "id": "A-01015",
+            "time": "16:20"
+          },
+          "isError": false
+        }
+      ],
+      "pass": true,
+      "estimatedTokens": 3982
+    },
+    {
+      "id": "T20",
+      "task": "Does Biscuit have any alerts on her record?",
+      "expectedTool": "find_patient",
+      "calls": [
+        {
+          "tool": "search_patients",
+          "args": {
+            "query": "Biscuit"
+          },
+          "isError": false
+        },
+        {
+          "tool": "getPatient",
+          "args": {
+            "id": "P-0001"
+          },
+          "isError": false
+        }
+      ],
+      "pass": true,
+      "estimatedTokens": 3036
+    }
+  ]
+}

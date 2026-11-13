@@ -1,0 +1,275 @@
+// A wrong answer: the API mirror kept as it is, fourteen endpoint tools.
+import { McpServer } from "@modelcontextprotocol/server";
+import { serveStdio } from "@modelcontextprotocol/server/stdio";
+import * as z from "zod/v4";
+import { type Appointment, clinic, type Patient } from "#clinic";
+
+// Every endpoint description starts the same way, like a generated API client.
+const ENDPOINT = "Calls the Harrow Lane PIMS API endpoint";
+
+function textResult(text: string) {
+  return { content: [{ type: "text" as const, text }] };
+}
+
+function errorResult(text: string) {
+  return { content: [{ type: "text" as const, text }], isError: true };
+}
+
+function patientLine(patient: Patient): string {
+  const alerts = patient.alerts ? ` alerts: ${patient.alerts}` : "";
+  return (
+    `${patient.id} ${patient.name} (${patient.species}, ${patient.breed}) ` +
+    `owner ${patient.ownerId} site ${patient.homeSite}${alerts}`
+  );
+}
+
+function appointmentLine(appointment: Appointment): string {
+  return (
+    `${appointment.id} ${appointment.date} ${appointment.start} ${appointment.length}min ` +
+    `patient ${appointment.patientId} vet ${appointment.vetId} ${appointment.status}`
+  );
+}
+
+// A search box that looks at pet names, owner names and owner phones all at once.
+function searchPatients({ query }: { query: string }) {
+  const byPetName = clinic.findPatients({ name: query });
+  const byOwnerName = clinic.findPatients({ ownerName: query });
+  const byOwnerPhone = clinic.findPatients({ ownerPhone: query });
+  const found = [...byPetName, ...byOwnerName, ...byOwnerPhone];
+  if (found.length === 0) {
+    return textResult("[]");
+  }
+  return textResult(found.map(patientLine).join("\n"));
+}
+
+function listOwners({ query }: { query: string }) {
+  const patients = [
+    ...clinic.findPatients({ ownerName: query }),
+    ...clinic.findPatients({ ownerPhone: query }),
+  ];
+  const ownerIds = new Set(patients.map((patient) => patient.ownerId));
+  const owners = [...ownerIds].map((ownerId) => clinic.owner(ownerId));
+  const lines = owners.map((owner) => `${owner?.id} ${owner?.name} ${owner?.phone}`);
+  return textResult(lines.join("\n") || "[]");
+}
+
+function getPatient({ id }: { id: string }) {
+  const patient = clinic.patient(id);
+  if (!patient) {
+    return errorResult("404 Not Found");
+  }
+  return textResult(JSON.stringify(patient));
+}
+
+function getOwner({ id }: { id: string }) {
+  const owner = clinic.owner(id);
+  if (!owner) {
+    return errorResult("404 Not Found");
+  }
+  return textResult(JSON.stringify(owner));
+}
+
+const listAppointmentsInput = z.object({
+  site: z.string(),
+  date: z.string().optional(),
+  vet: z.string().optional(),
+});
+
+function listAppointments(filter: z.infer<typeof listAppointmentsInput>) {
+  const date = filter.date ?? clinic.clock().date;
+  const appointments = clinic.appointments({ site: filter.site, date, vetId: filter.vet });
+  return textResult(appointments.map(appointmentLine).join("\n") || "[]");
+}
+
+function getAppointment({ id }: { id: string }) {
+  const appointment = clinic.appointment(id);
+  if (!appointment) {
+    return errorResult("404 Not Found");
+  }
+  return textResult(appointmentLine(appointment));
+}
+
+const createAppointmentInput = z.object({
+  id: z.string(),
+  vet: z.string(),
+  date: z.string().optional(),
+  time: z.string(),
+  duration: z.number().default(20),
+  reason: z.string(),
+});
+
+// Like the PIMS itself, this writes whatever it is given: no clash check, no id check.
+function createAppointment(input: z.infer<typeof createAppointmentInput>) {
+  const appointment = clinic.createAppointment({
+    patientId: input.id,
+    vetId: input.vet,
+    date: input.date ?? clinic.clock().date,
+    start: input.time,
+    length: input.duration,
+    reason: input.reason,
+  });
+  return textResult(`201 Created ${appointment.id}`);
+}
+
+const updateAppointmentInput = z.object({
+  id: z.string(),
+  vet: z.string().optional(),
+  date: z.string().optional(),
+  time: z.string().optional(),
+});
+
+function updateAppointment(input: z.infer<typeof updateAppointmentInput>) {
+  const moved = clinic.moveAppointment(input.id, {
+    vetId: input.vet,
+    date: input.date,
+    start: input.time,
+  });
+  if (!moved) {
+    return errorResult("404 Not Found");
+  }
+  return textResult(`200 OK ${appointmentLine(moved)}`);
+}
+
+function deleteAppointment({ id }: { id: string }) {
+  const cancelled = clinic.cancelAppointment(id);
+  if (!cancelled) {
+    return errorResult("404 Not Found");
+  }
+  return textResult("204 No Content");
+}
+
+function listVets({ site }: { site: string }) {
+  const vets = clinic.vets(site);
+  return textResult(vets.map((vet) => `${vet.id} ${vet.name}`).join("\n") || "[]");
+}
+
+const getAvailabilityInput = z.object({
+  site: z.string(),
+  date: z.string().optional(),
+  duration: z.number().default(20),
+});
+
+function getAvailability(input: z.infer<typeof getAvailabilityInput>) {
+  const date = input.date ?? clinic.clock().date;
+  const slots = clinic.freeSlots({ site: input.site, date, length: input.duration });
+  const lines = slots.map((slot) => `${slot.vetId} ${slot.start}`);
+  return textResult(lines.join("\n") || "[]");
+}
+
+function listVaccinations({ id }: { id: string }) {
+  const vaccinations = clinic.vaccinations(id);
+  return textResult(JSON.stringify(vaccinations));
+}
+
+function listClinicalNotes({ id }: { id: string }) {
+  const notes = clinic.clinicalNotes(id);
+  return textResult(JSON.stringify(notes));
+}
+
+// Opening hours for the next seven days, starting on the clinic's own date.
+function getSite({ id }: { id: string }) {
+  const lines: string[] = [];
+  const firstDay = new Date(`${clinic.clock().date}T12:00:00Z`);
+  for (let i = 0; i < 7; i++) {
+    const day = new Date(firstDay.getTime() + i * 24 * 60 * 60 * 1000);
+    const date = day.toISOString().slice(0, 10);
+    const hours = clinic.openingHours(id, date);
+    lines.push(hours ? `${date} ${hours.open}-${hours.close}` : `${date} closed`);
+  }
+  return textResult(lines.join("\n"));
+}
+
+// The description of one endpoint tool, such as "Calls ... endpoint GET /v1/owners/{id}."
+function endpoint(path: string): string {
+  return `${ENDPOINT} ${path}.`;
+}
+
+function registerRecordTools(server: McpServer) {
+  const byId = { inputSchema: z.object({ id: z.string() }) };
+  const byQuery = { inputSchema: z.object({ query: z.string() }) };
+  const bySite = { inputSchema: z.object({ site: z.string() }) };
+  server.registerTool(
+    "search_patients",
+    { description: endpoint("GET /v1/patients/search?query="), ...byQuery },
+    searchPatients,
+  );
+  server.registerTool(
+    "list_owners",
+    { description: endpoint("GET /v1/owners?query="), ...byQuery },
+    listOwners,
+  );
+  server.registerTool(
+    "getPatient",
+    { description: endpoint("GET /v1/patients/{id}"), ...byId },
+    getPatient,
+  );
+  server.registerTool(
+    "getOwner",
+    { description: endpoint("GET /v1/owners/{id}"), ...byId },
+    getOwner,
+  );
+  server.registerTool(
+    "list_vaccinations",
+    { description: endpoint("GET /v1/patients/{id}/vaccinations"), ...byId },
+    listVaccinations,
+  );
+  server.registerTool(
+    "list_clinical_notes",
+    { description: endpoint("GET /v1/patients/{id}/notes"), ...byId },
+    listClinicalNotes,
+  );
+  server.registerTool(
+    "list_vets",
+    { description: endpoint("GET /v1/sites/{site}/vets"), ...bySite },
+    listVets,
+  );
+  server.registerTool(
+    "get_site",
+    { description: endpoint("GET /v1/sites/{id}"), ...byId },
+    getSite,
+  );
+}
+
+function registerDiaryTools(server: McpServer) {
+  const byId = { inputSchema: z.object({ id: z.string() }) };
+  server.registerTool(
+    "list_appointments",
+    { description: endpoint("GET /v1/appointments"), inputSchema: listAppointmentsInput },
+    listAppointments,
+  );
+  server.registerTool(
+    "get_appointment",
+    { description: endpoint("GET /v1/appointments/{id}"), ...byId },
+    getAppointment,
+  );
+  server.registerTool(
+    "create_appointment",
+    { description: endpoint("POST /v1/appointments"), inputSchema: createAppointmentInput },
+    createAppointment,
+  );
+  server.registerTool(
+    "update_appointment",
+    { description: endpoint("PATCH /v1/appointments/{id}"), inputSchema: updateAppointmentInput },
+    updateAppointment,
+  );
+  server.registerTool(
+    "delete_appointment",
+    { description: endpoint("DELETE /v1/appointments/{id}"), ...byId },
+    deleteAppointment,
+  );
+  server.registerTool(
+    "get_availability",
+    { description: endpoint("GET /v1/availability"), inputSchema: getAvailabilityInput },
+    getAvailability,
+  );
+}
+
+function createServer(): McpServer {
+  const server = new McpServer({ name: "harrow-lane-api-mirror", version: "0.1.0" });
+  registerRecordTools(server);
+  registerDiaryTools(server);
+  return server;
+}
+
+serveStdio(createServer);
+console.error("harrow-lane API mirror running on stdio (14 tools)");

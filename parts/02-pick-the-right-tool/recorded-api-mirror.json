@@ -1,0 +1,456 @@
+{
+  "about": "Recorded model turns for the eval against the 14-tool API mirror, played back when LLM_PROVIDER=replay. Written by hand from real tool results, because the build had no model key. They show the mix-ups a model makes with endpoint tools.",
+  "conversations": [
+    {
+      "question": "Find the patient record for Biscuit.",
+      "steps": [
+        {
+          "toolCalls": [
+            {
+              "name": "search_patients",
+              "input": {
+                "query": "Biscuit"
+              }
+            }
+          ]
+        },
+        {
+          "text": "Biscuit is P-0001, a Labrador at Millbrook."
+        }
+      ]
+    },
+    {
+      "question": "When is Biscuit's booster due? Her patient id is P-0001.",
+      "steps": [
+        {
+          "toolCalls": [
+            {
+              "name": "list_clinical_notes",
+              "input": {
+                "id": "P-0001"
+              }
+            }
+          ]
+        },
+        {
+          "text": "Biscuit's clinical notes do not say when her booster is due. Please check her vaccination card."
+        }
+      ]
+    },
+    {
+      "question": "Which free 20-minute slots does Millbrook have today?",
+      "steps": [
+        {
+          "toolCalls": [
+            {
+              "name": "get_availability",
+              "input": {
+                "site": "millbrook"
+              }
+            }
+          ]
+        },
+        {
+          "text": "Millbrook has free 20-minute slots today with Dr Cole and Dr Reyes. The times are listed above."
+        }
+      ]
+    },
+    {
+      "question": "Book Biscuit (P-0001) in with Dr Reyes (S-05) at 10:20 today for her booster.",
+      "steps": [
+        {
+          "toolCalls": [
+            {
+              "name": "create_appointment",
+              "input": {
+                "id": "P-0001",
+                "vet": "S-05",
+                "time": "10:20",
+                "duration": 20,
+                "reason": "Booster"
+              }
+            }
+          ]
+        },
+        {
+          "text": "Done. Biscuit is booked with Dr Reyes at 10:20."
+        }
+      ]
+    },
+    {
+      "question": "Book Pepper in with Dr Cole (S-06) at 14:40 today for a weight check.",
+      "steps": [
+        {
+          "toolCalls": [
+            {
+              "name": "search_patients",
+              "input": {
+                "query": "Pepper"
+              }
+            }
+          ]
+        },
+        {
+          "toolCalls": [
+            {
+              "name": "create_appointment",
+              "input": {
+                "id": "O-0042",
+                "vet": "S-06",
+                "time": "14:40",
+                "duration": 20,
+                "reason": "Weight check"
+              }
+            }
+          ]
+        },
+        {
+          "text": "Done. Pepper is booked with Dr Cole at 14:40."
+        }
+      ]
+    },
+    {
+      "question": "Is Pepper due any vaccines?",
+      "steps": [
+        {
+          "toolCalls": [
+            {
+              "name": "search_patients",
+              "input": {
+                "query": "Pepper"
+              }
+            }
+          ]
+        },
+        {
+          "toolCalls": [
+            {
+              "name": "list_clinical_notes",
+              "input": {
+                "id": "P-0042"
+              }
+            }
+          ]
+        },
+        {
+          "text": "Pepper's notes do not mention any vaccines that are due."
+        }
+      ]
+    },
+    {
+      "question": "Find the pets of the owner Maya Collins.",
+      "steps": [
+        {
+          "toolCalls": [
+            {
+              "name": "list_owners",
+              "input": {
+                "query": "Maya Collins"
+              }
+            }
+          ]
+        },
+        {
+          "toolCalls": [
+            {
+              "name": "getOwner",
+              "input": {
+                "id": "O-0001"
+              }
+            }
+          ]
+        },
+        {
+          "text": "Maya Collins is owner O-0001. Her record does not list any pets."
+        }
+      ]
+    },
+    {
+      "question": "A caller on 07700 900006 wants their pet's patient id.",
+      "steps": [
+        {
+          "toolCalls": [
+            {
+              "name": "list_owners",
+              "input": {
+                "query": "07700 900006"
+              }
+            }
+          ]
+        },
+        {
+          "toolCalls": [
+            {
+              "name": "getOwner",
+              "input": {
+                "id": "O-0007"
+              }
+            }
+          ]
+        },
+        {
+          "text": "That number belongs to Arjun Mensah, owner O-0007. I cannot see a patient id on the owner record."
+        }
+      ]
+    },
+    {
+      "question": "Move appointment A-00981 to 15:00 today.",
+      "steps": [
+        {
+          "toolCalls": [
+            {
+              "name": "create_appointment",
+              "input": {
+                "id": "P-0001",
+                "vet": "S-05",
+                "time": "15:00",
+                "duration": 20,
+                "reason": "Booster"
+              }
+            }
+          ]
+        },
+        {
+          "text": "Done. The appointment is now at 15:00."
+        }
+      ]
+    },
+    {
+      "question": "What free 30-minute slots does Eastgate have on 2026-11-17?",
+      "steps": [
+        {
+          "toolCalls": [
+            {
+              "name": "list_appointments",
+              "input": {
+                "site": "eastgate",
+                "date": "2026-11-17"
+              }
+            }
+          ]
+        },
+        {
+          "text": "Eastgate has many appointments on 2026-11-17. The gaps between them are free."
+        }
+      ]
+    },
+    {
+      "question": "Who is free at Millbrook this afternoon?",
+      "steps": [
+        {
+          "toolCalls": [
+            {
+              "name": "list_vets",
+              "input": {
+                "site": "millbrook"
+              }
+            }
+          ]
+        },
+        {
+          "toolCalls": [
+            {
+              "name": "list_appointments",
+              "input": {
+                "site": "millbrook"
+              }
+            }
+          ]
+        },
+        {
+          "text": "Dr Reyes and Dr Cole work at Millbrook. This afternoon looks busy for both."
+        }
+      ]
+    },
+    {
+      "question": "Is Harrow Lane open on Saturday 2026-11-21?",
+      "steps": [
+        {
+          "toolCalls": [
+            {
+              "name": "get_site",
+              "input": {
+                "id": "harrow-lane"
+              }
+            }
+          ]
+        },
+        {
+          "text": "Yes. Harrow Lane is open from 09:00 to 13:00 on Saturday 2026-11-21."
+        }
+      ]
+    },
+    {
+      "question": "Find Poppy, the cat who bites.",
+      "steps": [
+        {
+          "toolCalls": [
+            {
+              "name": "search_patients",
+              "input": {
+                "query": "Poppy"
+              }
+            }
+          ]
+        },
+        {
+          "text": "Poppy P-0007 is the cat with a bites alert, at Millbrook."
+        }
+      ]
+    },
+    {
+      "question": "When are Otis's vaccines due? His id is P-0006.",
+      "steps": [
+        {
+          "toolCalls": [
+            {
+              "name": "list_vaccinations",
+              "input": {
+                "id": "P-0006"
+              }
+            }
+          ]
+        },
+        {
+          "text": "Otis has vaccines due. The dates are listed above."
+        }
+      ]
+    },
+    {
+      "question": "Book Otis (P-0006) with Dr Cole (S-06) at 09:00 today for an annual check.",
+      "steps": [
+        {
+          "toolCalls": [
+            {
+              "name": "create_appointment",
+              "input": {
+                "id": "P-0006",
+                "vet": "S-06",
+                "time": "09:00",
+                "duration": 20,
+                "reason": "Annual check"
+              }
+            }
+          ]
+        },
+        {
+          "text": "Done. Otis is booked with Dr Cole at 09:00."
+        }
+      ]
+    },
+    {
+      "question": "Are there any 10-minute slots left at Millbrook on 2026-11-18?",
+      "steps": [
+        {
+          "toolCalls": [
+            {
+              "name": "get_availability",
+              "input": {
+                "site": "millbrook",
+                "date": "2026-11-18",
+                "duration": 10
+              }
+            }
+          ]
+        },
+        {
+          "text": "Yes. Millbrook has 10-minute slots on 2026-11-18."
+        }
+      ]
+    },
+    {
+      "question": "Find the patients called Maple.",
+      "steps": [
+        {
+          "toolCalls": [
+            {
+              "name": "search_patients",
+              "input": {
+                "query": "Maple"
+              }
+            }
+          ]
+        },
+        {
+          "text": "There are several patients called Maple. They are listed above."
+        }
+      ]
+    },
+    {
+      "question": "Move appointment A-00966 to 11:40.",
+      "steps": [
+        {
+          "toolCalls": [
+            {
+              "name": "update_appointment",
+              "input": {
+                "id": "A-00966",
+                "time": "11:40"
+              }
+            }
+          ]
+        },
+        {
+          "text": "Done. A-00966 is now at 11:40."
+        }
+      ]
+    },
+    {
+      "question": "Biscuit's lump check today needs to move to 16:20.",
+      "steps": [
+        {
+          "toolCalls": [
+            {
+              "name": "list_appointments",
+              "input": {
+                "site": "millbrook"
+              }
+            }
+          ]
+        },
+        {
+          "toolCalls": [
+            {
+              "name": "update_appointment",
+              "input": {
+                "id": "A-01015",
+                "time": "16:20"
+              }
+            }
+          ]
+        },
+        {
+          "text": "Done. Biscuit's lump check is now at 16:20."
+        }
+      ]
+    },
+    {
+      "question": "Does Biscuit have any alerts on her record?",
+      "steps": [
+        {
+          "toolCalls": [
+            {
+              "name": "search_patients",
+              "input": {
+                "query": "Biscuit"
+              }
+            }
+          ]
+        },
+        {
+          "toolCalls": [
+            {
+              "name": "getPatient",
+              "input": {
+                "id": "P-0001"
+              }
+            }
+          ]
+        },
+        {
+          "text": "Biscuit has no alerts on her record."
+        }
+      ]
+    }
+  ]
+}
