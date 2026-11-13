@@ -29,12 +29,17 @@ async function callTool(name: string, args: Record<string, unknown>) {
   return { isError: Boolean(result.isError), text, structured: result.structuredContent };
 }
 
-// The first free slot Dr Reyes has today. Asking the server keeps each test true on any diary.
-async function freeSlotForDrReyes(): Promise<Slot> {
-  const result = await callTool("find_free_slots", { site: "millbrook", detail: "full" });
+// Eastgate has many free times on this date, so every test can find one.
+const QUIET_DATE = "2026-11-17";
+
+// The first free slot Dr Rhys Evans (S-09) has on the quiet date. Asking the server, not
+// guessing a time, keeps each test true on any diary.
+async function freeSlotForDrEvans(): Promise<Slot> {
+  const search = { site: "eastgate", date: QUIET_DATE, detail: "full" };
+  const result = await callTool("find_free_slots", search);
   const { slots } = result.structured as { slots: Slot[] };
-  const reyesSlots = slots.filter((slot) => slot.vetId === "S-05");
-  return reyesSlots[0];
+  const evansSlots = slots.filter((slot) => slot.vetId === "S-09");
+  return evansSlots[0];
 }
 
 test("find_patient runs", async () => {
@@ -43,23 +48,41 @@ test("find_patient runs", async () => {
 });
 
 test("book_appointment runs", async () => {
-  const slot = await freeSlotForDrReyes();
-  const booking = { patientId: "P-0001", vetId: "S-05", start: slot.start, reason: "Booster" };
+  const slot = await freeSlotForDrEvans();
+  const booking = {
+    patientId: "P-0003",
+    vetId: "S-09",
+    date: QUIET_DATE,
+    start: slot.start,
+    reason: "Booster",
+  };
   const result = await callTool("book_appointment", booking);
   expect(result).toBeDefined();
 });
 
 test("book_appointment runs twice", async () => {
-  const slot = await freeSlotForDrReyes();
-  const booking = { patientId: "P-0001", vetId: "S-05", start: slot.start, reason: "Booster" };
+  const slot = await freeSlotForDrEvans();
+  const booking = {
+    patientId: "P-0003",
+    vetId: "S-09",
+    date: QUIET_DATE,
+    start: slot.start,
+    reason: "Booster",
+  };
   await callTool("book_appointment", booking);
   const second = await callTool("book_appointment", booking);
   expect(second).toBeDefined();
 });
 
 test("book_appointment runs for an unknown patient", async () => {
-  const slot = await freeSlotForDrReyes();
-  const booking = { patientId: "P-9999", vetId: "S-05", start: slot.start, reason: "Booster" };
+  const slot = await freeSlotForDrEvans();
+  const booking = {
+    patientId: "P-9999",
+    vetId: "S-09",
+    date: QUIET_DATE,
+    start: slot.start,
+    reason: "Booster",
+  };
   const result = await callTool("book_appointment", booking);
   expect(result).toBeDefined();
 });

@@ -29,12 +29,17 @@ async function callTool(name: string, args: Record<string, unknown>) {
   return { isError: Boolean(result.isError), text, structured: result.structuredContent };
 }
 
-// The first free slot Dr Reyes has today. Asking the server keeps each test true on any diary.
-async function freeSlotForDrReyes(): Promise<Slot> {
-  const result = await callTool("find_free_slots", { site: "millbrook", detail: "full" });
+// Eastgate has many free times on this date, so every test can find one.
+const QUIET_DATE = "2026-11-17";
+
+// The first free slot Dr Rhys Evans (S-09) has on the quiet date. Asking the server, not
+// guessing a time, keeps each test true on any diary.
+async function freeSlotForDrEvans(): Promise<Slot> {
+  const search = { site: "eastgate", date: QUIET_DATE, detail: "full" };
+  const result = await callTool("find_free_slots", search);
   const { slots } = result.structured as { slots: Slot[] };
-  const reyesSlots = slots.filter((slot) => slot.vetId === "S-05");
-  return reyesSlots[0];
+  const evansSlots = slots.filter((slot) => slot.vetId === "S-09");
+  return evansSlots[0];
 }
 
 test("find_patient finds Biscuit by name", async () => {
@@ -43,12 +48,12 @@ test("find_patient finds Biscuit by name", async () => {
   expect(result.text).toContain("P-0001");
 });
 
-test("find_free_slots lists a free slot for Dr Reyes", async () => {
-  const slot = await freeSlotForDrReyes();
+test("find_free_slots lists a free slot for Dr Evans", async () => {
+  const slot = await freeSlotForDrEvans();
   expect(slot.start).toMatch(/^\d{2}:\d{2}$/);
 });
 
 // TODO: add the tests that would catch a broken server. Each one must fail if its rule breaks:
-//   - booking a free slot works (use freeSlotForDrReyes for a time that is free on any diary)
+//   - booking a free slot works (use freeSlotForDrEvans for a time that is free on any diary)
 //   - booking the same time twice is refused, with a tool error
 //   - booking a patient id that does not exist is refused, with a tool error

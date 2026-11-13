@@ -78,11 +78,17 @@ const findFreeSlotsInput = z.object({
 });
 
 // The shape of the structured result. The SDK checks every result against it.
+const slotOutput = z.object({
+  vetId: z.string(),
+  vetName: z.string(),
+  start: z.string(),
+});
+
 const freeSlotsOutput = z.object({
   site: z.string(),
   date: z.string(),
   length: z.number(),
-  slots: z.array(z.object({ vetId: z.string(), vetName: z.string(), start: z.string() })),
+  slots: z.array(slotOutput),
   summary: z.string(),
 });
 
@@ -357,12 +363,16 @@ const vaccinesDueInput = z.object({
   detail: DETAIL,
 });
 
+const vaccineOutput = z.object({
+  vaccine: z.string(),
+  due: z.string(),
+  given: z.string().optional(),
+});
+
 const vaccinesOutput = z.object({
   patientId: z.string(),
   name: z.string(),
-  vaccines: z.array(
-    z.object({ vaccine: z.string(), due: z.string(), given: z.string().optional() }),
-  ),
+  vaccines: z.array(vaccineOutput),
   summary: z.string(),
 });
 

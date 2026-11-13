@@ -39,9 +39,11 @@ async function runTests(folder: string): Promise<TestRun> {
 
 /** server.ts with `return undefined;` as the first line of one function, or undefined. */
 function mutatedSource(source: string, functionName: string): string | undefined {
-  const signature = new RegExp(`(function ${functionName}\\([\\s\\S]*?\\)[^{]*\\{)`);
+  // "function name(...) ... {": the name, the inputs in brackets, then the opening brace.
+  const pattern = ["function ", functionName, "\\([\\s\\S]*?\\)[^{]*\\{"].join("");
+  const signature = new RegExp(pattern);
   if (!signature.test(source)) return undefined;
-  return source.replace(signature, "$1\n  return undefined;");
+  return source.replace(signature, (opening) => `${opening}\n  return undefined;`);
 }
 
 // The copy sits next to the folder, so relative imports such as "../server" still resolve.

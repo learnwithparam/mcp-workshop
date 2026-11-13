@@ -38,7 +38,7 @@ function findClash(booking, date, movingId) {
 `test/server.test.ts` already connects a client to `createServer()` with `InMemoryTransport`, and has two tests.
 Add tests until a broken server fails at least one:
 
-1. Booking a free slot works. Use `freeSlotForDrReyes()` so the test is true on any diary.
+1. Booking a free slot works. Use `freeSlotForDrEvans()` so the test is true on any diary.
 2. Booking the same time twice is refused with `isError: true`.
 3. Booking patient `P-9999` is refused with `isError: true`.
 
@@ -57,7 +57,7 @@ Ran 5 tests across 1 file.
 Keep the names `findClash` and `unknownPatientError` in `server.ts`, because the check breaks those two.
 
 If you already know this: the tests share one diary, in the order they run. Ask the server for a free slot in
-each test, as `freeSlotForDrReyes()` does, so no test depends on another.
+each test, as `freeSlotForDrEvans()` does, so no test depends on another.
 
 ## Done when
 

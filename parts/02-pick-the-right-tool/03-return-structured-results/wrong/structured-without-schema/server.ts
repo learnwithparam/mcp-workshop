@@ -1,4 +1,5 @@
-// A wrong answer: it returns structuredContent but declares no outputSchema, so no client can check it.
+// A wrong answer: it returns structuredContent but declares no outputSchema, so no client can
+// check it.
 // find_free_slots and vaccines_due return structured results as well as a short text summary.
 // Check it with: bun run verify return-structured-results
 import { McpServer } from "@modelcontextprotocol/server";
@@ -77,11 +78,17 @@ const findFreeSlotsInput = z.object({
 });
 
 // The shape of the structured result. The SDK checks every result against it.
+const slotOutput = z.object({
+  vetId: z.string(),
+  vetName: z.string(),
+  start: z.string(),
+});
+
 const freeSlotsOutput = z.object({
   site: z.string(),
   date: z.string(),
   length: z.number(),
-  slots: z.array(z.object({ vetId: z.string(), vetName: z.string(), start: z.string() })),
+  slots: z.array(slotOutput),
 });
 
 // The arguments the tool receives, worked out from the schema above.
@@ -354,12 +361,16 @@ const vaccinesDueInput = z.object({
   detail: DETAIL,
 });
 
+const vaccineOutput = z.object({
+  vaccine: z.string(),
+  due: z.string(),
+  given: z.string().optional(),
+});
+
 const vaccinesOutput = z.object({
   patientId: z.string(),
   name: z.string(),
-  vaccines: z.array(
-    z.object({ vaccine: z.string(), due: z.string(), given: z.string().optional() }),
-  ),
+  vaccines: z.array(vaccineOutput),
 });
 
 type Vaccine = z.infer<typeof vaccinesOutput>["vaccines"][number];
