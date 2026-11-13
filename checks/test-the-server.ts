@@ -18,7 +18,25 @@ const MUTANTS = {
   patientCheckRemoved: "unknownPatientError",
 };
 
+const ROOT = join(import.meta.dir, "..");
+let installed: Promise<unknown> | undefined;
+
+// bun run can find packages without node_modules, but bun test cannot. So when the packages are
+// missing, as on a fresh CI machine, install them once from the lockfile.
+function installPackagesOnce(): Promise<unknown> {
+  if (existsSync(join(ROOT, "node_modules", "@modelcontextprotocol", "client"))) {
+    return Promise.resolve();
+  }
+  installed ??= Bun.spawn([process.execPath, "install", "--frozen-lockfile"], {
+    cwd: ROOT,
+    stdout: "ignore",
+    stderr: "ignore",
+  }).exited;
+  return installed;
+}
+
 async function runTests(folder: string): Promise<TestRun> {
+  await installPackagesOnce();
   const world = freshWorld();
   const testRun = Bun.spawn([process.execPath, "test", "./test"], {
     cwd: folder,
