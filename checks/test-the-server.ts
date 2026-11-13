@@ -10,7 +10,7 @@ import { freshWorld } from "./lib/world";
 const LEAST_TESTS = 4;
 const TEST_TIMEOUT_MS = 60000;
 
-type TestRun = { passed: number; failed: number; exitCode: number };
+type TestRun = { passed: number; failed: number; exitCode: number; output: string };
 
 // Each mutant makes one function in server.ts give up at once, as if its check were deleted.
 const MUTANTS = {
@@ -27,14 +27,18 @@ async function runTests(folder: string): Promise<TestRun> {
     stderr: "pipe",
   });
   const timer = setTimeout(() => testRun.kill(), TEST_TIMEOUT_MS);
-  // bun test prints its summary, such as "5 pass", on stderr.
-  const summary = await new Response(testRun.stderr).text();
-  await new Response(testRun.stdout).text();
+  // Read both streams at once, so neither can fill up and stop the tests.
+  const [errors, printed] = await Promise.all([
+    new Response(testRun.stderr).text(),
+    new Response(testRun.stdout).text(),
+  ]);
   const exitCode = await testRun.exited;
   clearTimeout(timer);
-  const passed = Number(summary.match(/(\d+) pass/)?.[1] ?? 0);
-  const failed = Number(summary.match(/(\d+) fail/)?.[1] ?? 0);
-  return { passed, failed, exitCode };
+  // bun test prints its summary, such as "5 pass", on stderr.
+  const output = `${printed}${errors}`;
+  const passed = Number(output.match(/(\d+) pass/)?.[1] ?? 0);
+  const failed = Number(output.match(/(\d+) fail/)?.[1] ?? 0);
+  return { passed, failed, exitCode, output };
 }
 
 /** server.ts with `return undefined;` as the first line of one function, or undefined. */
@@ -70,10 +74,19 @@ type Outcome = {
 const run = scenario(async (dir): Promise<Outcome> => {
   if (!existsSync(join(dir, "test"))) return {};
   const original = await runTests(dir);
+  if (original.exitCode !== 0) {
+    // Show what bun test said, so the reason is on screen and not only "tests failed".
+    console.error(`bun test in ${dir} said:\n${lastLines(original.output, 15)}`);
+  }
   const clashCheckRemoved = await runOnMutant(dir, MUTANTS.clashCheckRemoved);
   const patientCheckRemoved = await runOnMutant(dir, MUTANTS.patientCheckRemoved);
   return { original, clashCheckRemoved, patientCheckRemoved };
 });
+
+function lastLines(text: string, count: number): string {
+  const lines = text.trimEnd().split("\n");
+  return lines.slice(-count).join("\n");
+}
 
 const caught = (testRun: TestRun | undefined) => Boolean(testRun && testRun.exitCode !== 0);
 
