@@ -1,0 +1,12 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "Harrow Lane server",
+  "description": "TODO: one sentence, 100 characters at most, that says what the server lets a model do.",
+  "version": "latest",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "TODO: your deployed address, ending in /mcp"
+    }
+  ]
+}
