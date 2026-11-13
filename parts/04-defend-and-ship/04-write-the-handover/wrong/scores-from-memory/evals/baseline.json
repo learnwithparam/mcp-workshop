@@ -1,0 +1,149 @@
+{
+  "about": "Sample result of the shipped 20-task tool-choice eval, in replay mode. Use your own from shape-tools-around-jobs if you have it.",
+  "server": "14 tools built from the PIMS API",
+  "tools": 14,
+  "passed": 9,
+  "total": 20,
+  "tasks": [
+    {
+      "id": "task-01",
+      "question": "Can Biscuit get her booster at Millbrook?",
+      "expected": "find_free_slots",
+      "chosen": "list_vet_rota",
+      "pass": false
+    },
+    {
+      "id": "task-02",
+      "question": "Book Biscuit with Dr Reyes at 10:20.",
+      "expected": "book_appointment",
+      "chosen": "create_appointment_row",
+      "pass": false
+    },
+    {
+      "id": "task-03",
+      "question": "Who is Pepper's owner?",
+      "expected": "find_patient",
+      "chosen": "search_owners",
+      "pass": false
+    },
+    {
+      "id": "task-04",
+      "question": "What vaccines is Biscuit due?",
+      "expected": "vaccines_due",
+      "chosen": "get_vaccination_rows",
+      "pass": false
+    },
+    {
+      "id": "task-05",
+      "question": "Move Biscuit's 10:20 to 11:40.",
+      "expected": "move_appointment",
+      "chosen": "update_appointment_row",
+      "pass": false
+    },
+    {
+      "id": "task-06",
+      "question": "Cancel Biscuit's booster.",
+      "expected": "cancel_appointment",
+      "chosen": "set_appointment_status",
+      "pass": false
+    },
+    {
+      "id": "task-07",
+      "question": "Show Pepper's last notes.",
+      "expected": "read_notes",
+      "chosen": "read_notes",
+      "pass": true
+    },
+    {
+      "id": "task-08",
+      "question": "Any free 40-minute slot at Eastgate?",
+      "expected": "find_free_slots",
+      "chosen": "find_free_slots",
+      "pass": true
+    },
+    {
+      "id": "task-09",
+      "question": "Find the dog owned by Arjun Lowe.",
+      "expected": "find_patient",
+      "chosen": "find_patient",
+      "pass": true
+    },
+    {
+      "id": "task-10",
+      "question": "Is Dr Cole free at 14:40?",
+      "expected": "find_free_slots",
+      "chosen": "get_vet_diary",
+      "pass": false
+    },
+    {
+      "id": "task-11",
+      "question": "Book Pepper a nail clip tomorrow at 09:00.",
+      "expected": "book_appointment",
+      "chosen": "create_appointment_row",
+      "pass": false
+    },
+    {
+      "id": "task-12",
+      "question": "How much methadone is left?",
+      "expected": "controlled_drugs_log",
+      "chosen": "controlled_drugs_log",
+      "pass": true
+    },
+    {
+      "id": "task-13",
+      "question": "Which patient has phone 07700 900041?",
+      "expected": "find_patient",
+      "chosen": "search_owners",
+      "pass": false
+    },
+    {
+      "id": "task-14",
+      "question": "Push Pepper's visit to Thursday.",
+      "expected": "move_appointment",
+      "chosen": "move_appointment",
+      "pass": true
+    },
+    {
+      "id": "task-15",
+      "question": "When is Biscuit's next booster due?",
+      "expected": "vaccines_due",
+      "chosen": "vaccines_due",
+      "pass": true
+    },
+    {
+      "id": "task-16",
+      "question": "Cancel the 15:00 with Dr Reyes.",
+      "expected": "cancel_appointment",
+      "chosen": "cancel_appointment",
+      "pass": true
+    },
+    {
+      "id": "task-17",
+      "question": "Show me Biscuit's clinical history.",
+      "expected": "read_notes",
+      "chosen": "get_note_rows",
+      "pass": false
+    },
+    {
+      "id": "task-18",
+      "question": "Who can see a cat at Harrow Lane today?",
+      "expected": "find_free_slots",
+      "chosen": "find_free_slots",
+      "pass": true
+    },
+    {
+      "id": "task-19",
+      "question": "Book a 30-minute dental for Biscuit.",
+      "expected": "book_appointment",
+      "chosen": "book_appointment",
+      "pass": true
+    },
+    {
+      "id": "task-20",
+      "question": "Is the Millbrook clinic open on Sunday?",
+      "expected": "find_free_slots",
+      "chosen": "get_opening_hours",
+      "pass": false
+    }
+  ]
+}
