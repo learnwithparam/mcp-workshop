@@ -44,7 +44,7 @@ Expect: Ola (receptionist) gets no notes; Dr Sam Reyes (vet) gets a `read_notes`
 For example, `bun run try` with no arguments lists the tools of Ola, the receptionist:
 
 ```text
-The finished server, as ola, has 6 tool(s):
+The finished server, as ola, has 6 tools:
   find_patient: Find a patient by pet name, owner name or owner phone. ...
 ```
 

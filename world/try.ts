@@ -5,6 +5,7 @@
 //   --server <folder>        call the server in a step folder instead, over stdio
 import type { Client } from "@modelcontextprotocol/client";
 import { type Confirm, type Connected, connectFinished, connectFolder } from "./connect";
+import { protocolErrorLine, toolCountLine } from "./try-lines";
 
 const args = process.argv.slice(2);
 
@@ -36,7 +37,7 @@ async function listTools(client: Client) {
   const { tools } = await client.listTools();
   let serverName = `The finished server, as ${staffName ?? "ola"},`;
   if (folder) serverName = `The server in ${folder}`;
-  console.log(`${serverName} has ${tools.length} tool(s):`);
+  console.log(toolCountLine(serverName, tools.length));
   for (const tool of tools) console.log(`  ${tool.name}: ${tool.description ?? ""}`);
 }
 
@@ -63,7 +64,7 @@ try {
   if (toolName) await callTool(connection.client, toolName);
   else await listTools(connection.client);
 } catch (error) {
-  console.log(`Protocol error: ${(error as Error).message}`);
+  console.log(protocolErrorLine((error as Error).message));
   process.exitCode = 1;
 } finally {
   await connection.close();
