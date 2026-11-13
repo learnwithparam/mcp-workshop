@@ -1,0 +1,69 @@
+# Scenarios the clinic server is allowed to fail in the official MCP conformance suite.
+# The pass-conformance check passes this file to the suite with --expected-failures.
+#
+# Why each group is here:
+# - Many scenarios call test tools that only the suite's own reference server has, such as
+#   test_simple_text or slow_compute. A clinic server has clinic tools instead.
+# - The clinic server offers tools only: no prompts, no resources, no completions.
+# - Tasks are an optional extension that this part does not teach.
+#
+# Everything else must pass: stateless serving, server/discover, tools/list, Host checks
+# and the protocol headers.
+#
+# A line "scenario:check-id" excuses one check. The rest of that scenario still has to pass.
+server:
+  # Four checks need diagnostic test tools. The other checks of server-stateless must pass.
+  - server-stateless:sep-2575-server-rejects-undeclared-capability
+  - server-stateless:sep-2575-missing-capability-http-400
+  - server-stateless:sep-2575-http-server-no-independent-requests-on-stream
+  - server-stateless:sep-2575-server-no-log-without-loglevel
+  # A SHOULD: tell open subscriptions when the tool list changes. The clinic's list never changes.
+  - server-stateless:sep-2575-server-sends-tools-list-changed-on-subscription
+  # No prompts and no resources, so these lists answer "method not found".
+  - caching:sep-2549-prompts-list-caching-hints
+  - caching:sep-2549-resources-list-caching-hints
+  - caching:sep-2549-resources-templates-list-caching-hints
+  # The suite's own test tools.
+  - tools-call-simple-text
+  - tools-call-image
+  - tools-call-audio
+  - tools-call-embedded-resource
+  - tools-call-mixed-content
+  - tools-call-error
+  - tools-call-with-progress
+  - json-schema-2020-12
+  - http-custom-header-server-validation
+  - input-required-result-basic-elicitation
+  - input-required-result-basic-list-roots
+  - input-required-result-basic-sampling
+  - input-required-result-capability-check
+  - input-required-result-missing-input-response
+  - input-required-result-ignore-extra-params
+  - input-required-result-multi-round
+  - input-required-result-multiple-input-requests
+  - input-required-result-non-tool-request
+  - input-required-result-request-state
+  - input-required-result-result-type
+  - input-required-result-tampered-state
+  # Prompts, resources and completions: the clinic server does not offer them.
+  - completion-complete
+  - prompts-list
+  - prompts-get-simple
+  - prompts-get-with-args
+  - prompts-get-embedded-resource
+  - prompts-get-with-image
+  - resources-list
+  - resources-read-text
+  - resources-read-binary
+  - resources-templates-read
+  - sep-2164-resource-not-found
+  # The tasks extension.
+  - tasks-capability-negotiation
+  - tasks-dispatch-and-envelope
+  - tasks-lifecycle
+  - tasks-mrtr-composition
+  - tasks-mrtr-input
+  - tasks-request-headers
+  - tasks-request-state-removal
+  - tasks-required-task-error
+  - tasks-wire-fields
