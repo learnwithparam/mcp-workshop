@@ -34,15 +34,15 @@ flowchart LR
 5. Deploy the image to any host that runs a Dockerfile. Set `PUBLIC_URL` to the address it gives you. Then check
    the live server:
 
-   ```bash
-   bun run verify deploy-the-server --url https://your-server.example/mcp
-   ```
+```bash
+bun run verify deploy-the-server --url https://your-server.example/mcp
+```
 
-   Expect: `Done. All 7 rules pass.`, with every request sent to your live address.
+Expect: `Done. All 7 rules pass.`, with every request sent to your live address.
 
 Your screen should look like this:
 
-![The deploy check passing against a live address](../images/expected.png)
+![The deploy check passing against a running server, checked by its address](../images/expected.png)
 
 Why not Cloudflare Workers? The clinic's PIMS uses `bun:sqlite`, and Workers cannot run it.
 

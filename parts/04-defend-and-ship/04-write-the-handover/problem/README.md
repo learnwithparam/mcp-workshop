@@ -26,11 +26,11 @@ flowchart LR
    them into `evals/` here. If not, use the sample files that are already here.
 2. List the tools the finished server shows the director:
 
-   ```bash
-   bun run try --as joon
-   ```
+```bash
+bun run try --as joon
+```
 
-   Expect: `The finished server, as joon, has 8 tool(s):`, then one line per tool.
+Expect: `The finished server, as joon, has 8 tool(s):`, then one line per tool.
 
 3. Fill in every section of `HANDOVER.md`. Replace each TODO.
    - **Tools**: one line per tool. Mark it "Read-only", "Writes, not destructive" or "Destructive". The
