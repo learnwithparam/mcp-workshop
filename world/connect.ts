@@ -94,12 +94,14 @@ export async function connectFolder(
 }
 
 function timeoutAfter(milliseconds: number): Promise<never> {
-  return new Promise<never>((_, reject) =>
-    setTimeout(
+  return new Promise<never>((_, reject) => {
+    const timer = setTimeout(
       () => reject(new Error("the server did not answer within 15 seconds")),
       milliseconds,
-    ),
-  );
+    );
+    // unref lets the command exit as soon as its work is done, without waiting for this timer.
+    timer.unref();
+  });
 }
 
 // The last three lines a server printed usually say why it failed to start.

@@ -3,14 +3,13 @@
 ## The problem
 
 `cancel_appointment` cancels at once. A model that misreads "can we move Biscuit?" as "cancel Biscuit" frees the
-slot, and the owner finds out at the door. A cancel cannot be undone by the model, so a person says yes first.
+slot, and the owner finds out at the door. The model cannot undo a cancel, so a person says yes first.
 
 The 2026-07-28 spec does this with one request in two rounds. The first answer is not a result. It is
 `input_required`: a question for the person. The client shows a confirm dialog, then sends the same call again
 with the answer.
 
-There is a trap. The client sends the answer, so a client can also invent it. It could send "yes" on the very
-first call. So your question carries a `requestState`: a small note, signed by your server, that says which
+There is a trap. The client sends the answer, so it can also invent it, even on the first call. So your question carries a `requestState`: a small note, signed by your server, that says which
 appointment you asked about. You trust a yes only when your own signed note comes back with it.
 
 ```mermaid
@@ -42,6 +41,7 @@ bun parts/03-open-the-server-safely/call-server.ts --as ola cancel_appointment '
 ```
 
 Expect: `The server asks: Cancel Biscuit, 15:40 on 2026-11-16 with Dr Sam Reyes?  (answering no)` and then `Kept A-00981. Nothing changed.`
+The starter really cancels it. Then run `bun run world reset` to get it back.
 
 For example, the sample solution's first answer, cut short:
 
@@ -51,7 +51,7 @@ For example, the sample solution's first answer, cut short:
  "requestState":"v1.eyJwIjp7ImFwcG9pbnRtZW50SWQiOiJBLTAwOTgxIn0sImV4cCI6MTc5NDU0NjI3N30.5gtnWZLI..."}
 ```
 
-The middle part is plain base64 that anyone can read. The last part is the signature, so nobody can change it.
+The middle part is plain base64 that anyone can read. The signature at the end stops changes.
 
 ![The server asks before it cancels, and keeps the appointment on a no](../images/expected.png)
 
@@ -83,6 +83,6 @@ Expect: `Done. All 7 rules pass.` once your work meets every Done when line. Bef
 ## Words you will use
 
 - **Elicitation**: the server asks the person a question through the client.
-- **`input_required`**: a result that says "I need an answer before I can finish".
+- **`input_required`**: a result that says "I need an answer first".
 - **`requestState`**: a note the server hands to the client and gets back on the retry. Sign it, because the
   client holds it.

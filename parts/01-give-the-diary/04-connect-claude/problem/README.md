@@ -2,10 +2,10 @@
 
 ## The problem
 
-A server that nobody can use helps nobody. Ola at the Millbrook desk will not type JSON into a terminal. She asks
+Ola at the Millbrook desk will not type JSON into a terminal. She asks
 Claude. A host is the app she talks to, such as Claude Code or Claude Desktop.
 
-In this last step, you tell a real host how to start your server. Then you watch the model use your tools. It
+Here you tell a real host how to start your server. Then you watch the model use your tools. It
 answers a real question from the live diary.
 
 ```mermaid
@@ -28,6 +28,7 @@ flowchart LR
    - Claude Code: open a terminal in this folder and run `claude`. Approve the `harrow-lane` server, and check it with `/mcp`.
    - Claude Desktop: add the same entry to its config file under Settings, Developer. Use full paths there, for
      example `"args": ["/full/path/to/this/folder/server.ts"]`. Desktop does not start in this folder.
+     If Desktop cannot find `bun`, put the full path that `which bun` prints in `"command"`.
 3. Ask: "Who can see Biscuit at Millbrook?" Paste the whole answer after `Answer:` in `notes/connect-claude.md`.
 
 First, run the command from your config yourself. Does it start and wait quietly? Then the host can start it too:

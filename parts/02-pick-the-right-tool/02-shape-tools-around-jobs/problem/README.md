@@ -63,7 +63,8 @@ Score: 19/20. Estimated tokens: 43,290.
 With no key, the eval replays recorded choices for these five tool names, so the names must match. Each recorded
 call must also work on your server. With a live model, your descriptions matter too.
 
-If you already know this: GitHub cut its default MCP tools from 102 to 52 for this reason. Add a sixth
+If you already know this: GitHub cut its default MCP tools from 102 to 52 for this reason
+([github/github-mcp-server pull request 1159](https://github.com/github/github-mcp-server/pull/1159)). Add a sixth
 tool for T19 and run the eval with a live model.
 
 ## Done when
@@ -82,10 +83,6 @@ bun run verify shape-tools-around-jobs
 ```
 
 Expect: `Done. All 8 rules pass.` once your work meets every Done when line. Before that, each FAIL line has a `Try next:`.
-
-```text
-Done. All 8 rules pass.
-```
 
 ## If you get stuck
 

@@ -32,7 +32,8 @@ earlier.
 bun install
 ```
 
-Expect: `bun install` ends with a line such as `29 packages installed` and no errors.
+Expect: `bun install` ends with a line such as `31 packages installed` and no errors. Your number can be a little
+different.
 
 ```bash
 bun run world

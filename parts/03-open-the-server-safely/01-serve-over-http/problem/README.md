@@ -48,7 +48,8 @@ For example, with the server running, ask for the tool list with plain `curl`. T
 curl -s -X POST http://127.0.0.1:8787/mcp -H 'content-type: application/json' -H 'accept: application/json, text/event-stream' -H 'mcp-method: tools/list' -H 'mcp-protocol-version: 2026-07-28' -d '{"jsonrpc":"2.0","id":1,"method":"tools/list","params":{"_meta":{"io.modelcontextprotocol/protocolVersion":"2026-07-28","io.modelcontextprotocol/clientCapabilities":{}}}}'
 ```
 
-Expect: one JSON line that starts `{"result":{"tools":[{"name":"find_patient"`.
+Expect: one JSON line that starts `{"result":{"tools":[{"name":"find_patient"`. The starter prints
+`TODO: serve MCP here` instead.
 
 If you already know this: `createMcpHandler` serves 2025-era clients by default (`legacy: 'stateless'`). Each
 legacy request gets a fresh server too, so `GET` and `DELETE` answer 405.

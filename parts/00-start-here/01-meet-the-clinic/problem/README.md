@@ -18,7 +18,7 @@ Run the finished system. Then fill in `answers.md` in this folder with three fac
 bun run world
 ```
 
-Expect: `Harrow Lane Veterinary: 3 sites, 12 staff, 400 owners, 600 patients.` and two more lines about the diary.
+Expect: `Harrow Lane Veterinary: 3 sites, 12 staff, 400 owners, 600 patients.` and three more lines about the diary.
 
 ```bash
 bun run ask "Can Biscuit get her booster at Millbrook?"

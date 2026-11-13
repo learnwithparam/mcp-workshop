@@ -60,6 +60,22 @@ const scoresWell = scenario(async (dir) => {
   });
 });
 
+// The eval stops before it scores when a tool name has no recording.
+// Then there is no score to show.
+function scoreHint(): string {
+  if (lastScores.length === 0) {
+    return (
+      "the eval could not run on your server. Run it yourself (the command is in the step " +
+      "README) and read its message. Most often one of the five job tools is missing or " +
+      "spelled differently"
+    );
+  }
+  return (
+    "run the eval on your server and fix each FAIL line. " +
+    `Scores seen: ${lastScores.join(", ")}. A tool error on a recorded call also fails the task`
+  );
+}
+
 function readDesigned(dir: string): EvalReport | undefined {
   const reportPath = join(dir, "evals", "designed.json");
   if (!existsSync(reportPath)) return undefined;
@@ -134,9 +150,7 @@ export default [
   rule(
     "Over 3 replay runs the eval scores at least 18 of 20, and at least 4 above the baseline",
     async (dir) => (await scoresWell(dir)) === true,
-    () =>
-      "run the eval on your server and fix each FAIL line. " +
-      `Scores seen: ${lastScores.join(", ")}. A tool error on a recorded call also fails the task`,
+    scoreHint,
   ),
   rule(
     "evals/designed.json is a saved eval run of this server that scores at least 18",
