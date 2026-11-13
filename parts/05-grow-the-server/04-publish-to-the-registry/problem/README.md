@@ -9,7 +9,11 @@ setting it needs. Each server describes itself in one file, `server.json`.
 A `server.json` can be valid and still wrong. For example, the starter has three problems:
 
 ```json
-{ "name": "Harrow Lane server", "version": "latest", "remotes": [{ "type": "streamable-http", "url": "TODO" }] }
+{
+  "name": "Harrow Lane server",
+  "version": "latest",
+  "remotes": [{ "type": "streamable-http", "url": "TODO" }]
+}
 ```
 
 The name has a space and no namespace. "latest" is not one exact version. And the remote has no real address, and
