@@ -1,0 +1,16 @@
+{
+  "tools": {
+    "submit_claim": {
+      "fingerprint": "c3970446d0a945daa2b9b8b851819775a9c709425d55e81426f6a573fe964c55",
+      "definition": "{\n  \"description\": \"Send a claim to Hollowmere Pet Insurance for a treatment the clinic gave.\",\n  \"inputSchema\": {\n    \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\n    \"properties\": {\n      \"invoiceTotal\": {\n        \"description\": \"The invoice total in pounds, for example 240\",\n        \"type\": \"number\"\n      },\n      \"patientId\": {\n        \"description\": \"Patient id, for example P-0001\",\n        \"type\": \"string\"\n      },\n      \"treatment\": {\n        \"description\": \"What the clinic did, for example Dental scale and polish\",\n        \"type\": \"string\"\n      }\n    },\n    \"required\": [\n      \"patientId\",\n      \"treatment\",\n      \"invoiceTotal\"\n    ],\n    \"type\": \"object\"\n  },\n  \"name\": \"submit_claim\"\n}"
+    },
+    "claim_status": {
+      "fingerprint": "74aa4f56a0d278f616180a05854fe8507ceff6dec232956c1809bff1e2fd3e53",
+      "definition": "{\n  \"description\": \"Show where a claim is: received, in review, paid or refused.\",\n  \"inputSchema\": {\n    \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\n    \"properties\": {\n      \"claimId\": {\n        \"description\": \"Claim id, for example HM-20931\",\n        \"type\": \"string\"\n      }\n    },\n    \"required\": [\n      \"claimId\"\n    ],\n    \"type\": \"object\"\n  },\n  \"name\": \"claim_status\"\n}"
+    },
+    "policy_for_pet": {
+      "fingerprint": "c683e8aa5417f69f02034465a6760238857452fa93e009e94cd5cd107493433a",
+      "definition": "{\n  \"description\": \"Show a pet's insurance policy: what it covers and the excess to pay.\",\n  \"inputSchema\": {\n    \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\n    \"properties\": {\n      \"patientId\": {\n        \"description\": \"Patient id, for example P-0001\",\n        \"type\": \"string\"\n      }\n    },\n    \"required\": [\n      \"patientId\"\n    ],\n    \"type\": \"object\"\n  },\n  \"name\": \"policy_for_pet\"\n}"
+    }
+  }
+}
