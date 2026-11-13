@@ -65,8 +65,9 @@ const scoresWell = scenario(async (dir) => {
 function scoreHint(): string {
   if (lastScores.length === 0) {
     return (
-      "the eval could not run on your server. Run it yourself (the command is in the step README) " +
-      "and read its message. Most often one of the five job tools is missing or spelled differently"
+      "the eval could not run on your server. Run it yourself (the command is in the step " +
+      "README) and read its message. Most often one of the five job tools is missing or " +
+      "spelled differently"
     );
   }
   return (
