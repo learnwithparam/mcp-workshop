@@ -1,0 +1,21 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.your-github-name/harrow-lane",
+  "title": "Harrow Lane Veterinary",
+  "description": "Find free slots, book and move appointments, and read notes for a three-site vet group.",
+  "version": "1.0.0",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "http://127.0.0.1:8787/mcp",
+      "headers": [
+        {
+          "name": "Authorization",
+          "description": "Bearer token from the Harrow Lane sign-in, minted for this URL",
+          "isRequired": true,
+          "isSecret": true
+        }
+      ]
+    }
+  ]
+}
