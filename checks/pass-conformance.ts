@@ -16,9 +16,10 @@ const SUITE_TIMEOUT_MS = 180000;
 
 type SuiteRun = { exitCode: number; output: string; unexpected: string[] };
 
-// The lines under "Unexpected failures": each names a scenario, or scenario:check.
+// The suite colours its output. Bun's stripANSI removes the colour codes.
+// The lines under "Unexpected failures" each name a scenario, or scenario:check.
 function unexpectedFailures(output: string): string[] {
-  const plain = output.replaceAll(/\u001b\[[0-9;]*m/g, "");
+  const plain = Bun.stripANSI(output);
   const section = plain.split("Unexpected failures (not in baseline):")[1] ?? "";
   const lines = section.split("\n").map((line) => line.trim());
   const failures = lines.filter((line) => line.startsWith("✗ "));
