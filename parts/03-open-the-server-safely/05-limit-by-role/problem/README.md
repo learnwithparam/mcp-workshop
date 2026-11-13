@@ -4,7 +4,7 @@
 
 Every signed-in person now sees every tool. Ola is a receptionist. She books and moves appointments. She should
 never read a dog's clinical notes or the controlled-drugs register. A vet reads notes, but only for patients of
-her own site. Only Joon, the clinical director, reads the drugs register.
+their own site. Only Joon, the clinical director, reads the drugs register.
 
 Each token carries scopes, the kinds of data it may touch. The clinic uses four:
 
