@@ -54,8 +54,7 @@ Bear is a harrow-lane patient. You can read notes for millbrook patients only.
 
 ![Ola sees six tools, Dr Reyes sees seven, and Ola's call to read_notes gets 403](../images/expected.png)
 
-If you already know this: the SDK can also run a `scopeChallenge` per tool, but only for tools that are registered.
-Here the tool is hidden, so the 403 comes from `http.ts`.
+If you already know this: an SDK `scopeChallenge` runs only for registered tools. A hidden tool needs `http.ts`.
 
 ## Done when
 
@@ -73,7 +72,6 @@ Expect: `Done. All 5 rules pass.` once your work meets every Done when line. Bef
 
 ## If you get stuck
 
-- The scope says what kind of data. The site rule is about which records. You need both checks.
 - Check the site before you call `clinic.clinicalNotes`. The check reads the world log to see what was read.
 - The solution is there after you try: `../solution/server.ts` and `../solution/http.ts`.
 

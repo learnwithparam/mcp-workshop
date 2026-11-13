@@ -35,7 +35,7 @@ Follow the three TODO lines in `server.ts`:
 2. Sign the state with `createRequestStateCodec`. Give `new McpServer` its `verify`.
 3. On the retry, cancel only on a yes whose signed state names this same appointment.
 
-Try it with your server running. The helper answers no unless you say `--confirm yes`:
+Try it with your server running. The helper answers no unless you add `--confirm yes`:
 
 ```bash
 bun parts/03-open-the-server-safely/call-server.ts --as ola cancel_appointment '{"appointmentId":"A-00981"}'
@@ -43,7 +43,7 @@ bun parts/03-open-the-server-safely/call-server.ts --as ola cancel_appointment '
 
 Expect: `The server asks: Cancel Biscuit, 15:40 on 2026-11-16 with Dr Sam Reyes?  (answering no)` and then `Kept A-00981. Nothing changed.`
 
-For example, here is the first answer the sample solution sends, cut short:
+For example, the sample solution's first answer, cut short:
 
 ```text
 {"resultType":"input_required","inputRequests":{"confirm":{"method":"elicitation/create",
@@ -51,8 +51,7 @@ For example, here is the first answer the sample solution sends, cut short:
  "requestState":"v1.eyJwIjp7ImFwcG9pbnRtZW50SWQiOiJBLTAwOTgxIn0sImV4cCI6MTc5NDU0NjI3N30.5gtnWZLI..."}
 ```
 
-The middle part is plain base64: `{"p":{"appointmentId":"A-00981"},"exp":...}`. Anyone can read it. The last part is
-the signature, so nobody can change it. Signed is not the same as secret.
+The middle part is plain base64 that anyone can read. The last part is the signature, so nobody can change it.
 
 ![The server asks before it cancels, and keeps the appointment on a no](../images/expected.png)
 
@@ -77,9 +76,8 @@ Expect: `Done. All 7 rules pass.` once your work meets every Done when line. Bef
 
 ## If you get stuck
 
-- `context.mcpReq.requestState()` gives the payload you minted, already checked by `verify`. It is undefined on
-  the first call.
-- A tampered state never reaches your tool. `verify` refuses it with error `-32602`.
+- `context.mcpReq.requestState()` gives the payload you minted. It is undefined on the first call.
+- `verify` refuses a tampered state with error `-32602` before your tool runs.
 - The solution is there after you try: `../solution/server.ts`.
 
 ## Words you will use
@@ -88,4 +86,3 @@ Expect: `Done. All 7 rules pass.` once your work meets every Done when line. Bef
 - **`input_required`**: a result that says "I need an answer before I can finish".
 - **`requestState`**: a note the server hands to the client and gets back on the retry. Sign it, because the
   client holds it.
-- **Destructive**: a tool that changes or removes data in a way that is hard to undo.

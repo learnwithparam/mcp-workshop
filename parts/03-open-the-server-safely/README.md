@@ -54,25 +54,96 @@ sequenceDiagram
 
 ## Steps
 
-| Step                    | Minutes | You produce                                                                                           | The check reads                                                                                                                          |
-| ----------------------- | ------- | ----------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| `serve-over-http`       | 15      | `createMcpHandler` served by Bun on `127.0.0.1:8787/mcp`, with a Host check                           | a stateless `tools/list` with no session, 403 for `Host: evil.example`, a legacy-era client still served                                 |
-| `pass-conformance`      | 10      | nothing new unless it fails                                                                           | `@modelcontextprotocol/conformance` exit code against the server, with a shipped expected-failures file (pin the exact version at build) |
-| `require-a-token`       | 15      | `requireBearerAuth` and protected resource metadata                                                   | 401 with `WWW-Authenticate` naming the metadata URL; the metadata JSON; a token in the query string refused                              |
-| `check-the-audience`    | 10      | token checks for issuer, expiry and audience; no passthrough to the PIMS                              | tokens minted for another server and expired tokens get 401; the world log shows no inbound token sent on                                |
-| `limit-by-role`         | 10      | scopes `diary:read`, `diary:write`, `notes:read`, `drugs:read`, with tools hidden or refused by scope | Ola's token lists no notes tool and gets 403 on a direct call; Dr Reyes reads notes for her site only; only Joon reads the drugs log     |
-| `confirm-before-cancel` | 10      | `cancel_appointment` that returns `input_required` and cancels only on a yes                          | the diary row after a first call, a retry with no, a retry with yes, and a tampered `requestState`                                       |
+| Step                    | Minutes | You produce                                                                                           | The check reads                                                                                                                                |
+| ----------------------- | ------- | ----------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| `serve-over-http`       | 15      | `createMcpHandler` served by Bun on `127.0.0.1:8787/mcp`, with a Host check                           | a stateless `tools/list` with no session, 403 for `Host: evil.example`, a legacy-era client still served                                       |
+| `pass-conformance`      | 10      | a fix to `http.ts`, so the official suite passes                                                      | `@modelcontextprotocol/conformance@0.2.0-alpha.12` against the server, with `conformance-expected-failures.yml`                                |
+| `require-a-token`       | 15      | `requireBearerAuth` and protected resource metadata                                                   | 401 with `WWW-Authenticate` naming the metadata URL; the metadata JSON; a token in the query string refused                                    |
+| `check-the-audience`    | 10      | token checks for issuer, expiry and audience; no passthrough to the PIMS                              | tokens minted for another server and expired tokens get 401; the world log shows no inbound token sent on                                      |
+| `limit-by-role`         | 10      | scopes `diary:read`, `diary:write`, `notes:read`, `drugs:read`, with tools hidden or refused by scope | Ola's token lists no notes tool and gets 403 on a direct call; Dr Reyes reads notes for Millbrook patients only; only Joon reads the drugs log |
+| `confirm-before-cancel` | 10      | `cancel_appointment` that returns `input_required` and cancels only on a yes                          | the diary row after a first call, a retry with no, a yes with no, tampered or borrowed `requestState`, then a real yes                         |
 
-Total: 70 minutes. The finished server in `world/finished/` already does all six. Tokens come from `world/auth.ts`.
+Total: 70 minutes. Tokens come from `world/auth.ts`, the course's stand-in for the clinic's sign-in service. Your
+server imports what it needs from `clinic-login.ts` in this folder.
 
 ## Walkthrough
 
-TODO(part session): one `bun run verify <step-name>` per step, each with its `Expect:` line.
+You work in each step's `problem/` folder. Every step has two files you change: `server.ts` (the tools) and
+`http.ts` (how requests arrive). Each starter is the step before's solution, plus TODO lines.
+
+Start your server in its own terminal, from the step's `problem/` folder:
+
+```bash
+cd parts/03-open-the-server-safely/01-serve-over-http/problem && bun http.ts
+```
+
+Expect: `harrow-lane server listening on http://127.0.0.1:8787/mcp`. Press Ctrl+C to stop it.
+
+From step `require-a-token` on, talk to it as one of the demo staff with the helper in this folder:
+
+```bash
+bun parts/03-open-the-server-safely/call-server.ts --as sam
+```
+
+Expect: `As sam, your server lists 7 tool(s):` once you finish `limit-by-role`.
+
+Each check starts your server itself, on a free port, with a fresh copy of the diary:
+
+```bash
+bun run verify serve-over-http
+```
+
+Expect: `Done. All 5 rules pass.` once your work meets every Done when line. Before that, each FAIL line has a `Try next:`.
+
+```bash
+bun run verify pass-conformance
+```
+
+Expect: `Done. All 4 rules pass.` The first run downloads the conformance suite, so it needs the internet once.
+
+```bash
+bun run verify require-a-token
+```
+
+Expect: `Done. All 6 rules pass.` once a missing, forged or query-string token gets 401.
+
+```bash
+bun run verify check-the-audience
+```
+
+Expect: `Done. All 4 rules pass.` once a lab-results token gets 401 and no token reaches the PIMS.
+
+```bash
+bun run verify limit-by-role
+```
+
+Expect: `Done. All 5 rules pass.` once Ola sees six tools and gets 403 on `read_notes`.
+
+```bash
+bun run verify confirm-before-cancel
+```
+
+Expect: `Done. All 7 rules pass.` once a cancel waits for a signed yes.
 
 ```bash
 bun run verify part open-the-server-safely
 ```
 
-Expect: `Part open-the-server-safely is done: 6/6 steps pass.` once the part session has built the steps.
+Expect: `Part open-the-server-safely is done: 6/6 steps pass.`
 
-A later build session adds the steps of this part. Until then, the table above shows what each step asks of you.
+## Finished
+
+You now have a remote MCP server that the whole clinic can use:
+
+- it serves the 2026-07-28 spec over Streamable HTTP, with no sessions, and still serves older hosts;
+- it passes the official conformance suite, with every excused scenario written down and explained;
+- it refuses a missing, forged, expired or misdirected token, and never passes a token on;
+- each person sees only the tools their role allows, and a vet reads only their own site's notes;
+- a cancel waits for a person's yes, and the yes cannot be faked or moved to another appointment.
+
+For example, Ola's token lists six tools. Dr Reyes's token lists seven. Joon's token is the only one that reads
+the controlled-drugs register.
+
+The next part, `defend-and-ship`, puts this server in front of real risk. A third-party insurance server's tool
+description turns hostile, a clinical note carries an injected instruction, and the server goes live at a public
+URL. The Part 03 checks then run again against that URL.
