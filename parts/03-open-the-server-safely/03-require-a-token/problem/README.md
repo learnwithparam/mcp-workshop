@@ -6,8 +6,8 @@ Your server now has a URL, and it answers anyone who finds it. A request with no
 patients and book appointments. Every request needs to say who is asking, with a token.
 
 A token is a signed note from the clinic's authorization server: "this is Ola, a Millbrook receptionist, until
-16:00". MCP uses OAuth for this. Your server is the resource server. It never signs anyone in. It reads the token,
-checks it, and says no when the token is missing or wrong.
+16:00". MCP uses OAuth for this. Your server is the resource server. It never signs anyone in. It reads the token and
+checks it. It says no when the token is missing or wrong.
 
 A client with no token also needs to learn where to sign in. Your 401 answer tells it, through a small public
 JSON file called the protected resource metadata.
@@ -28,16 +28,12 @@ sequenceDiagram
 
 ## Your challenge
 
-Change `http.ts`. The TODO lines show where.
+Change `http.ts`. Each TODO line shows where.
 
-1. Import `ISSUER`, `RESOURCE` and `readToken` from `"../../clinic-login"`.
-2. Serve the metadata: `oauthMetadataResponse(request, { oauthMetadata, resourceServerUrl })`. Put it before the
-   path check, because it is not on `/mcp`.
-3. Build `checkBearerToken` with `requireBearerAuth({ verifier, resourceMetadataUrl })`. The verifier's
-   `verifyAccessToken(token)` calls `readToken(token)` and returns an `AuthInfo`. On an error it throws
-   `new OAuthError(OAuthErrorCode.InvalidToken, ...)`.
-4. When `checkBearerToken(request)` gives back a `Response`, return it. Otherwise call
-   `mcpHandler.fetch(request, { authInfo })`.
+1. Serve the metadata with `oauthMetadataResponse`. Do it before the path check, because it is not on `/mcp`.
+2. Build `checkBearerToken` with `requireBearerAuth`. Its verifier calls `readToken` from `"../../clinic-login"`.
+3. When `checkBearerToken` gives back a `Response`, return it. That is the 401.
+4. Otherwise pass the caller on with `mcpHandler.fetch(request, { authInfo })`.
 
 For example, here is what the sample solution answers to a request with no token:
 

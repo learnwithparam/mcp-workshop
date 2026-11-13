@@ -29,10 +29,13 @@ function metadataUrlFor(url: string) {
   return `${new URL(url).origin}/.well-known/oauth-protected-resource/mcp`;
 }
 
-async function readMetadata(url: string) {
+// biome-ignore lint/style/useNamingConvention: the metadata field names are fixed by RFC 9728
+type ResourceMetadata = { resource?: string; authorization_servers?: string[] };
+
+async function readMetadata(url: string): Promise<ResourceMetadata> {
   const response = await fetch(metadataUrlFor(url));
   if (response.status !== 200) return {};
-  return (await response.json()) as { resource?: string; authorization_servers?: string[] };
+  return (await response.json()) as ResourceMetadata;
 }
 
 const run = scenario(async (dir) =>
