@@ -45,7 +45,9 @@ Expect: `Pinned 3 tools in pins.json.`
 bun pins.ts check ../insurance/release-1.4.1.ts
 ```
 
-Expect: `CHANGED submit_claim: its definition is not the one you pinned.`, then the new lines, and exit code 1.
+Expect: `CHANGED submit_claim: its definition is not the one you pinned.`, then the new lines. To see the exit code,
+run `echo $?` next. It prints `1`, which means the check failed. The starter prints `OK` here, because its
+fingerprint misses the change.
 
 Your screen should look like this:
 

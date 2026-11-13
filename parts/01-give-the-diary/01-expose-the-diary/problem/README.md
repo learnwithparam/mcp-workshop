@@ -11,12 +11,20 @@ The PIMS already has a "find a slot" search: `clinic.freeSlots`. Nothing connect
 
 Turn `server.ts` in this folder into an MCP server with one read tool, `find_free_slots`, served over stdio.
 
-1. Register the tool with `server.registerTool(name, { description, inputSchema }, handler)`.
-2. Arguments: `site` (one of `harrow-lane`, `millbrook`, `eastgate`), an optional `date` (YYYY-MM-DD), and
+1. Add two imports at the top of the file. `#clinic` is a short name this repo gives to `world/clinic.ts`, the
+   PIMS:
+
+   ```typescript
+   import * as z from "zod/v4";
+   import { clinic } from "#clinic";
+   ```
+
+2. Register the tool with `server.registerTool(name, { description, inputSchema }, handler)`.
+3. Arguments: `site` (one of `harrow-lane`, `millbrook`, `eastgate`), an optional `date` (YYYY-MM-DD), and
    `length` in minutes (default 20). Use a Zod object. Give every field a `.describe("...")`.
-3. The handler calls `clinic.freeSlots({ site, date, length })` on every call. It returns each start time and vet
+4. The handler calls `clinic.freeSlots({ site, date, length })` on every call. It returns each start time and vet
    as text. When `date` is missing, use `clinic.clock().date`.
-4. Log only with `console.error`. Over stdio, stdout belongs to the protocol.
+5. Log only with `console.error`. Over stdio, stdout belongs to the protocol.
 
 Before you run the check, try your server the way a client does:
 

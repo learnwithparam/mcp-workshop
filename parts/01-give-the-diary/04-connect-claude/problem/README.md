@@ -28,6 +28,8 @@ flowchart LR
    - Claude Code: open a terminal in this folder and run `claude`. Approve the `harrow-lane` server, and check it with `/mcp`.
    - Claude Desktop: add the same entry to its config file under Settings, Developer. Use full paths there, for
      example `"args": ["/full/path/to/this/folder/server.ts"]`. Desktop does not start in this folder.
+     Desktop may also not find `bun`. Then run `which bun` in a terminal, and put the path it prints in
+     `"command"`, for example `"command": "/Users/you/.bun/bin/bun"`.
 3. Ask: "Who can see Biscuit at Millbrook?" Paste the whole answer after `Answer:` in `notes/connect-claude.md`.
 
 First, run the command from your config yourself. Does it start and wait quietly? Then the host can start it too:
