@@ -84,10 +84,6 @@ bun run verify shape-tools-around-jobs
 
 Expect: `Done. All 8 rules pass.` once your work meets every Done when line. Before that, each FAIL line has a `Try next:`.
 
-```text
-Done. All 8 rules pass.
-```
-
 ## If you get stuck
 
 - A task fails although the model chose the right tool: look for a tool error. Your tool refused a good input.

@@ -5,7 +5,7 @@
 Many teams build their first MCP server by copying the PIMS API. Harrow Lane did too. The result is the "API
 mirror": fourteen tools, one for each endpoint, such as `search_patients`, `list_owners` and `getPatient`.
 
-It works when you call it by hand. But a model has to pick the right tool from fourteen, and it often gets it
+But a model has to pick the right tool from fourteen, and it often gets it
 wrong. You cannot fix that until you can measure it.
 
 An eval is a test for a model. It gives the model the same tasks every time and scores what it does. This eval
@@ -34,9 +34,8 @@ Eval of api-mirror (14 tools, provider replay):
 Score: 12/20. Estimated tokens: 50,440.
 ```
 
-The `expected` column names the job, such as `vaccines_due`. It is not a tool of the API mirror. On the mirror,
-the tool that does that job is `list_vaccinations`. The `called` column shows the mirror tools the model really
-called. In T02 it called `list_clinical_notes`, so the task fails.
+The `expected` column names the job tool, such as `vaccines_due`. The mirror has no tool with that name. There,
+`list_vaccinations` does that job.
 
 2. Open `evals/baseline.json`. Each task has the calls the model made, `pass`, and `estimatedTokens`.
 3. Fill in `evals/notes.md`: the score, the worst mix-up, the wrong tool, and why you think the model chose it.
@@ -63,10 +62,6 @@ bun run verify eval-tool-choice
 
 Expect: `Done. All 7 rules pass.` once your work meets every Done when line. Before that, each FAIL line has a `Try next:`.
 
-```text
-Done. All 7 rules pass.
-```
-
 ## If you get stuck
 
 - `There is no recording`: for this step, run the eval on `api-mirror`, not on your server.
@@ -77,5 +72,4 @@ Done. All 7 rules pass.
 
 - **Eval**: a fixed set of tasks for a model, with a score, so you can compare one design with another.
 - **Baseline**: the first score, saved, so you can show that a later change made things better.
-- **Replay**: playing back recorded model choices instead of calling a live model. It needs no key.
 - **Token**: a small piece of text. Models read and charge by tokens, and about four characters make one.

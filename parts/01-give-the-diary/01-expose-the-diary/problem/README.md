@@ -3,7 +3,7 @@
 ## The problem
 
 The Millbrook front desk hears "when can you see my dog?" all the time. To answer, staff click into the PIMS, pick
-a vet, and scan the vet's diary. Claude could answer in one line, but it cannot see the diary.
+a vet, and scan the vet's diary. Claude cannot see the diary.
 
 The PIMS already has a "find a slot" search: `clinic.freeSlots`. Nothing connects it to a model yet.
 
@@ -11,13 +11,8 @@ The PIMS already has a "find a slot" search: `clinic.freeSlots`. Nothing connect
 
 Turn `server.ts` in this folder into an MCP server with one read tool, `find_free_slots`, served over stdio.
 
-1. Add two imports at the top of the file. `#clinic` is a short name this repo gives to `world/clinic.ts`, the
-   PIMS:
-
-   ```typescript
-   import * as z from "zod/v4";
-   import { clinic } from "#clinic";
-   ```
+1. At the top of the file, add `import * as z from "zod/v4";` and `import { clinic } from "#clinic";`.
+   `#clinic` is this repo's short name for `world/clinic.ts`, the PIMS.
 
 2. Register the tool with `server.registerTool(name, { description, inputSchema }, handler)`.
 3. Arguments: `site` (one of `harrow-lane`, `millbrook`, `eastgate`), an optional `date` (YYYY-MM-DD), and
@@ -47,8 +42,8 @@ Free 20-minute slots at millbrook on 2026-11-16:
 
 ![The tool answering for Millbrook](../images/expected.png)
 
-If you already know this: the check also starts your server raw and reads stdout before any request. A banner on
-stdout passes the SDK client here, but it breaks other hosts.
+If you already know this: the check reads stdout before any request. A banner there passes the SDK client, but
+it breaks other hosts.
 
 ## Done when
 
@@ -69,12 +64,12 @@ Expect: `Done. All 8 rules pass.` once your work meets every Done when line. Bef
 
 ## If you get stuck
 
-- The SDK's own guide to a first server is short: https://ts.sdk.modelcontextprotocol.io/v2/ (Get started, Build your first server).
-- `inputSchema` is the only schema you write. The SDK turns it into the JSON Schema the model sees. It also checks
-  every call against it before your handler runs.
+- The SDK's guide to a first server: https://ts.sdk.modelcontextprotocol.io/v2/.
+- `inputSchema` is the only schema you write. The SDK turns it into the JSON Schema the model sees, and checks
+  every call against it.
 - Old tutorials use `server.tool(...)` and `@modelcontextprotocol/sdk`. That is SDK v1. Use `registerTool` from
   `@modelcontextprotocol/server`.
-- Stuck for a long time? Compare with `../solution/server.ts`.
+- Still stuck? Compare with `../solution/server.ts`.
 
 ## Words you will use
 
