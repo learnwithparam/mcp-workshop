@@ -1,5 +1,33 @@
-[one-day]
-sessions = [{ parts = ["meet-the-world"], minutes = 60 }]
+# Parts mapped onto formats. This is the only file that talks about time.
+# Part minutes (from each step.toml, and from PARTS.md for parts still waiting for their session):
+# start-here 15, give-the-diary 50, pick-the-right-tool 65, open-the-server-safely 70, defend-and-ship 55,
+# grow-the-server 95. Core 255, extension 95, total 350. Session minutes include breaks and review.
 
-[four-evenings]
-sessions = [{ parts = ["meet-the-world"], minutes = 60 }]
+[one-day]
+# 09:00 to 17:00 with a 60-minute lunch after the second session. 420 teaching minutes plus lunch = 480.
+sessions = [
+  { parts = ["start-here", "give-the-diary"], minutes = 65, note = "morning, first block" },
+  { parts = ["pick-the-right-tool"], minutes = 80, note = "morning, after a 15-minute break" },
+  { parts = ["open-the-server-safely"], minutes = 85, note = "early afternoon, with a 15-minute break" },
+  { parts = ["defend-and-ship", "grow-the-server"], minutes = 190, note = "late afternoon: 150 minutes, a 15-minute break and a 25-minute show and tell" },
+]
+
+[five-evenings]
+# Five evenings of about 90 minutes each. The last evening is the extension.
+sessions = [
+  { parts = ["start-here", "give-the-diary"], minutes = 90, note = "evening 1" },
+  { parts = ["pick-the-right-tool"], minutes = 90, note = "evening 2" },
+  { parts = ["open-the-server-safely"], minutes = 90, note = "evening 3" },
+  { parts = ["defend-and-ship"], minutes = 90, note = "evening 4" },
+  { parts = ["grow-the-server"], minutes = 100, note = "evening 5, extension" },
+]
+
+[four-week-cohort]
+# One live session a week plus homework. Graded: week 1 connect-claude, week 2 eval score, week 3 auth checks,
+# week 4 deploy-the-server against the learner's URL and the handover.
+sessions = [
+  { parts = ["start-here", "give-the-diary"], minutes = 75, note = "week 1 live, 10 minutes review" },
+  { parts = ["pick-the-right-tool"], minutes = 75, note = "week 2 live, 10 minutes review" },
+  { parts = ["open-the-server-safely"], minutes = 75, note = "week 3 live, 5 minutes review" },
+  { parts = ["defend-and-ship", "grow-the-server"], minutes = 170, note = "week 4: 75 live (20 review) and the 95-minute extension as homework" },
+]

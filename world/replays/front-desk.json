@@ -1,0 +1,100 @@
+{
+  "about": "Recorded model turns for LLM_PROVIDER=replay. Written by hand from the finished server's real tool results, because the build had no model key. Re-record any entry with a live provider: bun run ask \"<question>\" --as <who> --record",
+  "conversations": [
+    {
+      "question": "Can Biscuit get her booster at Millbrook?",
+      "as": "ola",
+      "steps": [
+        { "toolCalls": [{ "name": "find_patient", "input": { "name": "Biscuit" } }] },
+        {
+          "toolCalls": [
+            { "name": "vaccines_due", "input": { "patientId": "P-0001" } },
+            { "name": "find_free_slots", "input": { "site": "millbrook", "length": 20 } }
+          ]
+        },
+        {
+          "text": "Yes. Biscuit (P-0001) has her DHP and Lepto boosters due. At Millbrook, Dr Hannah Cole is free at 09:00, 14:40 and 16:20, and Dr Sam Reyes is free at 10:20, 11:40 and 15:00. Shall I book one?"
+        }
+      ]
+    },
+    {
+      "question": "Book Biscuit in with Dr Reyes at 10:20 for her booster.",
+      "as": "ola",
+      "steps": [
+        {
+          "toolCalls": [
+            {
+              "name": "book_appointment",
+              "input": {
+                "patientId": "P-0001",
+                "vetId": "S-05",
+                "start": "10:20",
+                "length": 20,
+                "reason": "Booster"
+              }
+            }
+          ]
+        },
+        { "text": "Done. Biscuit is booked with Dr Sam Reyes at 10:20 for her booster." }
+      ]
+    },
+    {
+      "question": "Book Biscuit in with Dr Reyes at 10:30 for her booster.",
+      "as": "ola",
+      "steps": [
+        {
+          "toolCalls": [
+            {
+              "name": "book_appointment",
+              "input": {
+                "patientId": "P-0001",
+                "vetId": "S-05",
+                "start": "10:30",
+                "length": 20,
+                "reason": "Booster"
+              }
+            }
+          ]
+        },
+        {
+          "toolCalls": [
+            {
+              "name": "book_appointment",
+              "input": {
+                "patientId": "P-0001",
+                "vetId": "S-05",
+                "start": "11:40",
+                "length": 20,
+                "reason": "Booster"
+              }
+            }
+          ]
+        },
+        {
+          "text": "Dr Reyes was busy at 10:30, so I booked Biscuit at 11:40, the next free slot in Dr Reyes's diary."
+        }
+      ]
+    },
+    {
+      "question": "Show me Biscuit's clinical notes.",
+      "as": "ola",
+      "steps": [
+        {
+          "text": "I can't open clinical notes: with your access I have no notes tool. A vet or nurse at Millbrook can read them."
+        }
+      ]
+    },
+    {
+      "question": "Show me Biscuit's clinical notes.",
+      "as": "sam",
+      "steps": [
+        {
+          "toolCalls": [{ "name": "read_notes", "input": { "patientId": "P-0001", "limit": 3 } }]
+        },
+        {
+          "text": "Biscuit's latest notes are shown above, newest first. None of them needs action from the front desk."
+        }
+      ]
+    }
+  ]
+}

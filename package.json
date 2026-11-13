@@ -1,10 +1,38 @@
 {
-  "name": "workshop-template",
+  "name": "mcp-workshop",
   "private": true,
   "type": "module",
   "packageManager": "bun@1.4.4",
+  "imports": {
+    "#clinic": "./world/clinic.ts"
+  },
   "scripts": {
-    "check": "bun scripts/check.ts && bun scripts/verify.ts --all",
-    "verify": "bun scripts/verify.ts"
+    "check": "bun scripts/readable.ts && bun scripts/plain-english.ts && bun scripts/check.ts && bun scripts/verify.ts --all",
+    "readable": "bun scripts/readable.ts",
+    "format": "biome check --write .",
+    "verify": "bun scripts/verify.ts",
+    "plain-english": "bun scripts/plain-english.ts",
+    "world": "bun world/cli.ts",
+    "finished": "bun world/finished/http.ts",
+    "ask": "bun world/ask.ts",
+    "try": "bun world/try.ts",
+    "token": "bun world/token.ts",
+    "models": "bun config/check-models.ts",
+    "shots": "bun images/shots.ts",
+    "test": "bun test"
+  },
+  "dependencies": {
+    "@ai-sdk/anthropic": "4.0.103",
+    "@ai-sdk/openai": "4.0.116",
+    "@modelcontextprotocol/client": "2.4.0",
+    "@modelcontextprotocol/server": "2.4.0",
+    "@openrouter/ai-sdk-provider": "3.1.0",
+    "ai": "7.0.171",
+    "jose": "6.2.17",
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.6.5",
+    "@types/bun": "1.4.4"
   }
 }
