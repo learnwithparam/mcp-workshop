@@ -29,7 +29,7 @@ bun run try find_free_slots '{"site":"millbrook"}' --server parts/01-give-the-di
 
 Expect: `Result from find_free_slots:` and six start times, three for Dr Sam Reyes and three for Dr Hannah Cole.
 
-For example, the sample solution prints this. The starter has no tool yet, so it prints `Protocol error: Method not found`.
+For example, the sample solution prints this. The starter has no tool yet, so it prints `The server broke the MCP rules: Method not found.`
 
 ```text
 Result from find_free_slots:
