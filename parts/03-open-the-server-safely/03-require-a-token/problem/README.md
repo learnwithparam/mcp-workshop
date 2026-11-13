@@ -2,7 +2,7 @@
 
 ## The problem
 
-Your server now has a URL, and it answers anyone who finds it. A request with no sign-in can still list
+Your server has a URL, and it answers anyone who finds it. A request with no sign-in can still list
 patients and book appointments. Every request needs to say who is asking, with a token.
 
 A token is a signed note from the clinic's authorization server: "this is Ola, a Millbrook receptionist, until
@@ -28,26 +28,35 @@ sequenceDiagram
 
 ## Your challenge
 
-Change `http.ts`. Each TODO line shows where.
+Change `http.ts`. The TODO lines show where.
 
 1. Serve the metadata with `oauthMetadataResponse`. Do it before the path check, because it is not on `/mcp`.
 2. Build `checkBearerToken` with `requireBearerAuth`. Its verifier calls `readToken` from `"../../clinic-login"`.
 3. When `checkBearerToken` gives back a `Response`, return it. That is the 401.
 4. Otherwise pass the caller on with `mcpHandler.fetch(request, { authInfo })`.
 
-For example, here is what the sample solution answers to a request with no token:
+Start your server in one terminal:
+
+```bash
+cd parts/03-open-the-server-safely/03-require-a-token/problem && bun http.ts
+```
+
+Expect: `harrow-lane server listening on http://127.0.0.1:8787/mcp`.
+
+For example, send a request with no token from a second terminal:
 
 ```bash
 curl -s -i -X POST http://127.0.0.1:8787/mcp -d '{}'
 ```
 
 Expect: `HTTP/1.1 401 Unauthorized` and a header `WWW-Authenticate: Bearer error="invalid_token", error_description="Missing Authorization header", resource_metadata="http://127.0.0.1:8787/.well-known/oauth-protected-resource/mcp"`.
+The starter answers `415 Unsupported Media Type`: it checks no token yet.
 
 To try a real token, run `bun run finished` once and copy Ola's token. Stop it, start your server, and send
 the token in the header `Authorization: Bearer <token>`.
 
-If you already know this: `requireBearerAuth` reads only the `Authorization` header. That is the spec's rule, so a
-token never sits in a URL, a log or a browser history.
+If you already know this: `requireBearerAuth` reads only the `Authorization` header, so a token never sits in a
+URL or a log.
 
 ## Done when
 
