@@ -34,6 +34,10 @@ Eval of api-mirror (14 tools, provider replay):
 Score: 12/20. Estimated tokens: 50,440.
 ```
 
+The `expected` column names the job, such as `vaccines_due`. It is not a tool of the API mirror. On the mirror,
+the tool that does that job is `list_vaccinations`. The `called` column shows the mirror tools the model really
+called. In T02 it called `list_clinical_notes`, so the task fails.
+
 2. Open `evals/baseline.json`. Each task has the calls the model made, `pass`, and `estimatedTokens`.
 3. Fill in `evals/notes.md`: the score, the worst mix-up, the wrong tool, and why you think the model chose it.
 
