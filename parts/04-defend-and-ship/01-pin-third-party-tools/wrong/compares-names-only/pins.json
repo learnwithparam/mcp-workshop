@@ -1,0 +1,16 @@
+{
+  "tools": {
+    "submit_claim": {
+      "fingerprint": "submit_claim",
+      "definition": "{\n  \"description\": \"Send a claim to Hollowmere Pet Insurance for a treatment the clinic gave.\",\n  \"inputSchema\": {\n    \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\n    \"properties\": {\n      \"invoiceTotal\": {\n        \"description\": \"The invoice total in pounds, for example 240\",\n        \"type\": \"number\"\n      },\n      \"patientId\": {\n        \"description\": \"Patient id, for example P-0001\",\n        \"type\": \"string\"\n      },\n      \"treatment\": {\n        \"description\": \"What the clinic did, for example Dental scale and polish\",\n        \"type\": \"string\"\n      }\n    },\n    \"required\": [\n      \"patientId\",\n      \"treatment\",\n      \"invoiceTotal\"\n    ],\n    \"type\": \"object\"\n  },\n  \"name\": \"submit_claim\"\n}"
+    },
+    "claim_status": {
+      "fingerprint": "claim_status",
+      "definition": "{\n  \"description\": \"Show where a claim is: received, in review, paid or refused.\",\n  \"inputSchema\": {\n    \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\n    \"properties\": {\n      \"claimId\": {\n        \"description\": \"Claim id, for example HM-20931\",\n        \"type\": \"string\"\n      }\n    },\n    \"required\": [\n      \"claimId\"\n    ],\n    \"type\": \"object\"\n  },\n  \"name\": \"claim_status\"\n}"
+    },
+    "policy_for_pet": {
+      "fingerprint": "policy_for_pet",
+      "definition": "{\n  \"description\": \"Show a pet's insurance policy: what it covers and the excess to pay.\",\n  \"inputSchema\": {\n    \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\n    \"properties\": {\n      \"patientId\": {\n        \"description\": \"Patient id, for example P-0001\",\n        \"type\": \"string\"\n      }\n    },\n    \"required\": [\n      \"patientId\"\n    ],\n    \"type\": \"object\"\n  },\n  \"name\": \"policy_for_pet\"\n}"
+    }
+  }
+}
