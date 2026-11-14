@@ -52,9 +52,10 @@ flowchart TB
 | `pin-third-party-tools`     | 15      | `pins.ts` and `pins.json`: a fingerprint of every tool's full definition | `bun pins.ts check` against four insurance releases: one trusted, three changed    |
 | `break-the-lethal-trifecta` | 15      | a server with one leg cut, named in `notes/trifecta.md`                  | the recorded attack on Pepper (P-0042), 3 runs: every tool argument and the outbox |
 | `deploy-the-server`         | 15      | `PORT` and `PUBLIC_URL` read from settings, and a `Dockerfile`           | a rehearsal of your `CMD`, or your live URL: 401, metadata, audience, Ola and Joon |
+| `limit-requests`            | 15      | a rate limit for each client and a deadline for each request             | 80 quick requests from Joon, then Ola; a zero deadline                             |
 | `write-the-handover`        | 10      | `HANDOVER.md`: tools, scopes, eval scores, threats and defences          | six sections; every tool and its annotation; scores matched to the eval JSON       |
 
-Total: 55 minutes.
+Total: 70 minutes.
 
 Each step has its own starter in `problem/`, so you can start any step fresh. The steps do not build on each other's
 files. Do you want to deploy your own server from Part 3? Then copy it into `deploy-the-server/problem/` and keep
@@ -98,6 +99,8 @@ bun run verify deploy-the-server --url https://your-server.example/mcp
 
 Expect: `Done. All 7 rules pass.`, with every request sent to your live address.
 
+Limit each client and each request with `bun run verify limit-requests`. Expect: `Done. All 4 rules pass.`
+
 Write the handover from the real numbers:
 
 ```bash
@@ -110,7 +113,7 @@ Expect: `Done. All 6 rules pass.` once your work meets every Done when line. Bef
 bun run verify part defend-and-ship
 ```
 
-Expect: `Part defend-and-ship is done: 4/4 steps pass.` once every step passes.
+Expect: `Part defend-and-ship is done: 5/5 steps pass.` once every step passes.
 
 ## Assignment
 
@@ -122,7 +125,7 @@ Hand in your repo with these files filled in:
 - `01-pin-third-party-tools/problem/pins.ts` and `pins.json`;
 - `02-break-the-lethal-trifecta/problem/server.ts` and `notes/trifecta.md`, with the leg you cut;
 - the deployed URL, in the hand-in form or your repo's README;
-- `04-write-the-handover/problem/HANDOVER.md`.
+- `06-write-the-handover/problem/HANDOVER.md`.
 
 How it is graded. Each line is yes or no:
 
