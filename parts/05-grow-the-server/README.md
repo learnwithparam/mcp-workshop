@@ -46,8 +46,10 @@ flowchart LR
 | `front-two-servers`        | 25      | a proxy that prefixes tools, mints a token per upstream, drops unpinned tools | the tool list through the proxy; each upstream's log of the token audiences it received   |
 | `publish-to-the-registry`  | 15      | a valid `server.json` for the MCP Registry, no real publish                   | the file against the registry's 2025-12-11 schema, plus version, address and secret token |
 | `upgrade-a-v1-server`      | 15      | an SDK v1 server moved to v2 with the codemod, then fixed by hand             | no old import, no `@mcp-codemod-error`, and every `expose-the-diary` rule                 |
+| `wrap-your-own-api`        | 30      | `my-api.json`, a server of tools from it, and `EVIDENCE.md` of one real call  | tools, annotations, the requests a stand-in API receives, a failed call, the evidence     |
+| `secure-the-client`        | 20      | `guards.ts`: refuse unsafe addresses, check `iss`, check the client ID file   | each guard run on good and bad cases: private addresses, a wrong `iss`                    |
 
-Total: 95 minutes.
+Total: 145 minutes.
 
 Each step has its own starter in `problem/`, so you can start any step fresh, in any order.
 
@@ -93,11 +95,15 @@ bun run verify upgrade-a-v1-server
 
 Expect: `Done. All 10 rules pass.` once your work meets every Done when line. Before that, each FAIL line has a `Try next:`.
 
+Wrap your own API, with your own evidence: `bun run verify wrap-your-own-api`. Expect: `Done. All 8 rules pass.`
+
+Make the client safe to trust a server: `bun run verify secure-the-client`. Expect: `Done. All 4 rules pass.`
+
 ```bash
 bun run verify part grow-the-server
 ```
 
-Expect: `Part grow-the-server is done: 5/5 steps pass.` once every step passes.
+Expect: `Part grow-the-server is done: 7/7 steps pass.` once every step passes.
 
 ## Assignment
 
