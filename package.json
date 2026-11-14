@@ -42,5 +42,6 @@
   "plainEnglish": {
     "grade": 6
   },
-  "ladder": null
+  "ladder": null,
+  "capstone": true
 }

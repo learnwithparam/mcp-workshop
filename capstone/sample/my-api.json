@@ -1,0 +1,67 @@
+{
+  "api": "Dockside Books, a small shop's order API",
+  "endpoints": [
+    {
+      "name": "find_orders",
+      "description": "List a customer's orders, newest first. Use it to answer where an order is, before you change one.",
+      "method": "GET",
+      "path": "/orders",
+      "params": [
+        {
+          "name": "customerEmail",
+          "in": "query",
+          "type": "string",
+          "about": "The customer's email address"
+        }
+      ]
+    },
+    {
+      "name": "get_order",
+      "description": "Read one order by its id, with its items and status. Use it after find_orders gives you the id.",
+      "method": "GET",
+      "path": "/orders/{orderId}",
+      "params": [
+        {
+          "name": "orderId",
+          "in": "path",
+          "type": "string",
+          "about": "The order id, for example ORD-1041"
+        }
+      ]
+    },
+    {
+      "name": "add_gift_note",
+      "description": "Add a short gift note to an order that has not shipped. Use it only when the customer asks for a note.",
+      "method": "POST",
+      "path": "/orders/{orderId}/note",
+      "params": [
+        {
+          "name": "orderId",
+          "in": "path",
+          "type": "string",
+          "about": "The order id, for example ORD-1041"
+        },
+        {
+          "name": "note",
+          "in": "body",
+          "type": "string",
+          "about": "The note text, up to 200 characters"
+        }
+      ]
+    },
+    {
+      "name": "cancel_order",
+      "description": "Cancel an order that has not shipped. This cannot be undone. Use it only after the customer says yes.",
+      "method": "DELETE",
+      "path": "/orders/{orderId}",
+      "params": [
+        {
+          "name": "orderId",
+          "in": "path",
+          "type": "string",
+          "about": "The order id, for example ORD-1041"
+        }
+      ]
+    }
+  ]
+}
