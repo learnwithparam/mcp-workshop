@@ -1,0 +1,19 @@
+{
+  "api": "TODO: the name of your own API, and what it is for",
+  "endpoints": [
+    {
+      "name": "TODO_verb_thing",
+      "description": "TODO: what it does, and when a model should use it",
+      "method": "GET",
+      "path": "/TODO/{id}",
+      "params": [
+        {
+          "name": "id",
+          "in": "path",
+          "type": "string",
+          "about": "TODO: what this value is, with an example"
+        }
+      ]
+    }
+  ]
+}

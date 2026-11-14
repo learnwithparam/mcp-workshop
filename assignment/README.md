@@ -20,13 +20,13 @@ Start the stack and open the gateway in the MCP Inspector:
 bun assignment/token.ts && docker compose -f assignment/compose.yml up -d
 ```
 
-Expect: `Wrote the test key and tokens to` and then three containers started.
+Expect: a line that says it wrote the test key and tokens, and then three containers started.
 
 ```bash
 npx @modelcontextprotocol/inspector@2.15.0
 ```
 
-Expect: the Inspector prints a local address. It needs Node 22.23.4 or newer. Connect to `http://127.0.0.1:3000/mcp` with the token in `.run/caller.token`.
+Expect: the Inspector prints a local address. It needs a recent Node. Connect to `http://127.0.0.1:3000/mcp` with the token in `.run/caller.token`.
 
 Stop everything when you are done:
 

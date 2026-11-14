@@ -2,43 +2,35 @@
 
 ## The problem
 
-Every step so far was checked by this course. Next month a colleague changes `server.ts`, and nobody runs the
-course checks. If the clash check breaks, Dr Reyes gets double-booked, and nobody notices until two owners arrive.
-
-Your server needs its own tests, in your repo, that run in a second. The SDK can connect a client to your server
-inside one process: no socket, no stdio, no model. So a test calls a tool the way Claude does and checks the
-answer.
-
-But passing tests prove little. A test that checks nothing also passes. So the check here breaks your server on
-purpose, then runs your tests again. This is mutation testing. Each broken copy is a mutant, and a good test suite
-fails on every mutant.
+Next month a colleague edits `server.ts` and nobody runs the course checks. For example, if the clash check breaks, Dr Reyes is double-booked and two owners arrive for one slot. Your server needs its own tests. A test that checks nothing also passes, so the check breaks your server on purpose, which is mutation testing, and your tests must notice.
 
 ```mermaid
 flowchart LR
-  T[test/server.test.ts] --> A[your server.ts]
-  A --> P{all pass?}
-  T --> M1[mutant: clash check removed]
-  T --> M2[mutant: unknown patient allowed]
-  M1 --> F1{some test fails?}
-  M2 --> F2{some test fails?}
+  T[your tests] --> A[server.ts: pass]
+  T --> M[mutant with a rule removed: fail]
 ```
 
-For example, the first mutant adds one line to the clash function in a copy of your server. A test that books the
-same time twice must now fail:
+## Watch it done
 
-```text
-function findClash(booking, date, movingId) {
-  return undefined;
+```bash
+bun run verify test-the-server
 ```
+
+Expect: `FAIL  test/ has at least 4 tests, and they all pass on your server` and `0 of 3 rules pass.`
+
+```bash
+bun run verify test-the-server solution
+```
+
+Expect: `Done. All 3 rules pass.`
 
 ![bun test passing on the solution, then the check's three rules](../images/expected.png)
 
-## Your challenge
+## Your turn
 
-`test/server.test.ts` already connects a client to `createServer()` with `InMemoryTransport`, and has two tests.
-Add tests until a broken server fails at least one:
+`test/server.test.ts` joins a client to `createServer()` with `InMemoryTransport` and has two tests. Add three.
 
-1. Booking a free slot works. Use `freeSlotForDrEvans()` so the test is true on any diary.
+1. Booking a free slot works. Use `freeSlotForDrEvans()` so it is true on any diary.
 2. Booking the same time twice is refused with `isError: true`.
 3. Booking patient `P-9999` is refused with `isError: true`.
 
@@ -46,40 +38,38 @@ Add tests until a broken server fails at least one:
 bun test parts/02-pick-the-right-tool/06-test-the-server/problem/test
 ```
 
-Expect: `5 pass` and `0 fail` once your three tests are in.
-
-```text
- 5 pass
- 0 fail
-Ran 5 tests across 1 file.
-```
+Expect: `5 pass` and `0 fail`.
 
 Keep the names `findClash` and `unknownPatientError` in `server.ts`, because the check breaks those two.
 
-If you already know this: the tests share one diary, in the order they run. Ask the server for a free slot in
-each test, as `freeSlotForDrEvans()` does, so no test depends on another.
+## Do it on your work
+
+Write one test for the rule that would hurt most if it broke. Remove that rule once and watch the test fail. Good looks like a red test, then green again when you put the rule back.
 
 ## Done when
 
-- `test/` has at least 4 tests, and they all pass on your server.
-- Your tests fail when the clash check is removed from `server.ts`.
-- Your tests fail when the unknown-patient check is removed from `server.ts`.
+- `test/` has at least 4 tests, and they all pass.
+- Your tests fail when the clash check is removed.
+- Your tests fail when the unknown-patient check is removed.
 
 ```bash
 bun run verify test-the-server
 ```
 
-Expect: `Done. All 3 rules pass.` once your work meets every Done when line. Before that, each FAIL line has a `Try next:`.
+Expect: `Done. All 3 rules pass.`
 
-```text
-Done. All 3 rules pass.
-```
+## Solution
+
+The after state is a test file with five tests. See `solution/test/server.test.ts`.
+
+## Go further
+
+The tests share one diary, in the order they run. Ask for a free slot in each test, so no test depends on another.
 
 ## If you get stuck
 
-- The tests use a scratch copy of the diary in your system's temp folder. Your own diary stays as it is.
-- `expect(result.isError).toBe(true)` is the line that catches a missing refusal.
-- The solution is there after you try: `../solution/test/server.test.ts`.
+- The tests use a scratch copy of the diary, so your own diary stays as it is.
+- `expect(result.isError).toBe(true)` catches a missing refusal.
 
 ## Words you will use
 

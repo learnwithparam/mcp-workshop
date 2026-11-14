@@ -1,7 +1,7 @@
 # Start here
 
 In this page you set up the repo and meet Harrow Lane Veterinary. Then you run the finished server and see the
-goal. It takes about 15 minutes, and you need no API key.
+goal. It takes a short while, and you need no API key.
 
 ## Set up
 
@@ -53,7 +53,7 @@ Expect: four `FAIL` lines, each with a `Try next:` line. Every step starts faili
 
 ![Your first run: the world, then every rule failing with what to try next](images/first-run.png)
 
-For example, one line says `Try next: run: bun run try find_free_slots '{"site":"millbrook"}'`. Run that command
+For example, one line starts with Try next and ends with the command `bun run try find_free_slots '{"site":"millbrook"}'`. Run that command
 and the answer starts to appear.
 
 ## If you are a product manager
