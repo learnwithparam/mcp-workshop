@@ -2,87 +2,84 @@
 
 ## The problem
 
-`cancel_appointment` cancels at once. A model that misreads "can we move Biscuit?" as "cancel Biscuit" frees the
-slot, and the owner finds out at the door. The model cannot undo a cancel, so a person says yes first.
-
-The 2026-07-28 spec does this with one request in two rounds. The first answer is not a result. It is
-`input_required`: a question for the person. The client shows a confirm dialog, then sends the same call again
-with the answer.
-
-There is a trap. The client sends the answer, so it can also invent it, even on the first call. So your question carries a `requestState`: a small note, signed by your server, that says which
-appointment you asked about. You trust a yes only when your own signed note comes back with it.
+`cancel_appointment` cancels at once. For example, a model that reads "can we move Biscuit?" as "cancel Biscuit" frees the slot, and the owner finds out at the door. So a person says yes first. The server asks, the client shows a dialog, and the same call comes back with the answer.
 
 ```mermaid
 sequenceDiagram
-  participant P as Person (Ola)
   participant C as Client
   participant S as Your server
-  C->>S: tools/call cancel_appointment {A-00981}
-  S-->>C: input_required: "Cancel Biscuit, 15:40 with Dr Sam Reyes?" + signed requestState
-  C->>P: confirm dialog
-  P-->>C: yes
-  C->>S: the same call + inputResponses {confirm: true} + the same requestState
-  S->>S: signature good? same appointment? confirm true?
+  C->>S: cancel_appointment A-00981
+  S-->>C: input_required and a signed requestState
+  C->>S: same call, confirm true, same requestState
   S-->>C: Cancelled A-00981
 ```
 
-## Your challenge
-
-Follow the three TODO lines in `server.ts`:
-
-1. On the first call, return `inputRequired(...)` with an `elicit` question. It names the patient, time and vet.
-2. Sign the state with `createRequestStateCodec`. Give `new McpServer` its `verify`.
-3. On the retry, cancel only on a yes whose signed state names this same appointment.
-
-Try it with your server running. The helper answers no unless you add `--confirm yes`:
-
-```bash
-bun parts/03-open-the-server-safely/call-server.ts --as ola cancel_appointment '{"appointmentId":"A-00981"}'
-```
-
-Expect: `The server asks: Cancel Biscuit, 15:40 on 2026-11-16 with Dr Sam Reyes?  (answering no)` and then `Kept A-00981. Nothing changed.`
-The starter really cancels it. Then run `bun run world reset` to get it back.
-
-For example, the sample solution's first answer, cut short:
-
-```text
-{"resultType":"input_required","inputRequests":{"confirm":{"method":"elicitation/create",
- "params":{"message":"Cancel Biscuit, 15:40 on 2026-11-16 with Dr Sam Reyes?", ...}}},
- "requestState":"v1.eyJwIjp7ImFwcG9pbnRtZW50SWQiOiJBLTAwOTgxIn0sImV4cCI6MTc5NDU0NjI3N30.5gtnWZLI..."}
-```
-
-The middle part is plain base64 that anyone can read. The signature at the end stops changes.
-
-![The server asks before it cancels, and keeps the appointment on a no](../images/expected.png)
-
-If you already know this: the codec also takes a `bind` function. Bind the state to the caller's staff id, so a
-state minted for Ola is refused for anyone else.
-
-## Done when
-
-- The first call asks the person, names Biscuit and 15:40, and changes nothing.
-- An answer of no keeps the appointment.
-- A yes that skips the question, with no `requestState`, changes nothing.
-- A yes with a tampered `requestState` changes nothing.
-- A yes that carries the state of another appointment changes nothing.
-- A yes with its own signed state cancels the appointment.
-- The real MCP client confirms and the appointment is cancelled.
+## Watch it done
 
 ```bash
 bun run verify confirm-before-cancel
 ```
 
-Expect: `Done. All 7 rules pass.` once your work meets every Done when line. Before that, each FAIL line has a `Try next:`.
+Expect: `FAIL  The first call asks the person, names Biscuit and 15:40, and changes nothing` and `1 of 7 rules pass.`
+
+```bash
+bun run verify confirm-before-cancel solution
+```
+
+Expect: `Done. All 7 rules pass.`
+
+![The server asks before it cancels, and keeps the appointment on a no](../images/expected.png)
+
+## Your turn
+
+Follow the three TODO lines in `server.ts`.
+
+1. On the first call, return `inputRequired(...)` with an `elicit` question that names the patient, time and vet.
+2. Sign the state with `createRequestStateCodec`, and give `new McpServer` its `verify`. The client holds the state, so it must be signed.
+3. On the retry, cancel only on a yes whose signed state names this same appointment.
+4. Try it. The helper answers no unless you add `--confirm yes`.
+
+```bash
+bun parts/03-open-the-server-safely/call-server.ts --as ola cancel_appointment '{"appointmentId":"A-00981"}'
+```
+
+Expect: `Cancel Biscuit, 15:40 on 2026-11-16 with Dr Sam Reyes?  (answering no)` then `Kept A-00981. Nothing changed.`
+
+The starter really cancels the appointment. Run `bun run world reset` to get it back.
+
+## Do it on your work
+
+Pick your most harmful tool. Make it ask first, and sign what it asked about. Good looks like no change on a no, a faked yes, or a yes for another record.
+
+## Done when
+
+- The first call asks, names Biscuit and 15:40, and changes nothing.
+- A no keeps the appointment.
+- A yes with no `requestState`, or a tampered one, changes nothing.
+- A yes with the state of another appointment changes nothing.
+- A yes with its own signed state cancels it.
+
+```bash
+bun run verify confirm-before-cancel
+```
+
+Expect: `Done. All 7 rules pass.`
+
+## Solution
+
+The after state asks, signs, and cancels only on a matching yes. See `solution/server.ts`.
+
+## Go further
+
+The middle of the signed state is plain base64 that anyone can read. The signature stops changes. The codec also takes a `bind` function. Bind the state to the caller's staff id. Then a state minted for Ola fails for anyone else.
 
 ## If you get stuck
 
 - `context.mcpReq.requestState()` gives the payload you minted. It is undefined on the first call.
-- `verify` refuses a tampered state with error `-32602` before your tool runs.
-- The solution is there after you try: `../solution/server.ts`.
+- `verify` refuses a tampered state with error -32602 before your tool runs.
 
 ## Words you will use
 
 - **Elicitation**: the server asks the person a question through the client.
 - **`input_required`**: a result that says "I need an answer first".
-- **`requestState`**: a note the server hands to the client and gets back on the retry. Sign it, because the
-  client holds it.
+- **`requestState`**: a note the server hands to the client and gets back on the retry.

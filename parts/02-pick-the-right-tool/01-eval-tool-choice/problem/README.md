@@ -2,74 +2,85 @@
 
 ## The problem
 
-Many teams build their first MCP server by copying the PIMS API. Harrow Lane did too. The result is the "API
-mirror": fourteen tools, one for each endpoint, such as `search_patients`, `list_owners` and `getPatient`.
+Harrow Lane copied its practice system's API into 14 tools. For example, ask "When is Biscuit's booster due?" and the model reads every clinical note instead of the vaccine list. Twelve of twenty front-desk tasks pass. You cannot fix that until you can measure it. An eval is a fixed set of tasks that you score.
 
-But a model has to pick the right tool from fourteen, and it often gets it
-wrong. You cannot fix that until you can measure it.
+```mermaid
+flowchart LR
+  T[20 tasks] --> R[eval.ts] --> M[Model picks tools] --> S[Score and saved report]
+```
 
-An eval is a test for a model. It gives the model the same tasks every time and scores what it does. This eval
-has 20 front-desk tasks in `../../tasks.jsonl`. Each task names the tool and the inputs a good answer uses.
+## Watch it done
 
-For example, task T02 is "When is Biscuit's booster due? Her patient id is P-0001." The right call on the API
-mirror is `list_vaccinations`. The model calls `list_clinical_notes` instead. It reads every note and still does
-not find the date.
+Before, the check fails on everything. After, the baseline and notes exist.
+
+```bash
+bun run verify eval-tool-choice
+```
+
+Expect: seven FAIL lines, such as `FAIL  evals/baseline.json holds a result for each of the 20 tasks`, then `0 of 7 rules pass.`
+
+```bash
+bun run verify eval-tool-choice solution
+```
+
+Expect: `Done. All 7 rules pass.`
 
 ![The eval report for the API mirror: 12 of 20 tasks pass](../images/expected.png)
 
-## Your challenge
+## Your turn
 
-1. Run the eval on the API mirror and save the report as your baseline. A baseline is the score you start from,
-   so you can prove later that a change helped.
+1. Run the eval on the 14-tool API mirror and save the report. This saved score is your baseline, the number you start from.
 
 ```bash
 bun parts/02-pick-the-right-tool/eval.ts api-mirror --save parts/02-pick-the-right-tool/01-eval-tool-choice/problem/evals/baseline.json
 ```
 
-Expect: a PASS or FAIL line for each task, then `Score: 12/20.` and `Saved ...baseline.json`.
+Expect: twenty PASS or FAIL lines, then `Score: 12/20. Estimated tokens: 50,440.` and `Saved`.
+
+2. Find a failed task in the output.
 
 ```text
-Eval of api-mirror (14 tools, provider replay):
-  FAIL  T02  expected vaccines_due      called list_clinical_notes
-Score: 12/20. Estimated tokens: 50,440.
+  FAIL  T10  expected find_free_slots   called list_appointments
 ```
 
-The `expected` column names the job tool, such as `vaccines_due`. The mirror has no tool with that name. There,
-`list_vaccinations` does that job.
+Expect: the `expected` column names a job tool. The mirror has no tool with that name, so a match is by job.
 
-2. Open `evals/baseline.json`. Each task has the calls the model made, `pass`, and `estimatedTokens`.
-3. Fill in `evals/notes.md`: the score, the worst mix-up, the wrong tool, and why you think the model chose it.
+3. Open `evals/notes.md` and fill in four lines: the score, a failed task id, the wrong tool, and one sentence on why the model chose it.
 
-With no key, the eval plays back recorded model choices. So it is free and gives the same score every time. With
-`LLM_PROVIDER` and a key in `.env`, a live model chooses, and the score can move a little between runs.
+With no key, the eval replays recorded choices, so the score is the same every time.
 
-If you already know this: a task passes when one successful call used the expected tool and inputs. Look at T05.
-The model called the right write tool, but with the owner's id.
+## Do it on your work
+
+Write 10 or more tasks for your own server, each with the tool and key inputs a good answer uses. Run them and save the score. Good looks like a number you can compare after every change.
 
 ## Done when
 
 - `evals/baseline.json` holds a result for each of the 20 tasks.
 - The baseline is a run of the 14-tool API mirror.
 - Every pass and fail in the baseline matches the calls it recorded.
-- `notes.md` gives the same score as `baseline.json`.
-- `notes.md` names a task that failed in the baseline.
-- `notes.md` names the wrong tool the model called in that task.
-- `notes.md` says in a sentence why the model picked wrong.
+- `notes.md` gives the same score, names a failed task and the wrong tool, and says why in one sentence.
 
 ```bash
 bun run verify eval-tool-choice
 ```
 
-Expect: `Done. All 7 rules pass.` once your work meets every Done when line. Before that, each FAIL line has a `Try next:`.
+Expect: `Done. All 7 rules pass.`
+
+## Solution
+
+The after state is a saved baseline and filled-in notes. See `solution/evals/baseline.json` and `solution/evals/notes.md`.
+
+## Go further
+
+A task passes when one successful call used the expected tool and inputs. Look at T05: the model called the right write tool with the owner's id, so it fails.
 
 ## If you get stuck
 
-- The message says there is no recording: for this step, run the eval on `api-mirror`, not on your server.
-- Every run uses a fresh copy of the diary, so the bookings the eval makes never change your own diary.
-- The solution is there after you try: `../solution/evals/notes.md`.
+- No recording found: run the eval on `api-mirror`, not on your own server.
+- Every run uses a fresh copy of the diary, so your own diary never changes.
 
 ## Words you will use
 
 - **Eval**: a fixed set of tasks for a model, with a score, so you can compare one design with another.
-- **Baseline**: the first score, saved, so you can show that a later change made things better.
+- **Baseline**: the first score, saved, so you can show that a later change helped.
 - **Token**: a small piece of text. Models read and charge by tokens, and about four characters make one.

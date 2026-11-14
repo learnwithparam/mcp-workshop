@@ -6,7 +6,9 @@ import rules from "../checks/wrap-your-own-api";
 
 const folder = process.argv[2];
 if (!folder) {
-  console.error("Give the folder with your capstone work, for example: bun capstone/check.ts my-work");
+  console.error(
+    "Give the folder with your capstone work, for example: bun capstone/check.ts my-work",
+  );
   process.exit(2);
 }
 const artefact = resolve(folder);
