@@ -2,72 +2,75 @@
 
 ## The problem
 
-Other clinics in the group want to find the Harrow Lane server without asking you for the address. The MCP
-Registry is a public list of MCP servers. A host can search it, read how to connect, and ask the person for any
-setting it needs. Each server describes itself in one file, `server.json`.
-
-A `server.json` can be valid and still wrong. For example, the starter has three problems:
-
-```json
-{
-  "name": "Harrow Lane server",
-  "version": "latest",
-  "remotes": [{ "type": "streamable-http", "url": "TODO" }]
-}
-```
-
-The name has a space and no namespace. "latest" is not one exact version. And the remote has no real address, and
-says nothing about the token the server needs.
+Other clinics want to find the Harrow Lane server without asking for its address. The MCP Registry is a public list of servers, and each describes itself in one file, `server.json`. For example, the starter has the name Harrow Lane server, with spaces, and the version latest. Both are invalid.
 
 ```mermaid
 flowchart LR
-  F[server.json] --> R[(MCP Registry)]
-  R --> H[A host searches it]
-  H -- "reads remotes: url and headers" --> A[Asks the person for the token, hides it]
-  A --> S[Your deployed server]
+  F[server.json] --> R[(MCP Registry)] --> H[A host finds your server]
 ```
 
-## Your challenge
+## Watch it done
 
-Fix `server.json`. You do not publish anything in this step.
+Before, the check quotes the schema's own complaints:
 
-1. `name`: a namespace you own, a slash, then a short name. For example `io.github.<your GitHub name>/harrow-lane`.
-2. `description`: one sentence, 100 characters at most.
-3. `version`: one exact version, such as `1.0.0`.
-4. `remotes`: one `streamable-http` entry with your address from `deploy-the-server`. It must be https and end in
-   `/mcp`.
-5. Under that remote, add `headers` with one `Authorization` header. Mark it `"isRequired": true` and
-   `"isSecret": true`. Then a host asks the person for the token and never shows it on screen.
+```text
+FAIL  server.json matches the MCP Registry schema (2025-12-11)
+      Try next: fix what the schema says: data/name must match pattern "^[a-zA-Z0-9.-]+/[a-zA-Z0-9._-]+$", ...
+FAIL  Its version is one exact version, such as 1.0.0, never a range or latest
+FAIL  The remote asks for an Authorization header that is required and secret
+1 of 6 rules pass.
+```
 
-The registry's schema is in `../registry/server.schema.json`. It is a copy of version 2025-12-11 from
-`https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json`, read for this course.
+After, it prints `Done. All 6 rules pass.`
 
-If you already know this: a real publish uses the registry's `mcp-publisher` tool and proves you own the namespace.
-Keep that for your own server.
+## Your turn
 
-## Done when
+1. Open `server.json` in this step's `problem/` folder. Change `name` to a namespace you own, a slash, then a short name: `io.github.<your GitHub name>/harrow-lane`.
+2. Write `description` as one sentence of 100 characters or fewer.
+3. Change `version` to one exact version, such as `1.0.0`.
+4. In `remotes`, set the `streamable-http` url to a public https address that ends in `/mcp`.
+5. Under that remote, add this header, so a host asks the person for the token and never shows it:
 
-- `server.json` matches the MCP Registry schema (2025-12-11).
-- Its `$schema` names the 2025-12-11 server schema.
-- Its name is a namespace and a server name, such as `io.github.<you>/harrow-lane`.
-- Its version is one exact version, such as `1.0.0`, never a range or latest.
-- It has a `streamable-http` remote at a public https address ending in `/mcp`.
-- The remote asks for an `Authorization` header that is required and secret.
+```json
+"headers": [{ "name": "Authorization", "isRequired": true, "isSecret": true }]
+```
+
+6. Run the check.
 
 ```bash
 bun run verify publish-to-the-registry
 ```
 
-Expect: `Done. All 6 rules pass.` once your work meets every Done when line. Before that, each FAIL line has a `Try next:`.
+Expect: `Done. All 6 rules pass.`
+
+## Do it on your work
+
+Write a `server.json` for a server of your own. Use an address people outside your laptop can reach, never `127.0.0.1`. Good looks like a name you own, one exact version and a secret header for any token. Do not publish yet.
+
+## Done when
+
+- `server.json` matches the registry schema.
+- Its `$schema` names the 2025-12-11 server schema.
+- Its name is a namespace and a server name.
+- Its version is one exact version.
+- It has a `streamable-http` remote at a public https address ending in `/mcp`.
+- The remote asks for a required, secret `Authorization` header.
+
+## Solution
+
+The after state is one valid `server.json`. See `solution/server.json`.
+
+## Go further
+
+The registry's schema is in `../registry/server.schema.json`. A real publish uses the `mcp-publisher` tool and proves you own the namespace. Keep that for your own server.
 
 ## If you get stuck
 
-- The schema rule fails: its `Try next:` line quotes the schema's own message, such as `data/name must match pattern`.
-- Your address is `127.0.0.1`: nobody else can reach your laptop. Use the address from your deploy.
+- The schema rule fails: its `Try next:` line quotes the schema, such as `data/name must match pattern`.
+- Your address is `127.0.0.1`: use the address from your deploy.
 
 ## Words you will use
 
 - **MCP Registry**: a public list of MCP servers that hosts can search.
-- **`server.json`**: the file that describes one server for the registry: name, version and how to connect.
 - **Namespace**: the part of the name before the slash. It shows who owns the server.
 - **Secret header**: a setting a host asks for and never shows, such as a token.

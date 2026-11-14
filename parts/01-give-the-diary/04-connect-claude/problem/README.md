@@ -2,36 +2,39 @@
 
 ## The problem
 
-Ola at the Millbrook desk will not type JSON into a terminal. She asks
-Claude. A host is the app she talks to, such as Claude Code or Claude Desktop.
+Ola at the Millbrook desk will not type JSON into a terminal. She asks Claude, a host: the app a person talks to.
+For example, "Who can see Biscuit?" only works if the host has one file that says how to start your server.
 
-Here you tell a real host how to start your server. Then you watch the model use your tools. It
-answers a real question from the live diary.
+## Watch it done
+
+With no `.mcp.json` and no notes, the check fails. Real output:
+
+```text
+  FAIL  .mcp.json names one server under mcpServers, with a command
+  FAIL  Starting that exact command gives a working MCP server
+  FAIL  That server lists find_free_slots and book_appointment
+  FAIL  notes/connect-claude.md has the question and Claude's answer
+  FAIL  The answer names a Millbrook vet and at least one real free slot
+  FAIL  Every time in the answer is a free slot in the diary (nothing made up)
+0 of 6 rules pass. Fix the FAIL lines and run it again.
+```
+
+On the sample solution it ends with `Done. All 6 rules pass.`
 
 ```mermaid
 flowchart LR
-  O[Ola asks: Who can see Biscuit at Millbrook?] --> H[Host: Claude Code or Claude Desktop]
-  H -- "reads .mcp.json, starts: bun server.ts" --> S[Your server over stdio]
-  S -- find_free_slots --> P[(PIMS diary)]
-  P --> S --> H --> A[Answer with real free slots]
+  H[Host] -- "reads .mcp.json, starts bun server.ts" --> S[Your server] --> P[(PIMS diary)]
 ```
 
-## Your challenge
+## Your turn
 
-1. Create `.mcp.json` in this folder. It tells the host the command that starts your server:
+1. Create `.mcp.json` in this folder:
 
    ```json
    { "mcpServers": { "harrow-lane": { "command": "bun", "args": ["server.ts"] } } }
    ```
 
-2. Connect a host.
-   - Claude Code: open a terminal in this folder and run `claude`. Approve the `harrow-lane` server, and check it with `/mcp`.
-   - Claude Desktop: add the same entry to its config file under Settings, Developer. Use full paths there, for
-     example `"args": ["/full/path/to/this/folder/server.ts"]`. Desktop does not start in this folder.
-     If Desktop cannot find `bun`, put the full path that `which bun` prints in `"command"`.
-3. Ask: "Who can see Biscuit at Millbrook?" Paste the whole answer after `Answer:` in `notes/connect-claude.md`.
-
-First, run the command from your config yourself. Does it start and wait quietly? Then the host can start it too:
+2. Run the command from your config yourself.
 
 ```bash
 cd parts/01-give-the-diary/04-connect-claude/problem && bun server.ts
@@ -39,16 +42,18 @@ cd parts/01-give-the-diary/04-connect-claude/problem && bun server.ts
 
 Expect: one line that says the server is running on stdio, then nothing. Press Ctrl+C to stop it.
 
-For example, the sample solution's `notes/connect-claude.md` ends with this answer. Every time in it is a free slot
-in the diary:
+3. Connect a host. In Claude Code, open a terminal in this folder, run `claude`, approve `harrow-lane`, and check
+   it with `/mcp`. Claude Desktop needs the same entry in its own config, with full paths.
+4. Ask: "Who can see Biscuit at Millbrook?"
+5. Paste the whole answer after `Answer:` in `notes/connect-claude.md`.
 
-```text
-Answer: Claude called find_free_slots for millbrook and said: Dr Sam Reyes is free at 10:20, 11:40 and 15:00,
-and Dr Hannah Cole is free at 09:00, 14:40 and 16:20. Would you like me to book one of these for Biscuit?
-```
+Expect: Claude calls `find_free_slots` and names Dr Sam Reyes and Dr Hannah Cole with real times.
 
-If you already know this: the check starts exactly the command and args in `.mcp.json`, in this folder. Then it
-compares every time in Claude's answer with the diary.
+## Do it on your work
+
+Write the same `.mcp.json` entry for your own server from the project in the part README. Ask one real question of
+your own system. Good looks like the host starting your server by itself, and every fact in the answer matching the
+live system.
 
 ## Done when
 
@@ -56,24 +61,30 @@ compares every time in Claude's answer with the diary.
 - Starting that exact command gives a working MCP server.
 - That server lists `find_free_slots` and `book_appointment`.
 - `notes/connect-claude.md` has the question and Claude's answer.
-- The answer names a Millbrook vet and at least one real free slot.
-- Every time in the answer is a free slot in the diary (nothing made up).
+- The answer names a Millbrook vet and a real free slot, and every time in it is free in the diary.
 
 ```bash
 bun run verify connect-claude
 ```
 
-Expect: `Done. All 6 rules pass.` once your work meets every Done when line. Before that, each FAIL line has a `Try next:`.
+Expect: `Done. All 6 rules pass.`
+
+## Solution
+
+The after state is a `.mcp.json` and a notes file. See `solution/server.ts` and `solution/notes/connect-claude.md`.
 
 ## If you get stuck
 
 - Claude says it cannot see the diary: the server is not connected. In Claude Code, run `/mcp`. In Claude Desktop,
   open Settings, Developer, and read the server's log.
-- The answer has times that are not free: you booked some while you tested. Run `bun run world reset` and ask again.
-- Any MCP host works (VS Code, Cursor, others). The check only reads `.mcp.json` and your notes.
+- The answer has times that are not free: you booked some while you tested. Run `bun run world reset`.
+
+## Go further
+
+Claude Desktop does not start in this folder. Use full paths in `"args"`. If it cannot find `bun`, put the path that
+`which bun` prints in `"command"`. Any MCP host works. The check reads only `.mcp.json` and your notes.
 
 ## Words you will use
 
 - **`.mcp.json`**: a project file that lists MCP servers and the command that starts each one. Claude Code reads it.
-- **Host config**: where a host keeps its list of servers. Claude Desktop keeps its own, with the same shape.
 - **Working directory**: the folder a command runs in. A relative path such as `server.ts` is read from there.

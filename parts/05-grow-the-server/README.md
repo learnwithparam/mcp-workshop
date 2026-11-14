@@ -1,33 +1,51 @@
 # Grow the server
 
+## After this part you can
+
+Grow a server with a client, a task handle, a proxy, a registry file and a safe upgrade, and wrap your own API.
+
+## You leave with
+
+A `my-api.json` and a server of tools for your own API, with an `EVIDENCE.md` of one real call.
+
 ## The problem
 
-A year later, the clinic group grows, and the server must grow too:
+A year later, the clinic group grows. A lab-results service arrives, a second team wants one address for both servers, and blood results take minutes, so a tool cannot wait. For example, Dr Sam Reyes orders a blood panel for Biscuit (P-0001). The tool must return a task id such as `LAB-0001` at once, and the client asks again until the task is done.
 
-- the group adds a lab-results service;
-- a second team wants one URL for both servers;
-- blood results take minutes to come back, so a tool cannot wait for them;
-- some old servers still run on the previous SDK.
+## Steps
 
-This is an extension part. It grows the server and keeps everything Parts 1 to 4 proved.
+| Step                       | You produce                                                                   | The check reads                                                                             |
+| -------------------------- | ----------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| `build-a-small-client`     | `client.ts`: discover, list and call, with version negotiation                | its output against the Part 1 server and the lab's old `2025-11-25` server                  |
+| `report-lab-results-later` | `order_blood_panel` that returns a task handle, plus status and cancel tools  | how fast the order answers; the task moving from working to completed; cancel               |
+| `front-two-servers`        | a proxy that prefixes tools, mints a token per upstream, drops unpinned tools | the tool list through the proxy; each upstream's log of the token audiences it received     |
+| `publish-to-the-registry`  | a valid `server.json` for the MCP Registry, no real publish                   | the file against the registry's `2025-12-11` schema, plus version, address and secret token |
+| `upgrade-a-v1-server`      | an old SDK server moved to the new SDK with the codemod, then fixed by hand   | no old import, no `@mcp-codemod-error`, and every `expose-the-diary` rule                   |
+| `wrap-your-own-api`        | `my-api.json`, a server of tools from it, and `EVIDENCE.md` of one real call  | tools, annotations, the requests a stand-in API receives, a failed call, the evidence       |
+| `secure-the-client`        | `guards.ts`: refuse unsafe addresses, check `iss`, check the client ID file   | each guard run on good and bad cases: private addresses, a wrong `iss`                      |
 
-For example, Dr Sam Reyes orders a blood panel for Biscuit (P-0001). The lab needs a few minutes. So
-`order_blood_panel` returns a task handle at once: an id the client can ask about later, such as `LAB-0001`. The
-client asks `blood_panel_status` again until the task moves from working to completed.
+Each step has its own starter in `problem/`, so you can start any step fresh, in any order.
+
+## Watch and read
+
+| Kind  | Title                                              | Author                         | Why                                                            | Link                                                                                                   |
+| ----- | -------------------------------------------------- | ------------------------------ | -------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| read  | Writing effective tools for AI agents              | Anthropic engineering blog     | How to turn an API into tools a model uses well                | https://www.anthropic.com/engineering/writing-tools-for-agents                                         |
+| read  | Versioning                                         | Model Context Protocol project | How clients and servers agree on a protocol version            | https://modelcontextprotocol.io/specification/versioning                                               |
+| read  | The MCP Registry                                   | Model Context Protocol project | What the registry lists and how `server.json` fits             | https://modelcontextprotocol.io/registry/about                                                         |
+| read  | Server Side Request Forgery Prevention Cheat Sheet | OWASP                          | The standard guide to the attack the client guards stop        | https://cheatsheetseries.owasp.org/cheatsheets/Server_Side_Request_Forgery_Prevention_Cheat_Sheet.html |
+| video | Building Agents with Model Context Protocol        | Mahesh Murag, Anthropic        | A workshop from the team that wrote the protocol               | https://www.youtube.com/watch?v=kQmXtrmQ5Zg                                                            |
+| video | How We Build Effective Agents                      | Barry Zhang, Anthropic         | Keep agents simple, which is why tools should be few and clear | https://www.youtube.com/watch?v=D7_ipDqhtwk                                                            |
+
+## Project
+
+Wrap one real API you use at work as a small server of tools. List two endpoints, keep the key out of every tool input, and record one real call in `EVIDENCE.md`. Check it with `bun capstone/check.ts <your folder>`.
 
 ## Why it matters
 
-Every tool a host loads costs context before any work starts. Context is the text the model reads on each turn.
+Every tool a host loads costs context before any work starts. Context is the text the model reads on each turn. Anthropic measured one setup with several servers. The tool definitions alone took about 77K tokens before any work. When tools were loaded only when needed, they took about 8.7K tokens ([Introducing advanced tool use](https://www.anthropic.com/engineering/advanced-tool-use), read for this course).
 
-Anthropic measured one setup with several servers. The tool definitions alone took about 77K tokens before any work.
-When tools were loaded only when needed, they took about 8.7K tokens
-([Introducing advanced tool use](https://www.anthropic.com/engineering/advanced-tool-use), read for this course).
-
-So when you put two servers behind one front, you must keep that cost under control. You must also keep the trust
-boundary: each server only trusts tokens made for it.
-
-The diagram shows the plan. A thin proxy sits in front. It gets a new token for each server behind it, and it lets
-through only pinned lab tools.
+So when you put two servers behind one front, you must keep that cost under control. You must also keep the trust boundary: each server only trusts tokens made for it.
 
 ```mermaid
 flowchart LR
@@ -36,20 +54,6 @@ flowchart LR
   G -- "new token, lab audience; pinned tools only" --> S2[Lab-results server]
   S2 -. "task handle, then poll" .-> C
 ```
-
-## Steps
-
-| Step                       | Minutes | You produce                                                                   | The check reads                                                                           |
-| -------------------------- | ------- | ----------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
-| `build-a-small-client`     | 20      | `client.ts`: discover, list and call, with version negotiation                | its output against the Part 1 server and the lab's old 2025-11-25 server                  |
-| `report-lab-results-later` | 20      | `order_blood_panel` that returns a task handle, plus status and cancel tools  | how fast the order answers; the task moving from working to completed; cancel             |
-| `front-two-servers`        | 25      | a proxy that prefixes tools, mints a token per upstream, drops unpinned tools | the tool list through the proxy; each upstream's log of the token audiences it received   |
-| `publish-to-the-registry`  | 15      | a valid `server.json` for the MCP Registry, no real publish                   | the file against the registry's 2025-12-11 schema, plus version, address and secret token |
-| `upgrade-a-v1-server`      | 15      | an old SDK server moved to the new SDK with the codemod, then fixed by hand   | no old import, no `@mcp-codemod-error`, and every `expose-the-diary` rule                 |
-| `wrap-your-own-api`        | 30      | `my-api.json`, a server of tools from it, and `EVIDENCE.md` of one real call  | tools, annotations, the requests a stand-in API receives, a failed call, the evidence     |
-| `secure-the-client`        | 20      | `guards.ts`: refuse unsafe addresses, check `iss`, check the client ID file   | each guard run on good and bad cases: private addresses, a wrong `iss`                    |
-
-Each step has its own starter in `problem/`, so you can start any step fresh, in any order.
 
 ## Walkthrough
 

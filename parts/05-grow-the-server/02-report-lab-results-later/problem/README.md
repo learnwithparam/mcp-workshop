@@ -2,76 +2,87 @@
 
 ## The problem
 
-The clinic now has a lab-results server. Dr Sam Reyes asks Claude to order a blood panel for Biscuit (P-0001). A
-real panel takes a long time. The starter's `order_blood_panel` waits for the whole panel before it answers.
-So the model waits, the host waits, and Dr Reyes waits. A host can also give up on a slow tool call.
+For example, Dr Sam Reyes asks Claude to order a blood panel for Biscuit (P-0001). The starter tool waits for the whole panel, 3 seconds here and far longer in a real lab. A host can give up on a slow call. The fix is a task handle: an id the server returns at once.
 
-The fix is a task handle: an id the server returns at once, so the client can ask about the work later.
+```mermaid
+stateDiagram-v2
+  [*] --> working: order returns a taskId
+  working --> completed: the lab is done
+  working --> cancelled: cancel
+```
 
-For example, the first call returns at once:
+## Watch it done
+
+Before, the order tool waits, then prints the panel:
+
+```text
+Result from order_blood_panel:
+Blood panel for Biscuit: PCV 45 %, ALT 52 U/L, Creatinine 98 umol/L
+```
+
+```text
+0 of 5 rules pass. The order took 2287 ms.
+```
+
+After, the order answers at once with a task id, and a later call reports the results:
 
 ```text
 Ordered a blood panel for Biscuit. Task LAB-0001 is working. Ask blood_panel_status with this taskId in a few minutes.
 ```
 
-A little later, `blood_panel_status` with `LAB-0001` says `Task LAB-0001 is completed. PCV 45 %, ALT 52 U/L,
-Creatinine 98 umol/L`.
+`bun run verify report-lab-results-later solution` prints `Done. All 5 rules pass.`
 
-```mermaid
-stateDiagram-v2
-  [*] --> working: order_blood_panel returns a taskId
-  working --> working: blood_panel_status, still at the lab
-  working --> completed: the lab is done, results attached
-  working --> cancelled: cancel_blood_panel
-  completed --> [*]
-  cancelled --> [*]
-```
+## Your turn
 
-## Your challenge
-
-The lab is `../lab/lab.ts`. You do not edit it. It has `orderBloodPanel`, `status`, `results` and `cancel`.
-
-1. Change `order_blood_panel`, so it starts the panel and returns at once. Return `structuredContent` of
-   `taskId` and a `status` of `working`, with an `outputSchema`.
-2. Add `blood_panel_status`. It takes `taskId` and returns `working`, `completed` or `cancelled`. Once the task
-   is completed, it adds the results.
-3. Add `cancel_blood_panel`. It takes `taskId`, calls `lab.cancel`, and returns the new status.
-4. An unknown `taskId` is an error that names it.
-
-The lab takes 3 seconds here. Try the first call:
+1. Run the starter and watch it wait.
 
 ```bash
 bun run try --server parts/05-grow-the-server/02-report-lab-results-later/problem order_blood_panel '{"patientId":"P-0001"}'
 ```
 
-Expect: a result for `order_blood_panel` at once, with a taskId. The starter waits 3 seconds and prints the panel.
+Expect: a pause, then the full panel.
 
-If you already know this: the 2026-07-28 protocol moved tasks to an extension, `@modelcontextprotocol/ext-tasks`,
-with `tasks/get` and `tasks/cancel`. The server SDK used here has no server side for it yet. So this step builds
-the same idea with tools, and any client can use them.
+2. In `server.ts`, make `order_blood_panel` start the panel with `lab.orderBloodPanel` and return at once. Return `structuredContent` of `taskId` and `status: "working"`, with an `outputSchema`. The lab code is `../lab/lab.ts`; do not edit it.
+3. Add `blood_panel_status`. It takes `taskId` and returns working, completed or cancelled, with the results once completed.
+4. Add `cancel_blood_panel`. It calls `lab.cancel` and returns the new status.
+5. Return an error that names an unknown `taskId`.
+6. Run the first command again.
+
+Expect: the "Ordered a blood panel" text with a task id, with no wait.
+
+## Do it on your work
+
+Pick one slow job in your own server, such as a report or an export. Return an id at once and add one status tool. Good looks like a first answer in under a second, and a status that moves from working to done.
 
 ## Done when
 
-- `order_blood_panel` answers in under one second, while the lab still works.
-- Its structured result has a `taskId` and status `"working"`.
-- `blood_panel_status` says working at first, then completed with the lab's results.
-- `cancel_blood_panel` stops a working task, and it stays cancelled.
+- `order_blood_panel` answers in under one second.
+- Its result has a `taskId` and status `working`.
+- `blood_panel_status` says working, then completed with results.
+- `cancel_blood_panel` stops a task, and it stays cancelled.
 - An unknown `taskId` gets an error that names it.
 
 ```bash
 bun run verify report-lab-results-later
 ```
 
-Expect: `Done. All 5 rules pass.` once your work meets every Done when line. Before that, each FAIL line has a `Try next:`.
+Expect: `Done. All 5 rules pass.`
+
+## Solution
+
+The after state is one `server.ts` with three tools. See `solution/server.ts`.
+
+## Go further
+
+The newest protocol moved tasks to an extension, `@modelcontextprotocol/ext-tasks`, with `tasks/get` and `tasks/cancel`. The server SDK used here has no server side for it yet. So this step builds the same idea with tools, and any client can use them.
 
 ## If you get stuck
 
 - The order is still slow: you call `lab.waitForResults`. Call `lab.orderBloodPanel` and return.
-- The cancelled task turns completed later: your tool says "cancelled" but never calls `lab.cancel`.
-- The check sets `LAB_TURNAROUND_MS` to 1.5 seconds and asks again after that time.
+- A cancelled task turns completed: your tool never calls `lab.cancel`.
 
 ## Words you will use
 
-- **Task handle**: an id for work that is still running, so a client can ask about it later.
+- **Task handle**: an id for work that is still running.
 - **Polling**: asking again and again until the work is done.
 - **Turnaround**: how long the lab needs before results are ready.

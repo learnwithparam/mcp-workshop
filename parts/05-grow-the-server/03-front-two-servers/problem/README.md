@@ -2,87 +2,74 @@
 
 ## The problem
 
-The lab team wants one address for both servers: the clinic server and the lab-results server. A proxy can give
-them that. A proxy is a small server that sits in front of other servers and passes calls on.
+The lab team wants one address for two servers. A proxy, a small server that passes calls on, gives them that. For example, a careless proxy sends Joon's own token on, though it was made for the proxy. An upstream, a server behind the proxy, must refuse it.
 
-A careless proxy brings back two old dangers:
+```mermaid
+flowchart LR
+  J[Joon] --> P[proxy.ts]
+  P -- "new token, clinic audience" --> C[Clinic server]
+  P -- "new token, lab audience" --> L[Lab server]
+```
 
-- **Token passthrough**: it sends the caller's own token on. That token was minted for the proxy. An upstream
-  must refuse it, and the MCP spec says a server must not pass tokens through.
-- **New tools nobody reviewed**: the lab's latest release added `export_all_results`. It sends every result, with
-  owner details, to any address. Nobody at the clinic has read it, so it is not in `pins.json`.
+## Watch it done
 
-For example, Joon calls `clinic_find_free_slots` on the proxy. The proxy mints a new token for the clinic server,
-with the clinic's address as the audience. The clinic server's log then shows:
+Before, the starter proxy passes Joon's token on and lists every lab tool:
+
+```text
+FAIL  The unpinned lab tool export_all_results does not appear
+FAIL  Each upstream received only tokens minted for its own address
+FAIL  No upstream ever received a token minted for the proxy
+3 of 7 rules pass.
+```
+
+After, the clinic server's log shows a token made for the clinic:
 
 ```text
 {"server":"clinic","audience":"http://127.0.0.1:8801/mcp","subject":"S-01"}
 ```
 
-```mermaid
-flowchart LR
-  J[Joon: token for the proxy] --> P[proxy.ts]
-  P -- "new token, clinic audience" --> C[Clinic server]
-  P -- "new token, lab audience" --> L[Lab server]
-  L -. "export_all_results: not pinned, dropped" .-> X[ ]
-```
+`bun run verify front-two-servers solution` prints `Done. All 7 rules pass.`
 
-## Your challenge
+## Your turn
 
-The two upstream servers are in `../upstreams/`. You do not edit them. Your proxy is `proxy.ts`, with
-`upstream.ts` and `pins.ts`. It already adds the prefixes `clinic_` and `lab_`. Fix its two TODOs:
-
-1. In `upstream.ts`, `tokenFor` sends the caller's own token on. Mint a new token for every upstream call, with
-   the upstream's URL as the audience.
-2. In `proxy.ts`, keep only the lab tools whose fingerprint is in `pins.json`.
-
-Run it yourself in three terminals, from the repo root:
-
-```bash
-PORT=8801 bun parts/05-grow-the-server/03-front-two-servers/upstreams/clinic.ts
-```
-
-Expect: `clinic upstream listening on http://127.0.0.1:8801/mcp`
-
-```bash
-PORT=8802 bun parts/05-grow-the-server/03-front-two-servers/upstreams/lab.ts
-```
-
-Expect: `lab upstream listening on http://127.0.0.1:8802/mcp`
-
-```bash
-cd parts/05-grow-the-server/03-front-two-servers/problem && PORT=8800 CLINIC_URL=http://127.0.0.1:8801/mcp LAB_URL=http://127.0.0.1:8802/mcp bun proxy.ts
-```
-
-Expect: `The proxy serves 10 tools on http://127.0.0.1:8800/mcp` once the pin filter works. The starter serves 11.
-
-If you already know this: in a real clinic, the authorization server swaps one token for another (token exchange).
-Here the course's signing key stands in for it.
-
-## Done when
-
-- The proxy starts, and refuses a request with no token (401).
-- Clinic tools have the `clinic_` prefix, such as `clinic_find_free_slots`.
-- Pinned lab tools have the `lab_` prefix: `lab_order_blood_panel` and `lab_blood_panel_status`.
-- The unpinned lab tool `export_all_results` does not appear.
-- Calls go through: `clinic_find_free_slots` shows real free slots, `lab_order_blood_panel` a task.
-- Each upstream received only tokens minted for its own address.
-- No upstream ever received a token minted for the proxy.
+1. In `upstream.ts`, find `tokenFor`. It returns `caller.inboundToken`. Delete that line, so it always mints a new token with `audience: upstream.url`.
+2. In `proxy.ts`, find the TODO. Keep only the lab tools whose `fingerprint(tool)` is in `pinned`. Print each dropped tool.
+3. Run the check. It starts both upstreams and your proxy itself.
 
 ```bash
 bun run verify front-two-servers
 ```
 
-Expect: `Done. All 7 rules pass.` once your work meets every Done when line. Before that, each FAIL line has a `Try next:`.
+Expect: `Done. All 7 rules pass.`
+
+## Do it on your work
+
+List two servers you use, and write which tools you would let through from each. Good looks like a short list per server, with every new tool left out until a person has read it. Then name the audience each server should trust.
+
+## Done when
+
+- The proxy refuses a request with no token (401).
+- Clinic tools have the `clinic_` prefix, and pinned lab tools the `lab_` prefix.
+- `export_all_results` does not appear.
+- Calls go through and show real slots and a task.
+- Each upstream received only tokens made for its own address, and never one made for the proxy.
+
+## Solution
+
+The after state mints a token per upstream and filters by pins. See `solution/upstream.ts` and `solution/proxy.ts`.
+
+## Go further
+
+To run it by hand, use three terminals. Start the clinic upstream with `PORT=8801 bun parts/05-grow-the-server/03-front-two-servers/upstreams/clinic.ts`. Start `lab.ts` the same way on port 8802. Then start the proxy with `PORT=8800`, `CLINIC_URL` and `LAB_URL` set. Expect a line that says the proxy serves 10 tools. The starter serves 11.
+
+In a real clinic, the sign-in server swaps one token for another (token exchange). Here the course's signing key stands in for it.
 
 ## If you get stuck
 
-- Listing works but every call fails: the list at start uses a minted token, but calls still pass Joon's token on.
-- The check starts the upstreams and your proxy on free ports, and reads each upstream's token log.
+- Listing works but calls fail: calls still pass Joon's token on.
 
 ## Words you will use
 
-- **Proxy**: a server in front of other servers, which passes calls on.
-- **Upstream**: a server behind the proxy.
-- **Audience**: the server a token was minted for. A server refuses a token for any other audience.
+- **Proxy**: a server in front of other servers.
+- **Audience**: the server a token was made for.
 - **Token passthrough**: sending on a token you received. The MCP spec forbids it.

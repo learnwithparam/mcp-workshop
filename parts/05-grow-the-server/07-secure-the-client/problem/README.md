@@ -2,51 +2,63 @@
 
 ## The problem
 
-A client trusts what a server tells it. The server says "sign in at this address", and the client goes there. A
-bad server can name an address inside your network, such as `https://169.254.169.254/`. That is the cloud
-metadata service, and it holds secrets. This attack is called SSRF: the server tricks the client into making a
-request for it.
-
-For example, the lab's server returns metadata that points to `https://10.0.0.5/`. A client with no guard fetches
-it from inside the clinic network.
-
-Two more guards keep sign-in honest. The `iss` value in a sign-in answer says who sent it. A client that skips it
-can be fooled into sending a code to the wrong server. A Client ID Metadata Document is a small file the client
-hosts at an https address, and that address is its client ID.
+A client goes where a server tells it. For example, a bad server names `https://169.254.169.254/`, the cloud metadata service that holds secrets. That trick is SSRF: the server makes the client send a request for it. A client with no guard follows.
 
 ```mermaid
 flowchart LR
-  S[Server says: go to this address] --> G1{Safe to fetch?}
-  G1 -- no --> X[Refuse]
-  G1 -- yes --> A[Sign in]
-  A --> G2{iss matches the metadata?}
-  G2 -- no --> X
-  G2 -- yes --> OK[Trust the answer]
+  S[Server names an address] --> G{Safe to fetch?} -- no --> X[Refuse]
 ```
 
-## Your challenge
+## Watch it done
 
-1. Open `guards.ts`. Each guard allows everything today.
-2. In `checkFetchUrl`, refuse anything that is not plain https. Refuse an address with a name and password. Refuse
-   `localhost`, names that end in `.local` or `.internal`, and private or link-local numbers, in both the old and
-   the new style.
-3. In `checkIssuer`, when the server promised an `iss`, refuse a missing one. Refuse one that is not exactly the
-   issuer in the metadata.
-4. In `checkClientMetadata`, require a client ID that is the https address of the document, with a path. Require
-   `token_endpoint_auth_method` to be `none`. Require redirect addresses that are https, or http on this machine.
+Before, every guard in `guards.ts` allows everything:
 
-## Done when
+```text
+FAIL  An address that points inside, or is not plain https, is refused
+      First wrong answer: plain http
+FAIL  The iss check accepts a match and refuses a missing, wrong or look-alike iss
+FAIL  Our client ID document is accepted when it is good and refused when it is not
+1 of 4 rules pass.
+```
 
-- A public https address is fetched.
-- An address that points inside, or is not plain https, is refused.
-- The `iss` check accepts a match and refuses a missing, wrong or look-alike `iss`.
-- Our client ID document is accepted when it is good and refused when it is not.
+After, it prints `Done. All 4 rules pass.`
+
+## Your turn
+
+1. Open `guards.ts` in this step's `problem/` folder. In `checkFetchUrl`, refuse anything that is not plain https. Refuse an address with a name and password.
+2. Refuse `localhost`, names ending in `.local` or `.internal`, and private or link-local numbers.
+3. Run the check.
 
 ```bash
 bun run verify secure-the-client
 ```
 
-Expect: `Done. All 4 rules pass.` once your work meets every Done when line. Before that, each FAIL line has a `Try next:`.
+Expect: the `iss` rule and the client ID rule still show `FAIL`.
+
+4. In `checkIssuer`, when the server promised an `iss`, refuse a missing one. Refuse one that is not exactly the issuer in the metadata.
+5. In `checkClientMetadata`, require a client ID that is the https address of the document, with a path. Require `token_endpoint_auth_method` to be `none`. Require https redirects, or http on this machine.
+6. Run the check again.
+
+Expect: `Done. All 4 rules pass.`
+
+## Do it on your work
+
+Find one place where your own code or agent fetches an address that someone else supplied. Write down which of these guards it has. Good looks like a refused private address and a test that proves it.
+
+## Done when
+
+- A public https address is fetched.
+- An address that points inside, or is not plain https, is refused.
+- The `iss` check accepts a match and refuses a missing, wrong or look-alike one.
+- A good client ID document is accepted, and a bad one refused.
+
+## Solution
+
+The after state is a `guards.ts` with three working guards. See `solution/guards.ts`.
+
+## Go further
+
+Read the OWASP guide on SSRF, and the IETF draft for Client ID Metadata Documents. It says a server must not fetch an address that points to a special-use number. That is the rule you just wrote.
 
 ## If you get stuck
 
@@ -57,6 +69,6 @@ Expect: `Done. All 4 rules pass.` once your work meets every Done when line. Bef
 ## Words you will use
 
 - **SSRF**: a trick where a server makes a client fetch an address the server chose.
-- **`iss`**: the issuer value in a sign-in answer. It says who sent the answer.
+- **`iss`**: the issuer value in a sign-in answer. It says who sent it.
 - **Client ID Metadata Document**: a file at an https address that describes a client. The address is the client ID.
-- **Link-local**: an address that only works on the local network, such as `169.254.169.254`.
+- **Link-local**: an address that only works on the local network.

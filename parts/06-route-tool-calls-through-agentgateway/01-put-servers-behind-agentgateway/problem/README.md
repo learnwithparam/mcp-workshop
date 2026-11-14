@@ -2,32 +2,33 @@
 
 ## The problem
 
-Earlier you wrote a proxy by hand. It put the clinic server and the lab server behind one address.
-
-Teams that run this in production often use a ready-made gateway instead. A gateway is a small program that sits in
-front of your servers, checks who is calling and decides which tools they may use. Here you use agentgateway. You do
-not write code. You write one `config.yaml`.
-
-For example, Joon calls `clinic_find_free_slots` through port 3000. The gateway checks his token, finds the tool on
-the allow-list, sends a token made for the clinic server, and returns the free slots. If he calls
-`lab_export_all_results`, the gateway refuses.
+You wrote a proxy by hand. Many teams use a ready-made gateway instead: a program in front of your servers that checks who calls and which tools they may use. For example, agentgateway needs no code, only one `config.yaml`. The starter checks no token and knows one server.
 
 ```mermaid
 flowchart LR
-  J[Joon: token for the gateway] --> G[agentgateway on port 3000]
-  G -- "token for the clinic address" --> C[Clinic server]
-  G -- "token for the lab address" --> L[Lab server]
-  G -. "export_all_results: not on the allow-list, refused" .-> X[ ]
+  J[Joon] --> G[agentgateway] --> C[Clinic server]
+  G --> L[Lab server]
 ```
 
-## Your challenge
+## Watch it done
 
-Work in the `assignment/` folder. It has a `compose.yml` that starts the gateway, the clinic server and the lab
-server. It also has a starter `config.yaml` that knows only the clinic server and checks no token.
+Before, the starter config fails five of six rules (this check needs Docker to run the gateway):
 
-Make `config.yaml` do four things.
+```text
+  PASS  The gateway image is cr.agentgateway.dev/agentgateway:v1.7.0
+  FAIL  tools/list through the gateway shows tools from the clinic server and the lab server
+  FAIL  A request with no token is refused with 401
+  FAIL  The allowed tool returns real free slots
+  FAIL  A tool that is not on the allow-list returns an error
+  FAIL  The tools list shows only the allowed tools
+1 of 6 rules pass.
+```
 
-First, add the lab server as a second target, next to the clinic target:
+After, the gateway lists two tools, `clinic_find_free_slots` and `lab_blood_panel_status`. A call with no token gets 401. A call to `lab_export_all_results` is refused. The check prints `Done. All 6 rules pass.` On a machine without Docker the check cannot start the gateway, so it fails even on the solution.
+
+## Your turn
+
+1. Open `assignment/config.yaml`. Add the lab server as a second target, next to the clinic one:
 
 ```yaml
 - name: lab
@@ -35,7 +36,7 @@ First, add the lab server as a second target, next to the clinic target:
     host: http://127.0.0.1:8802/mcp
 ```
 
-Second, add a `jwtAuth` rule to the route's policies, so a request with no token gets 401:
+2. Add `jwtAuth` to the route's policies, so a request with no token gets 401:
 
 ```yaml
 jwtAuth:
@@ -46,62 +47,52 @@ jwtAuth:
     file: /run/keys/public-keys.jwks
 ```
 
-Third, give each target a `backendAuth` key that points at its own token file in `/run/keys`:
+3. Give each target its own token file with `backendAuth`, for example `/run/keys/clinic.token` and `/run/keys/lab.token`.
+4. Add `mcpAuthorization` rules that allow one read-only tool from each server. `mcp.tool.name` has no prefix:
 
 ```yaml
-policies:
-  backendAuth:
-    key:
-      value:
-        file: /run/keys/clinic.token
+- allow: 'mcp.tool.target == "clinic" && mcp.tool.name == "find_free_slots"'
 ```
 
-Fourth, add `mcpAuthorization` rules that allow one read-only tool from each server, and nothing else. Inside a
-rule, `mcp.tool.target` is the server name. The value `mcp.tool.name` is the tool's own name, without the prefix:
-
-```yaml
-mcpAuthorization:
-  rules:
-    - allow: 'mcp.tool.target == "clinic" && mcp.tool.name == "find_free_slots"'
-```
-
-Start it from the repo root:
+5. Make the test keys, start the three containers, and run the check.
 
 ```bash
 bun assignment/token.ts
-```
-
-Expect: a line that says it wrote the test key and tokens, and the path of `assignment/.run`.
-
-```bash
 docker compose -f assignment/compose.yml up -d
+bun run verify put-servers-behind-agentgateway
 ```
 
-Expect: three containers started: `clinic`, `lab` and `gateway`. Stop them later with `docker compose -f assignment/compose.yml down -v`.
+Expect: three containers started (`clinic`, `lab`, `gateway`), then `Done. All 6 rules pass.` Stop them with `docker compose -f assignment/compose.yml down -v`.
+
+## Do it on your work
+
+Write a gateway config for two servers you use. List each tool you would allow and why. Good looks like one allowed read-only tool per server, a token rule, and every new tool refused until you add it.
 
 ## Done when
 
 - The gateway image tag is `v1.7.0`.
-- `tools/list` through the gateway shows tools from both servers.
-- A request with no token is refused with 401.
+- The tool list shows tools from both servers.
+- A request with no token gets 401.
 - The allowed tool returns real free slots.
-- A tool that is not on the allow-list returns an error.
-- The tools list shows only the allowed tools.
+- A tool off the allow-list returns an error.
+- The list shows only the allowed tools.
 
-```bash
-bun run verify put-servers-behind-agentgateway
-```
+## Solution
 
-Expect: `Done. All 6 rules pass.` once your work meets every Done when line. Before that, each FAIL line has a `Try next:`.
+The after state is one `config.yaml` with two targets, a token rule, a key per target and an allow-list. See `solution/config.yaml`.
+
+## Go further
+
+The graded homework is in `assignment/README.md`. Run `bun assignment/check.ts` to write `assignment/result.json`.
 
 ## If you get stuck
 
-- The list is empty: `mcp.tool.name` is the name the server uses, such as `find_free_slots`, not `clinic_find_free_slots`.
-- Calls fail with a token error: each target needs its own `backendAuth`, because each server trusts only its own address.
+- The list is empty: `mcp.tool.name` is `find_free_slots`, not `clinic_find_free_slots`.
+- Calls fail with a token error: each target needs its own `backendAuth`.
 
 ## Words you will use
 
 - **Gateway**: a program in front of your servers that checks callers and passes calls on.
-- **Target**: one server behind the gateway. Its name becomes the prefix of its tools.
-- **Allow-list**: the only tools a caller may use. Everything else is refused.
-- **JWT**: a signed token that says who the caller is. The gateway checks the signature.
+- **Target**: one server behind the gateway. Its name becomes the tool prefix.
+- **Allow-list**: the only tools a caller may use.
+- **JWT**: a signed token that says who the caller is.
