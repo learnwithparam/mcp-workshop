@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=https://agentgateway.dev/schema/config
+binds:
+  - port: 3000
+    listeners:
+      - routes:
+          - policies:
+              # What they may call: one read-only tool from each server, nothing else.
+              mcpAuthorization:
+                rules:
+                  - allow: 'mcp.tool.target == "clinic" && mcp.tool.name == "find_free_slots"'
+                  - allow: 'mcp.tool.target == "lab" && mcp.tool.name == "blood_panel_status"'
+            backends:
+              - mcp:
+                  targets:
+                    - name: clinic
+                      mcp:
+                        host: http://127.0.0.1:8801/mcp
+                      # The clinic server only trusts a token made for its own address.
+                      policies:
+                        backendAuth:
+                          key:
+                            value:
+                              file: /run/keys/clinic.token
+                    - name: lab
+                      mcp:
+                        host: http://127.0.0.1:8802/mcp
+                      policies:
+                        backendAuth:
+                          key:
+                            value:
+                              file: /run/keys/lab.token

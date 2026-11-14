@@ -1,0 +1,34 @@
+# The two course servers and the gateway. All three share the clinic container's network, so each
+# course server is still at 127.0.0.1, the address its tokens are made for.
+services:
+  clinic:
+    image: oven/bun:1.4.4
+    working_dir: /repo/parts/05-grow-the-server/03-front-two-servers/upstreams
+    environment:
+      PORT: "8801"
+      CLINIC_DB: /tmp/clinic.sqlite
+      CLINIC_LOG: /tmp/clinic.log
+    volumes:
+      - ../:/repo:ro
+    ports:
+      - "127.0.0.1:3000:3000"
+    command:
+      - sh
+      - -c
+      - bun -e "import { seed } from '/repo/world/seed'; seed('/tmp/clinic.sqlite')" && bun clinic.ts
+  lab:
+    image: oven/bun:1.4.4
+    network_mode: "service:clinic"
+    working_dir: /repo/parts/05-grow-the-server/03-front-two-servers/upstreams
+    environment:
+      PORT: "8802"
+    volumes:
+      - ../:/repo:ro
+    command: ["bun", "lab.ts"]
+  gateway:
+    image: cr.agentgateway.dev/agentgateway:v1.7.0
+    network_mode: "service:clinic"
+    command: ["--file", "/etc/gateway/config.yaml"]
+    volumes:
+      - ${GATEWAY_CONFIG:-./config.yaml}:/etc/gateway/config.yaml:ro
+      - ${GATEWAY_RUN_DIR:-./.run}:/run/keys:ro
