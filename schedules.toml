@@ -1,6 +1,6 @@
 # Parts mapped onto formats. This is the only file that talks about time.
 # Part minutes (from each step.toml, and from PARTS.md for parts still waiting for their session):
-# start-here 15, give-the-diary 50, pick-the-right-tool 65, open-the-server-safely 70, defend-and-ship 55,
+# start-here 15, give-the-diary 50, pick-the-right-tool 65, open-the-server-safely 70, defend-and-ship 90,
 # grow-the-server 95, route-tool-calls-through-agentgateway 25 (optional). Core 255, extension 95, total 350 plus the optional 25. Session minutes include breaks and review.
 
 [one-day]
@@ -9,7 +9,7 @@ sessions = [
   { parts = ["start-here", "give-the-diary"], minutes = 65, note = "morning, first block" },
   { parts = ["pick-the-right-tool"], minutes = 80, note = "morning, after a 15-minute break" },
   { parts = ["open-the-server-safely"], minutes = 85, note = "early afternoon, with a 15-minute break" },
-  { parts = ["defend-and-ship", "grow-the-server", "route-tool-calls-through-agentgateway"], minutes = 190, note = "late afternoon: 150 minutes, a 15-minute break and a 25-minute show and tell" },
+  { parts = ["defend-and-ship", "grow-the-server", "route-tool-calls-through-agentgateway"], minutes = 210, note = "late afternoon: 170 minutes, a 15-minute break and a 25-minute show and tell" },
 ]
 
 [five-evenings]
@@ -29,5 +29,5 @@ sessions = [
   { parts = ["start-here", "give-the-diary"], minutes = 75, note = "week 1 live, 10 minutes review" },
   { parts = ["pick-the-right-tool"], minutes = 75, note = "week 2 live, 10 minutes review" },
   { parts = ["open-the-server-safely"], minutes = 75, note = "week 3 live, 5 minutes review" },
-  { parts = ["defend-and-ship", "grow-the-server", "route-tool-calls-through-agentgateway"], minutes = 195, note = "week 4: 75 live (20 review), the 95-minute extension and the 25-minute gateway part as homework" },
+  { parts = ["defend-and-ship", "grow-the-server", "route-tool-calls-through-agentgateway"], minutes = 210, note = "week 4: 90 live (20 review), the 95-minute extension and the 25-minute gateway part as homework" },
 ]

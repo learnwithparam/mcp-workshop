@@ -53,9 +53,10 @@ flowchart TB
 | `break-the-lethal-trifecta` | 15      | a server with one leg cut, named in `notes/trifecta.md`                  | the recorded attack on Pepper (P-0042), 3 runs: every tool argument and the outbox |
 | `deploy-the-server`         | 15      | `PORT` and `PUBLIC_URL` read from settings, and a `Dockerfile`           | a rehearsal of your `CMD`, or your live URL: 401, metadata, audience, Ola and Joon |
 | `limit-requests`            | 15      | a rate limit for each client and a deadline for each request             | 80 quick requests from Joon, then Ola; a zero deadline                             |
+| `trace-every-tool-call`     | 20      | one trace span for every tool call, sent to a collector                  | a small collector: three calls, the span names, labels, ids and no private data    |
 | `write-the-handover`        | 10      | `HANDOVER.md`: tools, scopes, eval scores, threats and defences          | six sections; every tool and its annotation; scores matched to the eval JSON       |
 
-Total: 70 minutes.
+Total: 90 minutes.
 
 Each step has its own starter in `problem/`, so you can start any step fresh. The steps do not build on each other's
 files. Do you want to deploy your own server from Part 3? Then copy it into `deploy-the-server/problem/` and keep
@@ -101,6 +102,8 @@ Expect: `Done. All 7 rules pass.`, with every request sent to your live address.
 
 Limit each client and each request with `bun run verify limit-requests`. Expect: `Done. All 4 rules pass.`
 
+Trace each tool call with `bun run verify trace-every-tool-call`. Expect: `Done. All 7 rules pass.`
+
 Write the handover from the real numbers:
 
 ```bash
@@ -113,7 +116,7 @@ Expect: `Done. All 6 rules pass.` once your work meets every Done when line. Bef
 bun run verify part defend-and-ship
 ```
 
-Expect: `Part defend-and-ship is done: 5/5 steps pass.` once every step passes.
+Expect: `Part defend-and-ship is done: 6/6 steps pass.` once every step passes.
 
 ## Assignment
 
