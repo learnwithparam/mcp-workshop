@@ -29,12 +29,14 @@ files. Do you want to deploy your own server from Part 3? Then copy it into `dep
 
 ## Watch and read
 
-| Kind | Title                                                      | Author                | Why                                                                                          | Link                                                          |
-| ---- | ---------------------------------------------------------- | --------------------- | -------------------------------------------------------------------------------------------- | ------------------------------------------------------------- |
-| read | Code execution with MCP                                    | Anthropic Engineering | Shows personal data kept away from the model, and one task cut from 150,000 tokens to 2,000. | https://www.anthropic.com/engineering/code-execution-with-mcp |
-| read | MCP Security Notification: Tool Poisoning Attacks          | Invariant Labs        | The first public write-up of tool poisoning, with a working example.                         | https://invariantlabs.ai/blog/mcp-security-notification       |
-| read | My lethal trifecta talk at the Bay Area AI Security Meetup | Simon Willison        | Names the three things that together let an agent leak data.                                 | https://simonwillison.net/2025/Aug/9/bay-area-ai/             |
-| read | Traces                                                     | OpenTelemetry         | Explains spans and traces, the idea behind the trace step.                                   | https://opentelemetry.io/docs/concepts/signals/traces/        |
+| Kind  | Title                                                      | Author                         | Why                                                                                          | Link                                                          |
+| ----- | ---------------------------------------------------------- | ------------------------------ | -------------------------------------------------------------------------------------------- | ------------------------------------------------------------- |
+| read  | Code execution with MCP                                    | Anthropic Engineering          | Shows personal data kept away from the model, and one task cut from 150,000 tokens to 2,000. | https://www.anthropic.com/engineering/code-execution-with-mcp |
+| read  | MCP Security Notification: Tool Poisoning Attacks          | Invariant Labs                 | The first public write-up of tool poisoning, with a working example.                         | https://invariantlabs.ai/blog/mcp-security-notification       |
+| read  | My lethal trifecta talk at the Bay Area AI Security Meetup | Simon Willison                 | Names the three things that together let an agent leak data.                                 | https://simonwillison.net/2025/Aug/9/bay-area-ai/             |
+| read  | Traces                                                     | OpenTelemetry                  | Explains spans and traces, the idea behind the trace step.                                   | https://opentelemetry.io/docs/concepts/signals/traces/        |
+| video | Your Insecure MCP Server Won't Survive Production          | Tun Shwe, Lenses               | Shows the attacks a live MCP server meets and how to stop them.                              | https://www.youtube.com/watch?v=BurJvbqFr4c                   |
+| video | The State of MCP Observability: Observable.tools           | Alex Volkov and Benjamin Eckel | Shows how a trace follows one tool call from the agent into the server.                      | https://www.youtube.com/watch?v=Lcqat4iP_lE                   |
 
 ## Project
 
