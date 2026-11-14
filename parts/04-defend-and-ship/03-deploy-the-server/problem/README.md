@@ -2,7 +2,7 @@
 
 ## The problem
 
-Your server answers on `http://127.0.0.1:8787/mcp`, an address that exists only on your laptop. Dr Reyes at Millbrook and Joon at Harrow Lane need one public address, such as `https://harrow-lane.fly.dev/mcp`. The host picks the port and the public name, so a fixed address breaks.
+For example, your server answers on `http://127.0.0.1:8787/mcp`, an address that exists only on your laptop. Dr Reyes at Millbrook and Joon at Harrow Lane need one public address, such as `https://harrow-lane.fly.dev/mcp`. The host picks the port and the public name, so a fixed address breaks.
 
 ```mermaid
 flowchart LR
@@ -32,6 +32,8 @@ After, the solution passes:
 Done. All 7 rules pass.
 ```
 
+![The deploy check passing against a running server](../images/expected.png)
+
 ## Your turn
 
 1. In `app.ts`, read `PUBLIC_URL`. Use it for the resource address, the allowed host names and the token audience.
@@ -57,7 +59,7 @@ Expect: `Done. All 7 rules pass.` Good looks like a public address that refuses 
 
 ## Done when
 
-- The `Dockerfile` has `FROM` and a `CMD` whose script exists from the repo root.
+- The `Dockerfile` has `FROM` and a `CMD` that names a real script.
 - The server answers on the port in `PORT`.
 - No token gives 401 and a `WWW-Authenticate` header with the metadata address.
 - The metadata names the public address as the resource.
@@ -67,18 +69,17 @@ Expect: `Done. All 7 rules pass.` Good looks like a public address that refuses 
 
 ## Solution
 
-The after state is three files: `Dockerfile`, `serve.ts` and `app.ts`. See `solution/Dockerfile`, `solution/serve.ts` and `solution/app.ts`.
+The after state is three files. See `solution/Dockerfile`, `solution/serve.ts` and `solution/app.ts`.
 
 ## Go further
 
-Why not Cloudflare Workers? The clinic's PIMS uses `bun:sqlite`, and Workers cannot run it. Try a second host with the same image.
+Why not Cloudflare Workers? The clinic's PIMS uses `bun:sqlite`, and Workers cannot run it.
 
 ## If you get stuck
 
 - 403 on every request: the Host check does not know the public name. Add `new URL(PUBLIC_URL).hostname`.
 - Joon's token gets 401: use `PUBLIC_URL` as the expected resource.
 - The live server never answers: read the host's logs. Does it listen on `0.0.0.0` and on `PORT`?
-- The course's signing key lets the check mint tokens. That is safe only because the clinic data is made up.
 
 ## Words you will use
 

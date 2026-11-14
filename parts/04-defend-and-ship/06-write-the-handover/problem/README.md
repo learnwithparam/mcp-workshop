@@ -2,7 +2,7 @@
 
 ## The problem
 
-Next month someone else looks after the live server, or you do after a long break. Handover notes often go wrong in one way: the numbers are typed from memory. A score that says 12/20 when `evals/baseline.json` says 9/20 makes every other line hard to trust.
+For example, next month someone else looks after the live server, or you do after a long break. Handover notes often go wrong in one way: the numbers are typed from memory. A score that says 12/20 when `evals/baseline.json` says 9/20 makes every other line hard to trust.
 
 ```mermaid
 flowchart LR

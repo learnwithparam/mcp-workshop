@@ -2,7 +2,7 @@
 
 ## The problem
 
-Your server is public. A buggy script for Joon sends 80 `tools/list` requests in a row, and Ola at the front desk then gets no answer at all. A rate limit caps how many requests one client may send in a minute. A deadline is the longest one request may run.
+For example, your server is public. A buggy script for Joon sends 80 `tools/list` requests in a row, and Ola at the front desk then gets no answer at all. A rate limit caps how many requests one client may send in a minute. A deadline is the longest one request may run.
 
 ```mermaid
 flowchart LR
