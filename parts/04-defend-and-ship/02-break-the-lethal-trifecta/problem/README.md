@@ -36,7 +36,7 @@ flowchart TB
 2. Cut one leg in `server.ts`. Keep `find_patient` and `read_notes`: vets need them.
    - **A way out**: remove `send_email`. If the clinic needs to email owners, add a tool that only takes an
      appointment id. Then the server picks the address and the words.
-   - **Private data**: make `owner_contact` return a stand-in such as `[phone of O-0042]` instead of the real
+   - **Private data**: make `owner_contact` return a stand-in such as `[phone-O-0042]` instead of the real
      number and email.
 3. Fill in `notes/trifecta.md`: the leg you cut, what you changed, and why.
 
@@ -46,7 +46,7 @@ Try the attack's first call on your server:
 bun run try --server parts/04-defend-and-ship/02-break-the-lethal-trifecta/problem owner_contact '{"patientId":"P-0042"}'
 ```
 
-Expect: `Result from owner_contact:`, then the owner's name. With the private data leg cut, no real phone number.
+Expect: a result for `owner_contact`, then the owner's name. With the private data leg cut, no real phone number.
 
 If you already know this: the check plays the three runs in fresh worlds. It reads every tool argument and the
 outbox file, never a model's reply.
@@ -78,4 +78,4 @@ Expect: `Done. All 6 rules pass.` once your work meets every Done when line. Bef
 
 - **Prompt injection**: text in your data that tries to give the model orders.
 - **Lethal trifecta**: private data, untrusted content and a way out, all in reach of one agent.
-- **Stand-in (token)**: a placeholder such as `[phone of O-0042]` that the model can pass on but not read.
+- **Stand-in (token)**: a placeholder such as `[phone-O-0042]` that the model can pass on but not read.

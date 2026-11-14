@@ -37,7 +37,7 @@ bunx @modelcontextprotocol/conformance@0.2.0-alpha.12 server --url http://127.0.
 
 Expect: a summary, then a red `Unexpected failures` list that starts with `server-stateless:sep-2575-request-meta-invalid`.
 
-3. Read the list. Then fix `http.ts` so the suite ends with `Baseline check passed`.
+3. Read the list. Then fix `http.ts` so the suite ends with the baseline check passed.
 
 For example, one check sends a request with no `_meta`. The spec says the answer is HTTP 400 with a JSON-RPC
 error. Kofi's change turns that 400 into a 200. A client can then no longer tell a bad request from a good one.

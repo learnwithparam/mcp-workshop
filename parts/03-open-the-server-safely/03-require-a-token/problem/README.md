@@ -50,10 +50,10 @@ curl -s -i -X POST http://127.0.0.1:8787/mcp -d '{}'
 ```
 
 Expect: `HTTP/1.1 401 Unauthorized` and a header `WWW-Authenticate: Bearer error="invalid_token", error_description="Missing Authorization header", resource_metadata="http://127.0.0.1:8787/.well-known/oauth-protected-resource/mcp"`.
-The starter answers `415 Unsupported Media Type`: it checks no token yet.
+The starter answers with the code `415`: it checks no token yet.
 
 To try a real token, run `bun run finished` once and copy Ola's token. Stop it, start your server, and send
-the token in the header `Authorization: Bearer <token>`.
+the token in the `Authorization` header, as `Bearer <token>`.
 
 If you already know this: `requireBearerAuth` reads only the `Authorization` header, so a token never sits in a
 URL or a log.

@@ -50,7 +50,7 @@ Keep that for your own server.
 - `server.json` matches the MCP Registry schema (2025-12-11).
 - Its `$schema` names the 2025-12-11 server schema.
 - Its name is a namespace and a server name, such as `io.github.<you>/harrow-lane`.
-- Its version is one exact version, such as 1.0.0, never a range or latest.
+- Its version is one exact version, such as `1.0.0`, never a range or latest.
 - It has a `streamable-http` remote at a public https address ending in `/mcp`.
 - The remote asks for an `Authorization` header that is required and secret.
 

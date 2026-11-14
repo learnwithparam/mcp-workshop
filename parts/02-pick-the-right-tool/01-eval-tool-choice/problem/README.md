@@ -64,7 +64,7 @@ Expect: `Done. All 7 rules pass.` once your work meets every Done when line. Bef
 
 ## If you get stuck
 
-- `There is no recording`: for this step, run the eval on `api-mirror`, not on your server.
+- The message says there is no recording: for this step, run the eval on `api-mirror`, not on your server.
 - Every run uses a fresh copy of the diary, so the bookings the eval makes never change your own diary.
 - The solution is there after you try: `../solution/evals/notes.md`.
 

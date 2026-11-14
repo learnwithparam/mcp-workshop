@@ -53,7 +53,7 @@ If you already know this: the check compares every time after `Free slots:` with
 - A start in the past: the error says it is in the past and gives the clinic clock.
 - A clash: the error names the vet and lists real free slots after "Free slots:".
 - Outside opening times: the error gives the opening and closing times.
-- A length of 25 minutes: the error names `length` and the values that work (10 to 60).
+- A length of 25 (not a step of ten): the error names `length` and the values that work (10 to 60).
 - None of the five bad calls wrote to the diary, and a good booking still adds one row.
 
 ```bash

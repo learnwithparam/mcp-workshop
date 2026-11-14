@@ -9,7 +9,7 @@ attacks it stops.
 Handover notes often go wrong in one way: the numbers are typed from memory. A score that says 12/20 when the eval
 file says 9/20 makes every other line hard to trust.
 
-For example, `evals/baseline.json` in this folder ends its header with `"passed": 9, "total": 20`. So your handover
+For example, `evals/baseline.json` in this folder ends its header with the counts passed and total. So your handover
 says 9/20 for the server built from the PIMS API, not "about half".
 
 ```mermaid
@@ -30,7 +30,7 @@ flowchart LR
 bun run try --as joon
 ```
 
-Expect: `The finished server, as joon, has 8 tools:`, then one line per tool.
+Expect: a line that names the tool count, then one line per tool.
 
 3. Fill in every section of `HANDOVER.md`. Replace each TODO.
    - **Tools**: one line per tool. Mark it "Read-only", "Writes, not destructive" or "Destructive". The

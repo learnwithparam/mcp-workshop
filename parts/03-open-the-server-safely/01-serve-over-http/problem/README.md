@@ -49,9 +49,9 @@ curl -s -X POST http://127.0.0.1:8787/mcp -H 'content-type: application/json' -H
 ```
 
 Expect: one JSON line that starts `{"result":{"tools":[{"name":"find_patient"`. The starter prints
-`TODO: serve MCP here` instead.
+a TODO line instead.
 
-If you already know this: `createMcpHandler` serves 2025-era clients by default (`legacy: 'stateless'`). Each
+If you already know this: `createMcpHandler` serves older clients by default (`legacy: 'stateless'`). Each
 legacy request gets a fresh server too, so `GET` and `DELETE` answer 405.
 
 ## Done when
@@ -59,7 +59,7 @@ legacy request gets a fresh server too, so `GET` and `DELETE` answer 405.
 - `bun http.ts` starts and answers on the port in `MCP_PORT`.
 - A `tools/list` request with no `initialize` and no session id lists the clinic tools.
 - A request with the header `Host: evil.example` gets 403.
-- A 2025-era client that starts with `initialize` is still served.
+- An older client that starts with `initialize` is still served.
 - The MCP client calls `find_free_slots` over HTTP and gets the free times in the diary.
 
 ```bash

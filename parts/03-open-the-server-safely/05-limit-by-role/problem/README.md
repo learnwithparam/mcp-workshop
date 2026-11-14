@@ -8,11 +8,11 @@ their own site. Only Joon, the clinical director, reads the drugs register.
 
 Each token carries scopes, the kinds of data it may touch. The clinic uses four:
 
-| Role         | Scopes                                         |
-| ------------ | ---------------------------------------------- |
-| receptionist | `diary:read diary:write`                       |
-| vet, nurse   | `diary:read diary:write notes:read`            |
-| director     | `diary:read diary:write notes:read drugs:read` |
+| Role         | Scopes                                                  |
+| ------------ | ------------------------------------------------------- |
+| receptionist | `diary:read diary:write`                                |
+| vet, nurse   | `diary:read`, `diary:write`, `notes:read`               |
+| director     | `diary:read`, `diary:write`, `notes:read`, `drugs:read` |
 
 Hiding a tool is the first wall. The second wall is a clear 403 when someone calls it anyway. The 403 names the
 scope, so a client can ask the person to sign in with more access. This is called step-up.

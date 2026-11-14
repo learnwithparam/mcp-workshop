@@ -16,7 +16,7 @@ For example, a receptionist asks "Can Biscuit get her booster at Millbrook?". Th
 
 You leave able to:
 
-- build a server on the current MCP spec and TypeScript SDK v2. It has tools shaped around jobs, structured results
+- build a server on the current MCP spec and the current TypeScript SDK. It has tools shaped around jobs, structured results
   and tests;
 - measure how well the model picks tools with an eval (a scored test), then raise the score by redesigning the tools;
 - serve it over Streamable HTTP as an OAuth resource server. It checks each token's audience and scope. It never
@@ -32,7 +32,7 @@ earlier.
 bun install
 ```
 
-Expect: `bun install` ends with a line such as `31 packages installed` and no errors. Your number can be a little
+Expect: `bun install` ends with a line that counts the packages and no errors. Your number can be a little
 different.
 
 ```bash

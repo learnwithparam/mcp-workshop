@@ -1,4 +1,4 @@
-# Upgrade a v1 server
+# Upgrade an old server
 
 ## The problem
 
@@ -23,8 +23,8 @@ leaves a comment that starts with `@mcp-codemod-error`.
 
 ```mermaid
 flowchart LR
-  V1[server.ts on SDK v1] -- "bunx @modelcontextprotocol/codemod v1-to-v2" --> M[Imports and names fixed, 1 marker]
-  M -- "you fix the marker" --> V2[SDK v2, old protocol]
+  V1[server.ts on the old SDK] -- "bunx @modelcontextprotocol/codemod v1-to-v2" --> M[Imports and names fixed, 1 marker]
+  M -- "you fix the marker" --> V2[New SDK, old protocol]
   V2 -- "you switch to serveStdio" --> D[Speaks 2026-07-28: answers server/discover]
 ```
 
@@ -62,7 +62,7 @@ Expect: `Done. All 10 rules pass.` once your work meets every Done when line. Be
 
 ## If you get stuck
 
-- `Part 1: It speaks the current MCP spec revision` fails: you still call `server.connect`. Use `serveStdio`.
+- The rule about speaking the current spec fails: you still call `server.connect`. Use `serveStdio`.
 - The server does not start: look at the marker. `inputSchema` must be a schema, not a sentence.
 - Want to start again? Run `git checkout` on the folder, then run the codemod once more.
 

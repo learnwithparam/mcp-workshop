@@ -40,7 +40,7 @@ Add a tool `book_appointment(patientId, vetId, date?, start, length, reason)` to
 bun run try book_appointment '{"patientId":"P-0001","vetId":"S-05","start":"10:20","reason":"Booster"}' --server parts/01-give-the-diary/02-book-an-appointment/problem
 ```
 
-Expect: `Result from book_appointment:` and a booking line. `bun run world reset` undoes it.
+Expect: a result for `book_appointment` and a booking line. `bun run world reset` undoes it.
 
 For example, run it twice on the sample solution. The first run books Biscuit (P-0001) with Dr Reyes (S-05). The
 second run refuses:

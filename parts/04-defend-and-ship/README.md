@@ -56,8 +56,6 @@ flowchart TB
 | `trace-every-tool-call`     | 20      | one trace span for every tool call, sent to a collector                  | a small collector: three calls, the span names, labels, ids and no private data    |
 | `write-the-handover`        | 10      | `HANDOVER.md`: tools, scopes, eval scores, threats and defences          | six sections; every tool and its annotation; scores matched to the eval JSON       |
 
-Total: 90 minutes.
-
 Each step has its own starter in `problem/`, so you can start any step fresh. The steps do not build on each other's
 files. Do you want to deploy your own server from Part 3? Then copy it into `deploy-the-server/problem/` and keep
 `serve.ts` as the file the `Dockerfile` starts.
@@ -149,7 +147,7 @@ You now have a server that is defended and live:
 - a public address that refuses a missing token, a token for another server and a receptionist reading notes;
 - a handover the next person can trust, because its numbers come from files.
 
-For example, Release 1.4.1 of the insurance server now stops at `CHANGED submit_claim`. It never reaches the model.
+For example, The reworded release of the insurance server now stops at `CHANGED submit_claim`. It never reaches the model.
 
 Next, in `grow-the-server`, the clinic adds a lab-results service. You put both servers behind one proxy. The proxy
 lets through only the lab tools that match your pins, so the pin check from this part guards it.

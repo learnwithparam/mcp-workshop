@@ -32,9 +32,9 @@ Dr Mei Lin (S-10): 08:00, 08:10, 08:20
 ## Your challenge
 
 1. Give `find_free_slots` an `outputSchema`: `site`, `date`, `length`, and `slots`, a list of
-   `{ vetId, vetName, start }`. Return the same shape as `structuredContent`.
+   `vetId`, `vetName` and `start`. Return the same shape as `structuredContent`.
 2. Give `vaccines_due` an `outputSchema`: `patientId`, `name`, and `vaccines`, a list of
-   `{ vaccine, due, given? }`.
+   `vaccine`, `due` and `given`.
 3. Add a `detail` input to both: `"concise"` (the default) or `"full"`. Concise slots are the first 3 for each
    vet. Concise vaccines are the latest due date of each vaccine. Full gives everything.
 4. Keep a one-line text summary in `content`.
@@ -43,7 +43,7 @@ Dr Mei Lin (S-10): 08:00, 08:10, 08:20
 bun run try vaccines_due '{"patientId":"P-0042","detail":"full"}' --server parts/02-pick-the-right-tool/03-return-structured-results/problem
 ```
 
-Expect: `Result from vaccines_due:` and both of Pepper's cat flu records once `detail` works.
+Expect: a result for `vaccines_due` and both of Pepper's cat flu records once `detail` works.
 
 ```text
 Result from vaccines_due:
@@ -59,7 +59,7 @@ returning `length` as a string and see what the model would read.
 - `find_free_slots` and `vaccines_due` both declare an `outputSchema`.
 - Ten fixture calls return `structuredContent` that matches the tool's `outputSchema`.
 - Every one of those results also has a text summary.
-- A concise `find_free_slots` answer stays under 150 tokens (Eastgate, 2026-11-17, 30 minutes).
+- A concise `find_free_slots` answer stays under 150 tokens (Eastgate, 2026-11-17, a length of 30).
 - A full `find_free_slots` answer lists every free slot the diary has.
 - Every slot in the structured result is really free in the diary.
 - `vaccines_due` gives one entry per vaccine when concise, and every record when full (Pepper).

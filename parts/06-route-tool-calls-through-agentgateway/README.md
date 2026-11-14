@@ -17,7 +17,7 @@ lab server, and lets him call only the two read-only ones. The risky `export_all
 A hand-built proxy is the right way to learn, because you see every decision. It is a poor way to run a clinic. Each
 change to it is code to review, test and deploy.
 
-A gateway moves those decisions into one config file. We measured agentgateway version 1.7.0 idle in Docker. It used
+A gateway moves those decisions into one config file. We measured agentgateway idle in Docker. It used
 about 14 MiB of memory, and 21 MiB after a few calls. The two course servers beside it used about 85 MiB together.
 
 The diagram shows the plan. It is the same plan as the hand-built proxy.
@@ -41,8 +41,6 @@ flowchart LR
 | Step                              | Minutes | You produce                                                         | The check reads                                                                            |
 | --------------------------------- | ------- | ------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
 | `put-servers-behind-agentgateway` | 25      | `assignment/config.yaml` with two targets, a token rule, allow-list | the tool list, a call with no token, an allowed call and a blocked call, all via port 3000 |
-
-Total: 25 minutes.
 
 ## Walkthrough
 

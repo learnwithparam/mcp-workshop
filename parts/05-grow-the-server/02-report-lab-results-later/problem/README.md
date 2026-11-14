@@ -3,7 +3,7 @@
 ## The problem
 
 The clinic now has a lab-results server. Dr Sam Reyes asks Claude to order a blood panel for Biscuit (P-0001). A
-real panel takes about 40 minutes. The starter's `order_blood_panel` waits for the whole panel before it answers.
+real panel takes a long time. The starter's `order_blood_panel` waits for the whole panel before it answers.
 So the model waits, the host waits, and Dr Reyes waits. A host can also give up on a slow tool call.
 
 The fix is a task handle: an id the server returns at once, so the client can ask about the work later.
@@ -32,7 +32,7 @@ stateDiagram-v2
 The lab is `../lab/lab.ts`. You do not edit it. It has `orderBloodPanel`, `status`, `results` and `cancel`.
 
 1. Change `order_blood_panel`, so it starts the panel and returns at once. Return `structuredContent` of
-   `{ taskId, status: "working" }`, with an `outputSchema`.
+   `taskId` and a `status` of `working`, with an `outputSchema`.
 2. Add `blood_panel_status`. It takes `taskId` and returns `working`, `completed` or `cancelled`. Once the task
    is completed, it adds the results.
 3. Add `cancel_blood_panel`. It takes `taskId`, calls `lab.cancel`, and returns the new status.
@@ -44,7 +44,7 @@ The lab takes 3 seconds here. Try the first call:
 bun run try --server parts/05-grow-the-server/02-report-lab-results-later/problem order_blood_panel '{"patientId":"P-0001"}'
 ```
 
-Expect: `Result from order_blood_panel:` at once, with a taskId. The starter waits 3 seconds and prints the panel.
+Expect: a result for `order_blood_panel` at once, with a taskId. The starter waits 3 seconds and prints the panel.
 
 If you already know this: the 2026-07-28 protocol moved tasks to an extension, `@modelcontextprotocol/ext-tasks`,
 with `tasks/get` and `tasks/cancel`. The server SDK used here has no server side for it yet. So this step builds

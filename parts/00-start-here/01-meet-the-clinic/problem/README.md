@@ -32,7 +32,7 @@ Expect: three `tool` lines (`find_patient`, `vaccines_due`, `find_free_slots`) a
 bun run try find_free_slots '{"site":"millbrook"}'
 ```
 
-Expect: `Result from find_free_slots:` and one line per vet with their free start times.
+Expect: a result for `find_free_slots` and one line per vet with their free start times.
 
 ```bash
 bun run ask "Show me Biscuit's clinical notes."

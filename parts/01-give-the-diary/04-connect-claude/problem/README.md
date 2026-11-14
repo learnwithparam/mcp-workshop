@@ -37,7 +37,7 @@ First, run the command from your config yourself. Does it start and wait quietly
 cd parts/01-give-the-diary/04-connect-claude/problem && bun server.ts
 ```
 
-Expect: `harrow-lane server running on stdio`, then nothing. Press Ctrl+C to stop it.
+Expect: one line that says the server is running on stdio, then nothing. Press Ctrl+C to stop it.
 
 For example, the sample solution's `notes/connect-claude.md` ends with this answer. Every time in it is a free slot
 in the diary:

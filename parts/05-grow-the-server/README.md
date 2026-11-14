@@ -45,11 +45,9 @@ flowchart LR
 | `report-lab-results-later` | 20      | `order_blood_panel` that returns a task handle, plus status and cancel tools  | how fast the order answers; the task moving from working to completed; cancel             |
 | `front-two-servers`        | 25      | a proxy that prefixes tools, mints a token per upstream, drops unpinned tools | the tool list through the proxy; each upstream's log of the token audiences it received   |
 | `publish-to-the-registry`  | 15      | a valid `server.json` for the MCP Registry, no real publish                   | the file against the registry's 2025-12-11 schema, plus version, address and secret token |
-| `upgrade-a-v1-server`      | 15      | an SDK v1 server moved to v2 with the codemod, then fixed by hand             | no old import, no `@mcp-codemod-error`, and every `expose-the-diary` rule                 |
+| `upgrade-a-v1-server`      | 15      | an old SDK server moved to the new SDK with the codemod, then fixed by hand   | no old import, no `@mcp-codemod-error`, and every `expose-the-diary` rule                 |
 | `wrap-your-own-api`        | 30      | `my-api.json`, a server of tools from it, and `EVIDENCE.md` of one real call  | tools, annotations, the requests a stand-in API receives, a failed call, the evidence     |
 | `secure-the-client`        | 20      | `guards.ts`: refuse unsafe addresses, check `iss`, check the client ID file   | each guard run on good and bad cases: private addresses, a wrong `iss`                    |
-
-Total: 145 minutes.
 
 Each step has its own starter in `problem/`, so you can start any step fresh, in any order.
 
@@ -120,7 +118,7 @@ How it is graded. Each line is yes or no:
 2. Does `bun run verify front-two-servers` pass, so no upstream ever sees a token minted for the proxy?
 
 Extension for advanced learners: make each upstream token live 60 seconds. Pass `expiresIn: "60s"` when the proxy
-mints it. Do the upstream logs show `exp - iat` of 60 or less? Add `exp` and `iat` to the log line to see.
+mints it. Do the upstream logs show a token life of 60 seconds or less? Add `exp` and `iat` to the log line to see.
 
 ## Finished
 

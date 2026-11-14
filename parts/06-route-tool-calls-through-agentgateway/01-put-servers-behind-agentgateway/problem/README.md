@@ -71,7 +71,7 @@ Start it from the repo root:
 bun assignment/token.ts
 ```
 
-Expect: `Wrote the test key and tokens to` and the path of `assignment/.run`.
+Expect: a line that says it wrote the test key and tokens, and the path of `assignment/.run`.
 
 ```bash
 docker compose -f assignment/compose.yml up -d

@@ -65,7 +65,7 @@ Done. All 7 rules pass.
 ## If you get stuck
 
 - `ResourceTemplate` and `ResourceNotFoundError` come from `@modelcontextprotocol/server`.
-- The read callback gets the URI and the filled-in blanks, for example `{ patientId: "P-0001" }`.
+- The read callback gets the URI and the filled-in blanks, for example `patientId` set to `P-0001`.
 - The solution is there after you try: `../solution/server.ts`.
 
 ## Words you will use

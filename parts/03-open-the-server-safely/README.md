@@ -27,7 +27,7 @@ that flow comes from someone else, so you cannot trust it.
 
 Here is a real case. The `mcp-remote` package let a bad server run commands on the user's machine. It did this with a
 crafted `authorization_endpoint` URL. This is CVE-2025-6514, rated critical with a CVSS score of 9.6. It affects
-versions 0.0.5 up to 0.1.16
+in many older versions
 ([GitHub advisory GHSA-6xpm-ggf7-wc3p](https://github.com/advisories/GHSA-6xpm-ggf7-wc3p)).
 
 The spec's own security guide forbids token passthrough. Passthrough means a server accepts a token made for another
@@ -63,7 +63,7 @@ sequenceDiagram
 | `limit-by-role`         | 10      | scopes `diary:read`, `diary:write`, `notes:read`, `drugs:read`, with tools hidden or refused by scope | Ola's token lists no notes tool and gets 403 on a direct call; Dr Reyes reads notes for Millbrook patients only; only Joon reads the drugs log |
 | `confirm-before-cancel` | 10      | `cancel_appointment` that returns `input_required` and cancels only on a yes                          | the diary row after a first call, a retry with no, a yes with no, tampered or borrowed `requestState`, then a real yes                         |
 
-Total: 70 minutes. Tokens come from `world/auth.ts`, the course's stand-in for the clinic's sign-in service. Your
+Tokens come from `world/auth.ts`, the course's stand-in for the clinic's sign-in service. Your
 server imports what it needs from `clinic-login.ts` in this folder.
 
 ## Walkthrough

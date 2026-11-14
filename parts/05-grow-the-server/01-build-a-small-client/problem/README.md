@@ -36,7 +36,7 @@ sequenceDiagram
 
 Open `client.ts`. It connects, prints the server and protocol, and lists tools. Finish the three TODOs:
 
-1. Turn on version negotiation: `{ versionNegotiation: { mode: "auto" } }`. With "auto", the client asks
+1. Turn on version negotiation: `versionNegotiation` with the mode set to `auto`. With "auto", the client asks
    `server/discover` first, and falls back to `initialize` when the server does not know it.
 2. Print `Supported versions:` from `client.getDiscoverResult()`.
 3. Call the tool named on the command line, with `callOneTool`.
@@ -53,7 +53,7 @@ Your screen should look like this:
 
 ![client.ts against the Part 1 server and the old lab server](../images/expected.png)
 
-If you already know this: `mode: { pin: "2026-07-28" }` refuses any server that cannot offer that version. Use a pin
+If you already know this: A `pin` mode set to `2026-07-28` refuses any server that cannot offer that version. Use a pin
 only when you control every server.
 
 ## Done when

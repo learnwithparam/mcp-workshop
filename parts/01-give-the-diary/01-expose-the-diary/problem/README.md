@@ -11,12 +11,12 @@ The PIMS already has a "find a slot" search: `clinic.freeSlots`. Nothing connect
 
 Turn `server.ts` in this folder into an MCP server with one read tool, `find_free_slots`, served over stdio.
 
-1. At the top of the file, add `import * as z from "zod/v4";` and `import { clinic } from "#clinic";`.
+1. At the top of the file, add two imports: `z` from `zod/v4`, and `clinic` from `#clinic`.
    `#clinic` is this repo's short name for `world/clinic.ts`, the PIMS.
 
 2. Register the tool with `server.registerTool(name, { description, inputSchema }, handler)`.
 3. Arguments: `site` (one of `harrow-lane`, `millbrook`, `eastgate`), an optional `date` (YYYY-MM-DD), and
-   `length` in minutes (default 20). Use a Zod object. Give every field a `.describe("...")`.
+   `length`, in minutes, with a default of 20. Use a Zod object. Give every field a `.describe("...")`.
 4. The handler calls `clinic.freeSlots({ site, date, length })` on every call. It returns each start time and vet
    as text. When `date` is missing, use `clinic.clock().date`.
 5. Log only with `console.error`. Over stdio, stdout belongs to the protocol.
@@ -27,7 +27,7 @@ Before you run the check, try your server the way a client does:
 bun run try find_free_slots '{"site":"millbrook"}' --server parts/01-give-the-diary/01-expose-the-diary/problem
 ```
 
-Expect: `Result from find_free_slots:` and six start times, three for Dr Sam Reyes and three for Dr Hannah Cole.
+Expect: a result for `find_free_slots` and six start times, three for Dr Sam Reyes and three for Dr Hannah Cole.
 
 For example, the sample solution prints this. The starter has no tool yet, so it prints `The server broke the MCP rules: Method not found.`
 
@@ -53,7 +53,7 @@ it breaks other hosts.
 - `tools/list` has a tool called `find_free_slots`.
 - Its description is one to three sentences of at least 8 words.
 - It takes `site` and `length`, and every argument has a description.
-- For Millbrook and 20 minutes it returns exactly the free slots in the diary.
+- For Millbrook and a length of 20 it returns exactly the free slots in the diary.
 - It reads the live diary: a slot booked behind its back disappears from the next answer.
 
 ```bash
@@ -64,10 +64,10 @@ Expect: `Done. All 8 rules pass.` once your work meets every Done when line. Bef
 
 ## If you get stuck
 
-- The SDK's guide to a first server: https://ts.sdk.modelcontextprotocol.io/v2/.
+- The SDK's guide to a first server: [the SDK site](https://ts.sdk.modelcontextprotocol.io/v2/).
 - `inputSchema` is the only schema you write. The SDK turns it into the JSON Schema the model sees, and checks
   every call against it.
-- Old tutorials use `server.tool(...)` and `@modelcontextprotocol/sdk`. That is SDK v1. Use `registerTool` from
+- Old tutorials use `server.tool(...)` and `@modelcontextprotocol/sdk`. That is the old SDK. Use `registerTool` from
   `@modelcontextprotocol/server`.
 - Still stuck? Compare with `../solution/server.ts`.
 

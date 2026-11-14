@@ -14,7 +14,7 @@ input and cost in tokens.
 
 For example, Ola asks "When is Biscuit's booster due?". With the copied API, the model may call `list_owners` first
 and then read all of Biscuit's notes. With a tool shaped around the job, it calls `vaccines_due` once with
-`{"patientId":"P-0001"}`. The answer is one line: `Biscuit: DHP due 2026-11-19; Lepto due 2026-11-19`.
+`{"patientId":"P-0001"}`. The answer is one line: Biscuit with the two vaccines and their due days.
 
 In this part you measure how well the model picks tools on twenty front-desk tasks. This test is called an eval.
 Then you redesign the tools around jobs, and you prove the score went up. You also make the answers short and
@@ -63,7 +63,7 @@ Your server, 5 job tools:       Score: 19/20. Estimated tokens: 43,290.
 | `add-records-as-resources`  | 10      | a `clinic://patients/{patientId}/summary` resource template, a `resource_link` from `find_patient`, a prompt | `resources/templates/list`, `resources/read` on a fixture id, no owner contact, error `-32602` on an unknown id, the prompt                                       |
 | `test-the-server`           | 10      | `test/server.test.ts` with an in-process client and at least 4 tests                                         | `bun test` passes, then fails against two mutants: clash check removed, unknown patient allowed                                                                   |
 
-Total: 65 minutes. Each role gets its model from `config/models.ts`. Replay is the default, so the eval runs with no
+Each role gets its model from `config/models.ts`. Replay is the default, so the eval runs with no
 key. The eval kit sits in this folder: `eval.ts`, `tasks.jsonl`, the `api-mirror.ts` server, and the two
 recordings it plays back.
 

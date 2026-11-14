@@ -87,7 +87,7 @@ Expect: `Done. All 8 rules pass.` once your work meets every Done when line. Bef
 ## If you get stuck
 
 - A task fails although the model chose the right tool: look for a tool error. Your tool refused a good input.
-- `There is no recording`: one of the five tool names is spelled differently.
+- The message says there is no recording: one of the five tool names is spelled differently.
 - The solution is there after you try: `../solution/server.ts`.
 
 ## Words you will use

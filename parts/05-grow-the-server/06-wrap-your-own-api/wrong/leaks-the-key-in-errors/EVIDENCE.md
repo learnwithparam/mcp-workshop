@@ -2,7 +2,7 @@
 
 ## My API
 
-Dockside Books order API at https://api.dockside-books.example/v2. I used a test key from the shop's staging site.
+Dockside Books order API at https://api.dockside-books.example/orders. I used a test key from the shop's staging site.
 
 ## A real call
 
