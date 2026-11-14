@@ -1,0 +1,33 @@
+# yaml-language-server: $schema=https://agentgateway.dev/schema/config
+binds:
+  - port: 3000
+    listeners:
+      - routes:
+          - policies:
+              # Who may call: a token signed by the course key, made for the gateway's address.
+              jwtAuth:
+                mode: strict
+                issuer: https://login.harrowlane.test
+                audiences: [http://127.0.0.1:3000/mcp]
+                jwks:
+                  file: /run/keys/public-keys.jwks
+            backends:
+              - mcp:
+                  targets:
+                    - name: clinic
+                      mcp:
+                        host: http://127.0.0.1:8801/mcp
+                      # The clinic server only trusts a token made for its own address.
+                      policies:
+                        backendAuth:
+                          key:
+                            value:
+                              file: /run/keys/clinic.token
+                    - name: lab
+                      mcp:
+                        host: http://127.0.0.1:8802/mcp
+                      policies:
+                        backendAuth:
+                          key:
+                            value:
+                              file: /run/keys/lab.token

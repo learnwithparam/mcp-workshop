@@ -1,0 +1,11 @@
+# yaml-language-server: $schema=https://agentgateway.dev/schema/config
+binds:
+  - port: 3000
+    listeners:
+      - routes:
+          - backends:
+              - mcp:
+                  targets:
+                    - name: clinic
+                      mcp:
+                        host: http://127.0.0.1:8801/mcp
