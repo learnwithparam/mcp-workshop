@@ -10,7 +10,7 @@ An `assignment/config.yaml` with two targets, a token rule and an allow-list.
 
 ## The problem
 
-You built a proxy, token checks and a tool allow-list by hand. Teams that run MCP servers in production often use an open-source gateway for this job: one small program you configure, not code you maintain. For example, Joon's token reaches the gateway on port 3000, and he can call only the two read-only tools. The risky `export_all_results` stays out of reach.
+You built a proxy, token checks and a tool allow-list by hand. Teams that run MCP servers in production often use an open-source gateway. It is one small program you configure, not code you maintain. For example, Joon's token reaches the gateway on port 3000, and he can call only the two read-only tools. The risky `export_all_results` stays out of reach.
 
 ## Steps
 

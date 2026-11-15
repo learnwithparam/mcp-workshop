@@ -2,7 +2,7 @@
 
 ## After this part you can
 
-Grow a server with a client, a task handle, a proxy, a registry file and a safe upgrade, and wrap your own API.
+Grow a server. Add a client, a task handle, a proxy, a registry file and a safe upgrade. Then wrap your own API.
 
 ## You leave with
 
@@ -10,7 +10,7 @@ A `my-api.json` and a server of tools for your own API, with an `EVIDENCE.md` of
 
 ## The problem
 
-A year later, the clinic group grows. A lab-results service arrives, a second team wants one address for both servers, and blood results take minutes, so a tool cannot wait. For example, Dr Sam Reyes orders a blood panel for Biscuit (P-0001). The tool must return a task id such as `LAB-0001` at once, and the client asks again until the task is done.
+A year later, the clinic group grows. A lab-results service arrives. A second team wants one address for both servers. Blood results take minutes, so a tool cannot wait. For example, Dr Sam Reyes orders a blood panel for Biscuit (P-0001). The tool must return a task id such as `LAB-0001` at once. The client asks again until the task is done.
 
 ## Steps
 
@@ -113,7 +113,7 @@ The problem: a lab-results service arrives, and a second team wants one address 
 
 Hand in your repo with these files filled in:
 
-- `01-build-a-small-client/problem/client.ts`;
+- `01-build-a-small-client/problem/client.ts`.
 - `03-front-two-servers/problem/` with `proxy.ts`, `upstream.ts` and `pins.json`.
 
 How it is graded. Each line is yes or no:
@@ -128,10 +128,10 @@ mints it. Do the upstream logs show a token life of 60 seconds or less? Add `exp
 
 You now have a server that can grow:
 
-- a small client that works with new and old servers;
-- a lab tool that answers at once and reports later;
-- one address for two servers, where each server only trusts tokens made for it, and new tools wait for review;
-- a `server.json` that lets other clinics find your server;
+- a small client that works with new and old servers.
+- a lab tool that answers at once and reports later.
+- one address for two servers, where each server only trusts tokens made for it, and new tools wait for review.
+- a `server.json` that lets other clinics find your server.
 - a way to move old servers to the new SDK and the new protocol.
 
 For example, Joon now calls `lab_order_blood_panel` and `clinic_find_free_slots` through one address. The lab

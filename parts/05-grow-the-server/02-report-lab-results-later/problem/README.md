@@ -42,7 +42,7 @@ bun run try --server parts/05-grow-the-server/02-report-lab-results-later/proble
 
 Expect: a pause, then the full panel.
 
-2. In `server.ts`, make `order_blood_panel` start the panel with `lab.orderBloodPanel` and return at once. Return `structuredContent` of `taskId` and `status: "working"`, with an `outputSchema`. The lab code is `../lab/lab.ts`; do not edit it.
+2. In `server.ts`, make `order_blood_panel` start the panel with `lab.orderBloodPanel` and return at once. Return `structuredContent` of `taskId` and `status: "working"`, with an `outputSchema`. The lab code is `../lab/lab.ts`. Do not edit it.
 3. Add `blood_panel_status`. It takes `taskId` and returns working, completed or cancelled, with the results once completed.
 4. Add `cancel_blood_panel`. It calls `lab.cancel` and returns the new status.
 5. Return an error that names an unknown `taskId`.

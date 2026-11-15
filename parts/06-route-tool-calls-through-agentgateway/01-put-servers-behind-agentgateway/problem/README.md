@@ -2,7 +2,7 @@
 
 ## The problem
 
-You wrote a proxy by hand. Many teams use a ready-made gateway instead: a program in front of your servers that checks who calls and which tools they may use. For example, agentgateway needs no code, only one `config.yaml`. The starter checks no token and knows one server.
+You wrote a proxy by hand. Many teams use a ready-made gateway instead. It is a program in front of your servers. It checks who calls and which tools they may use. For example, agentgateway needs no code, only one `config.yaml`. The starter checks no token and knows one server.
 
 ```mermaid
 flowchart LR
@@ -24,7 +24,7 @@ Before, the starter config fails five of six rules (this check needs Docker to r
 1 of 6 rules pass.
 ```
 
-After, the gateway lists two tools, `clinic_find_free_slots` and `lab_blood_panel_status`. A call with no token gets 401. A call to `lab_export_all_results` is refused. The check prints `Done. All 6 rules pass.` On a machine without Docker the check cannot start the gateway, so it fails even on the solution.
+After, the gateway lists two tools, `clinic_find_free_slots` and `lab_blood_panel_status`. A call with no token gets 401. A call to `lab_export_all_results` is refused. The check prints `Done. All 6 rules pass.` On a machine without Docker, the check cannot start the gateway. It fails even on the solution.
 
 ## Your turn
 
@@ -66,7 +66,7 @@ Expect: three containers started (`clinic`, `lab`, `gateway`), then `Done. All 6
 
 ## Do it on your work
 
-Write a gateway config for two servers you use. List each tool you would allow and why. Good looks like one allowed read-only tool per server, a token rule, and every new tool refused until you add it.
+Write a gateway config for two servers you use. List each tool you would allow and why. Good looks like one allowed read-only tool per server. It has a token rule. Every new tool is refused until you add it.
 
 ## Done when
 

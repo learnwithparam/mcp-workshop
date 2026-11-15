@@ -2,7 +2,7 @@
 
 ## My API
 
-TODO: the name and base address of your own API, and which key you used (a test key, never a real one).
+TODO: name your own API and its base address. Say which key you used. Use a test key, never a real one.
 
 ## A real call
 
