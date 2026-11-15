@@ -2,7 +2,7 @@
 
 ## The problem
 
-Your server has a URL and answers anyone who finds it. For example, a request with no sign-in can still list patients and book appointments. A token fixes that. It is a signed note from the clinic's login service that says who is asking, such as Ola, a Millbrook receptionist. Your server only reads and checks it.
+Your server has a URL and answers anyone who finds it. For example, a request with no sign-in can still list patients and book appointments. A token fixes that. It is a signed note from the clinic's login service. It says who is asking, such as Ola, a Millbrook receptionist. Your server only reads and checks it.
 
 ```mermaid
 sequenceDiagram

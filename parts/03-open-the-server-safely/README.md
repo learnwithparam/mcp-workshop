@@ -6,7 +6,7 @@ Put an MCP server on a web address so that only the right people reach the right
 
 ## You leave with
 
-A remote server that passes the official conformance suite, checks every token, hides tools by role, and asks before it cancels.
+A remote server passes the official conformance suite. It checks every token, hides tools by role, and asks before it cancels.
 
 ## The problem
 
@@ -49,7 +49,7 @@ sequenceDiagram
 
 ## Project
 
-Take one server of your own. Serve it over HTTP, run the conformance suite, then require a token and refuse one made for another server. Give two roles different tool lists. You are done when a missing, forged or misdirected token gets 401, and the second role gets 403 on a tool it should not have.
+Take one server of your own. Serve it over HTTP, run the conformance suite, then require a token and refuse one made for another server. Give two roles different tool lists. You are done when a missing, forged or misdirected token gets 401. The second role gets 403 on a tool it should not have.
 
 ## Walkthrough
 
@@ -77,7 +77,7 @@ Expect: `Part open-the-server-safely is done: 6/6 steps pass.`
 
 ## Why it matters
 
-The spec's security guide forbids token passthrough, where a server accepts a token made for another server and sends it on. A server must refuse tokens that were not made for it.
+The spec's security guide forbids token passthrough. That is when a server accepts a token made for another server and sends it on. A server must refuse tokens that were not made for it.
 
 ## Finished
 

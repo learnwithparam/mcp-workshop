@@ -68,7 +68,7 @@ The after state hides tools by scope and checks the site. See `solution/server.t
 
 ## Go further
 
-A 403 that names the missing scope is called step-up, so the client can ask the person to sign in again with more access. An SDK scope challenge runs only for registered tools, so a hidden tool needs the check in `http.ts`.
+A 403 that names the missing scope is called step-up. The client can then ask the person to sign in again with more access. An SDK scope challenge runs only for registered tools, so a hidden tool needs the check in `http.ts`.
 
 ## If you get stuck
 

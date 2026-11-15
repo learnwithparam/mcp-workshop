@@ -2,7 +2,7 @@
 
 ## The problem
 
-`cancel_appointment` cancels at once. For example, a model that reads "can we move Biscuit?" as "cancel Biscuit" frees the slot, and the owner finds out at the door. So a person says yes first. The server asks, the client shows a dialog, and the same call comes back with the answer.
+`cancel_appointment` cancels at once. For example, a model reads "can we move Biscuit?" as "cancel Biscuit". The slot frees up, and the owner finds out at the door. So a person says yes first. The server asks, the client shows a dialog, and the same call comes back with the answer.
 
 ```mermaid
 sequenceDiagram

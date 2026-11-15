@@ -74,7 +74,7 @@ The after state keeps each status as the handler sent it. See `solution/http.ts`
 
 ## Go further
 
-The expected-failures file excuses scenarios that need the suite's own test tools, and prompts and resources this server does not offer. Read its comments. The `--requirements` flag pins the scenarios to one spec, so a newer suite cannot fail you on a rule that did not exist then.
+The expected-failures file excuses scenarios. They need the suite's own test tools, or prompts and resources this server does not offer. Read its comments. The `--requirements` flag pins the scenarios to one spec. A newer suite cannot fail you on a rule that did not exist then.
 
 ## If you get stuck
 
