@@ -113,13 +113,13 @@ meets several times.
 
 At the end you have a deployed Harrow Lane server. Its URL passes the course's remote checks:
 
-- 401 (not allowed) with no token;
-- 401 for a token made for another server;
-- no notes tool for a receptionist;
-- nothing cancelled without a yes.
+- 401 (not allowed) with no token.
+- 401 for a token made for another server.
+- No notes tool for a receptionist.
+- Nothing cancelled without a yes.
 
 Next to it you have three more things. You have the eval score before and after your tool redesign. You have the
-pin check catching both poisoned versions of the insurance server. You have a `HANDOVER.md`, and the checker matches
+pin check that catches both poisoned versions of the insurance server. You have a `HANDOVER.md`. The checker matches
 its numbers against your eval results.
 
 You can reuse all of this. Swap the seed data and the tool contract, and the same checks work for another business.
