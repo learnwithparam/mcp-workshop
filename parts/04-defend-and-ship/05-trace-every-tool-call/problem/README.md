@@ -33,7 +33,7 @@ Done. All 7 rules pass.
 ## Your turn
 
 1. Open `app.ts`, the server from the deploy step.
-2. For each `tools/call`, time the call and build one span named `tools/call` and a space and the tool name, such as `tools/call find_patient`.
+2. For each `tools/call`, time the call. Build one span named `tools/call`, a space, and the tool name, such as `tools/call find_patient`.
 3. Add three labels: `mcp.method.name` is `tools/call`, `gen_ai.operation.name` is `execute_tool`, and `gen_ai.tool.name` is the tool name. Expect: one span for each call, with those labels.
 
 4. Use a random 32 digit trace id and 16 digit span id, in lower case hex. If the request has a `traceparent` header, reuse its trace id, and use its parent id as `parentSpanId`.
@@ -67,7 +67,7 @@ The after state is span code inside the HTTP front. See `solution/app.ts` and `s
 
 ## Go further
 
-Add a child span for the PIMS call inside each tool, to tell a slow tool from a slow back end.
+Add a child span for the PIMS call inside each tool. It tells a slow tool from a slow back end.
 
 ## If you get stuck
 

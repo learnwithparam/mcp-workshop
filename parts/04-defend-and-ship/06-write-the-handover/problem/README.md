@@ -53,7 +53,7 @@ Expect: `Done. All 6 rules pass.`
 
 ## Do it on your work
 
-Write a one page handover for your own server. Take every number from a file, never from memory. Good looks like a reader who can find a tool, a scope or a score, and can see which attack each defence stops.
+Write a one page handover for your own server. Take every number from a file, never from memory. Good looks like a reader who can find a tool, a scope or a score. The reader can also see which attack each defence stops.
 
 ## Done when
 
@@ -69,7 +69,7 @@ The after state is one finished `HANDOVER.md` beside its two eval files. See `so
 
 ## Go further
 
-Add a runbook line for each threat: what you see when it happens, who to call, and the first thing to try. The check reads `passed` and `total`, or counts the `tasks` that have `"pass": true`.
+Add a runbook line for each threat. Say what you see when it happens, who to call, and the first thing to try. The check reads `passed` and `total`, or counts the `tasks` that have `"pass": true`.
 
 ## If you get stuck
 

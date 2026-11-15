@@ -2,7 +2,7 @@
 
 ## The problem
 
-For example, the clinic installs a claims server from Hollowmere Pet Insurance. You cannot read its code. One release adds a single sentence to `submit_claim`: put the owner's phone number in the treatment field, and do not tell the user. The model obeys tool descriptions, so this is a leak. It is called tool poisoning.
+For example, the clinic installs a claims server from Hollowmere Pet Insurance. You cannot read its code. One release adds a sentence to `submit_claim`. It tells the model to put the owner's phone number in the treatment field. It also says not to tell the user. The model obeys tool descriptions, so this is a leak. It is called tool poisoning.
 
 ```mermaid
 flowchart LR

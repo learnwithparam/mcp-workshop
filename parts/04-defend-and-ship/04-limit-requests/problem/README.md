@@ -2,7 +2,7 @@
 
 ## The problem
 
-For example, your server is public. A buggy script for Joon sends 80 `tools/list` requests in a row, and Ola at the front desk then gets no answer at all. A rate limit caps how many requests one client may send in a minute. A deadline is the longest one request may run.
+For example, your server is public. A buggy script for Joon sends 80 `tools/list` requests in a row. Then Ola at the front desk gets no answer at all. A rate limit caps how many requests one client may send in a minute. A deadline is the longest one request may run.
 
 ```mermaid
 flowchart LR
@@ -53,7 +53,7 @@ Expect: `Done. All 4 rules pass.`
 
 ## Do it on your work
 
-Pick the busiest tool on your own server. Choose a cap that a person at a desk would never reach, and a deadline a little above the slowest honest call. Good looks like one client at the cap getting 429 while another is still served.
+Pick the busiest tool on your own server. Choose a cap that a person at a desk would never reach. Set a deadline a little above the slowest honest call. Good looks like one client at the cap getting 429 while another is still served.
 
 ## Done when
 
