@@ -2,7 +2,7 @@
 
 ## The problem
 
-A patient's summary is the same every time, and a person often wants to see it, not only the model. For example, making the model call a tool for each of 600 patients is slow. A resource is a record with an address, a URI, that the host can read and show without a model call.
+A patient's summary is the same every time, and a person often wants to see it, not only the model. For example, making the model call a tool for each of 600 patients is slow. A resource is a record with an address. The address is a URI. The host can read and show it without a model call.
 
 ```mermaid
 flowchart LR

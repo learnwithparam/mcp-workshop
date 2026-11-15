@@ -2,7 +2,7 @@
 
 ## The problem
 
-Next month a colleague edits `server.ts` and nobody runs the course checks. For example, if the clash check breaks, Dr Reyes is double-booked and two owners arrive for one slot. Your server needs its own tests. A test that checks nothing also passes, so the check breaks your server on purpose, which is mutation testing, and your tests must notice.
+Next month a colleague edits `server.ts` and nobody runs the course checks. For example, if the clash check breaks, Dr Reyes is double-booked and two owners arrive for one slot. Your server needs its own tests. A test that checks nothing also passes. To find weak tests, break your server on purpose. This is mutation testing. Your tests must notice the break.
 
 ```mermaid
 flowchart LR

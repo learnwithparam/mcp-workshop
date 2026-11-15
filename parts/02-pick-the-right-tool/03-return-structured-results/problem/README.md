@@ -2,7 +2,7 @@
 
 ## The problem
 
-`find_free_slots` answers with text only. For example, Eastgate has 70 free starts on one day, so one busy search can flood the model with times nobody asked for. Code cannot trust a sentence either. Anthropic measured one answer at 206 tokens in a detailed form and 72 in a short form.
+`find_free_slots` answers with text only. For example, Eastgate has 70 free starts on one day. One busy search can flood the model with times nobody asked for. Code cannot trust a sentence either. Anthropic measured one answer at 206 tokens in a detailed form and 72 in a short form.
 
 ```mermaid
 flowchart LR

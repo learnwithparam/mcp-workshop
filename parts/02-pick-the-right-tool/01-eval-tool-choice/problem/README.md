@@ -45,7 +45,7 @@ Expect: twenty PASS or FAIL lines, then `Score: 12/20. Estimated tokens: 50,440.
 
 Expect: the `expected` column names a job tool. The mirror has no tool with that name, so a match is by job.
 
-3. Open `evals/notes.md` and fill in four lines: the score, a failed task id, the wrong tool, and one sentence on why the model chose it.
+3. Open `evals/notes.md`. Fill in four lines. They hold the score, a failed task id, and the wrong tool. Add one sentence on why the model chose it.
 
 With no key, the eval replays recorded choices, so the score is the same every time.
 

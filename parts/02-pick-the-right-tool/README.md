@@ -6,11 +6,11 @@ Measure how well a model picks your tools, then redesign them around jobs and pr
 
 ## You leave with
 
-A server with five job tools, a saved baseline and a saved designed score, short structured answers, and your own tests.
+A server with five job tools. You also get a saved baseline, a saved designed score, short structured answers, and your own tests.
 
 ## The problem
 
-The first version of a clinic server often copies the practice system's API, one tool for each endpoint. With fourteen look-alike tools, the model books under the owner's id and reads every note to find one vaccine date. GitHub cut its own MCP server from 102 default tools to 52, and its tool descriptions from 64.6k tokens to 30.3k ([pull request 1159](https://github.com/github/github-mcp-server/pull/1159)). A token is a small piece of text that models count and charge by.
+The first version of a clinic server often copies the practice system's API, one tool for each endpoint. With fourteen look-alike tools, the model books under the owner's id and reads every note to find one vaccine date. GitHub cut its own MCP server from 102 default tools to 52. Its tool descriptions fell from 64.6k tokens to 30.3k ([pull request 1159](https://github.com/github/github-mcp-server/pull/1159)). A token is a small piece of text that models count and charge by.
 
 ```mermaid
 flowchart LR
@@ -69,7 +69,7 @@ For example, Anthropic found that tool-use examples raised accuracy on complex i
 
 ## Assignment
 
-Hand in a server the model uses well, with proof, in your repo: `evals/baseline.json` and `evals/designed.json` (both written by the eval, never by hand), your `server.ts`, and `test/server.test.ts`. The rubric is yes or no:
+Hand in a server the model uses well, with proof, in your repo. Include `evals/baseline.json` and `evals/designed.json`. The eval writes both, never you. Include your `server.ts` and `test/server.test.ts` too. The rubric is yes or no:
 
 1. Does `shape-tools-around-jobs` pass, with at least 18 of 20 and 4 above the baseline?
 2. Does every pass and fail in both eval files match the calls it recorded?
@@ -80,4 +80,4 @@ For a stretch, write 5 new tasks in `evals/holdout.jsonl` and run them with a li
 
 ## Finished
 
-You now have a server the model uses well, and the numbers to prove it. The next part, open-the-server-safely, serves this server over HTTP, adds tokens and roles, and makes cancelling wait for a person to say yes.
+You now have a server the model uses well, and the numbers to prove it. The next part is open-the-server-safely. It serves this server over HTTP. It adds tokens and roles. It makes cancelling wait for a person to say yes.

@@ -2,7 +2,7 @@
 
 ## The problem
 
-A host such as Claude Desktop decides when to ask a person before a tool runs. With no hints, it treats every tool as one that writes and may destroy data. For example, staff then see "Allow?" on every slot search, click yes without reading, and miss the one warning that matters.
+A host such as Claude Desktop decides when to ask a person before a tool runs. With no hints, it treats every tool as one that writes and may destroy data. For example, staff see "Allow?" on every slot search. They click yes without reading. They miss the one warning that matters.
 
 ```mermaid
 flowchart LR
@@ -64,7 +64,7 @@ The after state has hints on all five tools. See `solution/server.ts`.
 
 ## Go further
 
-Hints help a host that trusts you. A host should never decide on hints from an untrusted server, so keep your own checks, like the clash check in `book_appointment`. Part 3 adds `cancel_appointment`, the first destructive tool, and it asks the person itself.
+Hints help a host that trusts you. A host should never trust hints from an untrusted server. Keep your own checks, like the clash check in `book_appointment`. Part 3 adds `cancel_appointment`, the first destructive tool, and it asks the person itself.
 
 ## If you get stuck
 
