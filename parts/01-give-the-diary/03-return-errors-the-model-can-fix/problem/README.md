@@ -2,8 +2,9 @@
 
 ## The problem
 
-Your server refuses bad bookings, but the error says only "Clash". For example, Biscuit at 10:40 with Dr Reyes fails,
-and the model guesses 10:50, which fails too. Each wrong guess costs a tool call, tokens and a receptionist's wait.
+Your server refuses bad bookings. But the error only says "Clash". The model then has to guess.
+
+For example, Biscuit at 10:40 with Dr Reyes fails. The model guesses 10:50, and that fails too. Each wrong guess costs a tool call, tokens and a receptionist's wait.
 
 ```mermaid
 flowchart LR
@@ -14,14 +15,14 @@ flowchart LR
 
 ## Watch it done
 
-The starter replies:
+The starter replies like this:
 
 ```text
 Tool error from book_appointment:
 Clash: the vet is already booked at 10:40.
 ```
 
-Real output of its check:
+This is real output from the check:
 
 ```text
   FAIL  An unknown patient: the error names patientId and the id that was sent
@@ -32,7 +33,7 @@ Real output of its check:
 1 of 7 rules pass. Fix the FAIL lines and run it again.
 ```
 
-The sample solution replies as below, and the check ends with `Done. All 7 rules pass.`
+The sample solution replies like this. The check ends with `Done. All 7 rules pass.`
 
 ```text
 Tool error from book_appointment:
@@ -41,8 +42,7 @@ Dr Sam Reyes is booked at 10:40, which clashes with 10:40. Free slots: 10:20, 11
 
 ## Your turn
 
-1. Start with the clash. Call `clinic.freeSlots` for that vet and write the times after `Free slots:`. Never type
-   times by hand.
+1. Start with the clash. Call `clinic.freeSlots` for that vet. Write the times after `Free slots:`. Never type times by hand.
 2. Try it.
 
 ```bash
@@ -51,7 +51,7 @@ bun run try book_appointment '{"patientId":"P-0001","vetId":"S-05","start":"10:4
 
 Expect: an error that names Dr Sam Reyes and lists free times.
 
-3. Handle the other four bad calls before the clash check. Each error must contain:
+3. Handle the other four bad calls before the clash check. Each error must contain the text in this table.
 
 | Bad call                 | Your error must contain                                 |
 | ------------------------ | ------------------------------------------------------- |
@@ -60,18 +60,17 @@ Expect: an error that names Dr Sam Reyes and lists free times.
 | 18:30 at Millbrook       | opening and closing times (`clinic.openingHours`)       |
 | `length` of 25           | `length` and the values that work, 10 to 60             |
 
-For the length, put the message on the Zod rule: `.multipleOf(10, { error: "length must be 10 to 60 minutes" })`.
+For the length, put the message on the Zod rule. Use `.multipleOf(10, { error: "length must be 10 to 60 minutes" })`.
 
 ## Do it on your work
 
-Take one refusal in your own tool. Rewrite it to name the field, say what is wrong and offer a real next step from
-live data. Good looks like an error a stranger could act on without asking you.
+Take one refusal in your own tool. Rewrite it so it names the field. Say what is wrong. Offer a real next step from live data. A good error is one that a stranger could act on without asking you.
 
 ## Done when
 
 - An unknown patient, a past start, an opening-hours miss and a length of 25 each get the error in the table.
 - A clash names the vet and lists real free slots after "Free slots:".
-- None of the five bad calls wrote to the diary, and a good booking still adds one row.
+- None of the five bad calls writes to the diary. A good booking still adds one row.
 
 ```bash
 bun run verify return-errors-the-model-can-fix
@@ -81,8 +80,7 @@ Expect: `Done. All 7 rules pass.`
 
 ## Solution
 
-The after state is a `server.ts` where every refusal says what is wrong and what to do next. See
-`solution/server.ts`.
+The finished state is a `server.ts` where every refusal says what is wrong and what to do next. See `solution/server.ts`.
 
 ## If you get stuck
 
@@ -90,8 +88,7 @@ The after state is a `server.ts` where every refusal says what is wrong and what
 
 ## Go further
 
-Anthropic says errors should "clearly communicate specific and actionable improvements":
-[Writing effective tools for agents](https://www.anthropic.com/engineering/writing-tools-for-agents).
+Anthropic says errors should "clearly communicate specific and actionable improvements". Read [Writing effective tools for agents](https://www.anthropic.com/engineering/writing-tools-for-agents).
 
 ## Words you will use
 

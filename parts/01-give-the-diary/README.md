@@ -2,19 +2,21 @@
 
 ## After this part you can
 
-Put one read tool and one safe write tool on an MCP server and connect Claude to it.
+Put one read tool and one safe write tool on an MCP server. Then connect Claude to it.
 
 ## You leave with
 
-A working stdio server with `find_free_slots` and `book_appointment`, plus a `.mcp.json` that starts it.
+A working stdio server with `find_free_slots` and `book_appointment`. You also get a `.mcp.json` that starts it.
 
 ## The problem
 
-The Millbrook front desk spends a lot of time on the phone, booking and moving appointments. Staff want to ask Claude
-"who can see Biscuit?" and have it book the slot. A model cannot use the practice system (PIMS) API it has never seen,
-and the PIMS double-books a vet if you let it. Anthropic's tool-writing guide shows one answer in two forms: the
-detailed one takes 206 tokens, the short one 72. A token is a small piece of text a model reads. You build the first
-safe bridge. For example, a bad booking for Biscuit at 10:40 gets this reply, and the model books 11:40 next:
+The Millbrook front desk spends a lot of time on the phone. Staff book and move appointments all day. They want to ask Claude, "Who can see Biscuit?" and have it book the slot.
+
+A model cannot use an API it has never seen. The PIMS (the clinic's record system) also double-books a vet if you let the model write freely.
+
+Anthropic's tool-writing guide shows one idea in two forms. The detailed version takes 206 tokens. The short version takes 72. A token is a small piece of text that a model reads. In this part, you build the first safe bridge.
+
+For example, a bad booking for Biscuit at 10:40 gets this reply. The model then books 11:40 next.
 
 ```text
 Tool error from book_appointment:
@@ -38,8 +40,7 @@ flowchart LR
 | `return-errors-the-model-can-fix` | errors that name the field and the fix | five planted bad calls, the free slots in the diary                                          |
 | `connect-claude`                  | `.mcp.json` and Claude's answer        | the server started from your config, every time in the answer                                |
 
-Each step's starter is the sample solution of the step before it. So you can start any step fresh. Do you want to
-keep your own code instead? Then copy your `server.ts` into the next step's `problem/` folder.
+Each step starts from the sample solution of the step before it. So you can start any step fresh. You can also keep your own code. To do that, copy your `server.ts` into the next step's `problem/` folder.
 
 ## Walkthrough
 
@@ -50,8 +51,7 @@ bun run verify return-errors-the-model-can-fix
 bun run verify connect-claude
 ```
 
-Expect: `Done. All 8 rules pass.`, then `All 7`, `All 7` and `All 6`, once your work meets every Done when line. Before
-that, each FAIL line has a `Try next:`.
+Expect: `Done. All 8 rules pass.`, then `All 7`, `All 7` and `All 6`, once your work meets every Done when line. Before that, each FAIL line has a `Try next:`.
 
 ```bash
 bun run verify part give-the-diary
@@ -71,5 +71,4 @@ Expect: `Part give-the-diary is done: 4/4 steps pass.` once every step passes.
 
 ## Project
 
-Pick one read action and one write action from your own work, such as "list open tickets" and "add a ticket". Write
-the tool names, their arguments, and the one refusal message the write tool needs, in a file called `my-tools.md`.
+Pick one read action and one write action from your own work. Examples are "list open tickets" and "add a ticket". Write the tool names, their arguments, and the one refusal message the write tool needs. Save them in a file called `my-tools.md`.

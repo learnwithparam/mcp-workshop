@@ -2,13 +2,13 @@
 
 ## The problem
 
-Reading the diary is safe. Writing is not. The PIMS lets staff double-book a vet on purpose, so
-`clinic.createAppointment` writes whatever it gets. For example, if Claude books Biscuit at 10:20 while Dr Reyes
-already sees a dog, two owners arrive for one slot. A cancelled row stays, but its time is free.
+Reading the diary is safe. Writing to it is not. The PIMS lets staff double-book a vet on purpose. So `clinic.createAppointment` writes whatever it gets.
+
+For example, Claude books Biscuit at 10:20. Dr Reyes already sees a dog at that time. Now two owners arrive for one slot. A cancelled row stays in the diary, but its time is free again.
 
 ## Watch it done
 
-The starter has no booking tool. Real output of the check:
+The starter has no booking tool. This is real output from the check:
 
 ```text
   FAIL  tools/list has book_appointment with patientId, vetId, start and reason
@@ -25,30 +25,27 @@ The sample solution ends with `Done. All 7 rules pass.`
 ## Your turn
 
 1. Add `book_appointment(patientId, vetId, date?, start, length, reason)` to `server.ts`.
-2. Read the vet's rows with `clinic.appointments({ vetId, date })`. Keep only `booked` and `arrived` rows.
-3. Two appointments clash when each starts before the other ends. Compare minutes, not strings.
-4. On a clash, return `{ content: [...], isError: true }` and write nothing. Otherwise call
-   `clinic.createAppointment(...)` once.
-5. Give `start` a Zod rule (`HH:MM`), so the SDK refuses bad input first.
+2. Read the vet's rows with `clinic.appointments({ vetId, date })`. Keep only the rows that are `booked` or `arrived`.
+3. Two appointments clash when each one starts before the other ends. Compare minutes, not text.
+4. On a clash, return `{ content: [...], isError: true }`. Write nothing. Otherwise, call `clinic.createAppointment(...)` once.
+5. Give `start` a Zod rule for `HH:MM`. The SDK then refuses bad input first.
 6. Run it twice.
 
 ```bash
 bun run try book_appointment '{"patientId":"P-0001","vetId":"S-05","start":"10:20","reason":"Booster"}' --server parts/01-give-the-diary/02-book-an-appointment/problem
 ```
 
-Expect: first `Booked A-01962: 10:20 on 2026-11-16.`, then a tool error that says `Clash`. Undo with
-`bun run world reset`.
+Expect: first `Booked A-01962: 10:20 on 2026-11-16.`, then a tool error that says `Clash`. Undo it with `bun run world reset`.
 
 ## Do it on your work
 
-Do the same on one write action of your own system. First list what would make a write wrong, such as a double
-booking. Good looks like a check before the write, a refusal that writes nothing, and a test of a half-overlap.
+Do the same for one write action in your own system. First, list what would make a write wrong, such as a double booking. A good write tool has a check before the write. It refuses a clash and writes nothing. It also has a test for a partial overlap.
 
 ## Done when
 
 - `tools/list` has `book_appointment` with `patientId`, `vetId`, `start` and `reason`.
-- Biscuit with Dr Reyes at 10:20 adds exactly one row, and a freed slot (11:40) can be booked.
-- A taken time, or one that starts mid-appointment (10:30), adds no row and returns `isError: true`.
+- Biscuit with Dr Reyes at 10:20 adds exactly one row. A freed slot at 11:40 can be booked.
+- A taken time, or a time that starts mid-appointment (10:30), adds no row and returns `isError: true`.
 - Arguments that fail the schema come back as a tool error and add no row.
 
 ```bash
@@ -59,13 +56,12 @@ Expect: `Done. All 7 rules pass.`
 
 ## Solution
 
-The after state is `server.ts` with a second tool and a clash check before the write. See `solution/server.ts`.
+The finished state is `server.ts` with a second tool. It has a clash check before the write. See `solution/server.ts`.
 
 ## If you get stuck
 
-- The check uses a fresh diary, so your test bookings never break it.
-- A tool error (`isError: true`) is a normal result. The model reads it. A protocol error is for the host's code, and
-  the model never sees it.
+- The check uses a fresh diary. Your test bookings never break it.
+- A tool error (`isError: true`) is a normal result. The model reads it. A protocol error goes to the host's code. The model never sees it.
 
 ## Go further
 
@@ -86,6 +82,6 @@ sequenceDiagram
 
 ## Words you will use
 
-- **Tool error**: a reply with `isError: true` and text that explains the failure to the model.
+- **Tool error**: a reply with `isError: true`. Its text explains the failure to the model.
 - **Clash**: two appointments for one vet whose times overlap.
-- **System of record**: the place the clinic trusts for the truth, here the PIMS diary.
+- **System of record**: the place the clinic trusts for the truth. Here, that is the PIMS diary.
