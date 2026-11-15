@@ -3,6 +3,23 @@
 Every message a script prints when something fails is in this table. Find the words you see in the first column.
 Then do what the last column says.
 
+## Start here when something breaks
+
+Ask these questions in order. Stop at the first "yes".
+
+```mermaid
+flowchart TD
+  A["Something failed"] --> B{"Does it say FAIL with a Try next line?"}
+  B -- "Yes" --> C["Do what Try next says. Run the step again"]
+  B -- "No" --> D{"Does the step need Docker?"}
+  D -- "Yes" --> E["Start Docker, then run the step again"]
+  D -- "No" --> F{"Is port 8787 or 3000 busy?"}
+  F -- "Yes" --> G["Stop the old server with Ctrl+C"]
+  F -- "No" --> H["Find the message in the table below"]
+```
+
+## Look up the message
+
 For example, you run `bun run try find_free_slots '{site:millbrook}'` and see the message: the arguments are not valid JSON.
 The fix is to write the JSON with double quotes inside single quotes: `'{"site":"millbrook"}'`.
 

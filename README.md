@@ -1,14 +1,13 @@
 # Build an MCP server a vet clinic can trust
 
-This course is for engineers who connect AI to a company's records. It is also for product managers who must judge
-an MCP project. MCP (Model Context Protocol) is a standard way for an AI model to call tools on your server.
+This course is for engineers who connect AI to company records. It is also for product managers who judge MCP projects. MCP (Model Context Protocol) is a standard way for an AI model to call tools on your server.
 
-You build one MCP server for Harrow Lane Veterinary, a group of three clinics. You build it step by step. The model
-picks the right tool. It gets errors it can fix. Each role sees only what it should. Bad third-party tools are
-caught. Then you deploy it.
+You build one MCP server for Harrow Lane Veterinary, a group of three clinics. You build it one step at a time. The
+model learns to pick the right tool. It reads errors it can fix. Each role sees only what it should. The course catches
+bad third-party tools. Then you deploy the server.
 
-Every step ends in a check. The check talks to your server like a real MCP client. So you finish with proof that
-your server works, not a certificate.
+Every step ends in a check. The check talks to your server like a real MCP client. You finish with proof that your
+server works.
 
 For example, a receptionist asks "Can Biscuit get her booster at Millbrook?". The finished server finds Biscuit
 (patient P-0001), sees her DHP and Lepto vaccines are due, and lists free times. Dr Sam Reyes is free at 10:20,
@@ -68,6 +67,8 @@ or fail for each role.
 To use the finished server from a real host, run `bun run finished`. A host is the app the model runs in, such as
 Claude Code. The command serves `http://127.0.0.1:8787/mcp`. It prints a token for Ola (receptionist), Dr Sam Reyes
 (vet) and Joon Park (clinical director). A token is a short secret string that says who you are.
+
+If a command fails, see [troubleshooting](00-orientation/troubleshooting.md). Find the message you see, then do its fix.
 
 ## What you build
 
@@ -136,10 +137,18 @@ It needs real roles and a risky action, like cancelling.
 
 ## How the course works
 
+Each step follows one loop. You read, you build, and the check tells you what is left.
+
+```mermaid
+flowchart LR
+  A["Read the part's problem"] --> B["Work in the step's problem/ folder"]
+  B --> C["Run bun run verify step-name"]
+  C -- "FAIL with a Try next line" --> B
+  C -- "All rules PASS" --> D["Go to the next step"]
+```
+
 1. Start in [00-orientation](00-orientation/README.md).
-2. Each part opens with a real problem. It says why the problem matters, with a number from a real source. Then it
-   shows a diagram.
-3. Each step has a challenge, a Done when list, and one check. You work in the step's `problem/` folder. The sample
-   answer is in `solution/`. Read it when you are stuck, not before.
+2. Each part opens with a real problem and a number from a real source. Then it shows a diagram.
+3. Each step has a challenge, a Done when list and one check. The sample answer is in `solution/`. Read it when you are stuck, not before.
 
 Every course repo follows the same rules. [STANDARD.md](STANDARD.md) lists them, with the check behind each one.
