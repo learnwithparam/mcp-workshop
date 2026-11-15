@@ -1,10 +1,10 @@
 # Build an MCP server a vet clinic can trust
 
-This course is for engineers who connect AI to company records. It is also for product managers who judge MCP projects. MCP (Model Context Protocol) is a standard way for an AI model to call tools on your server.
+This course is for engineers who connect AI to company records. It is also for product managers who judge MCP projects. MCP stands for Model Context Protocol. It is a standard way for an AI model to call tools on your server.
 
-You build one MCP server for Harrow Lane Veterinary, a group of three clinics. You build it one step at a time. The
-model learns to pick the right tool. It reads errors it can fix. Each role sees only what it should. The course catches
-bad third-party tools. Then you deploy the server.
+You build one MCP server for Harrow Lane Veterinary. It is a group of three clinics. You build it one step at a time.
+The model learns to pick the right tool. It reads errors it can fix. Each role sees only what it should see. The course
+catches bad third-party tools. Then you deploy the server.
 
 Every step ends in a check. The check talks to your server like a real MCP client. You finish with proof that your
 server works.
@@ -13,14 +13,14 @@ For example, a receptionist asks "Can Biscuit get her booster at Millbrook?". Th
 (patient P-0001), sees her DHP and Lepto vaccines are due, and lists free times. Dr Sam Reyes is free at 10:20,
 11:40 and 15:00. You build that server yourself.
 
-You leave able to:
+When you finish, you can:
 
-- build a server on the current MCP spec and the current TypeScript SDK. It has tools shaped around jobs, structured results
-  and tests;
-- measure how well the model picks tools with an eval (a scored test), then raise the score by redesigning the tools;
-- serve it over Streamable HTTP as an OAuth resource server. It checks each token's audience and scope. It never
-  passes a token on. It asks for a yes before anything it cannot undo;
-- pin third-party tools, keep owner contact details away from the model, deploy, and hand it over.
+- Build a server that uses the current MCP spec and TypeScript SDK.
+- Build tools around jobs, with structured results and tests.
+- Score how well the model picks tools. Then improve the score by changing the tools.
+- Serve the server over Streamable HTTP. Check each token's audience and scope.
+- Keep the server from passing a token on. Ask for a yes before any action you cannot undo.
+- Pin third-party tools. Keep owner contact details away from the model. Deploy and hand over the server.
 
 ## Run the finished system first
 
@@ -68,7 +68,7 @@ To use the finished server from a real host, run `bun run finished`. A host is t
 Claude Code. The command serves `http://127.0.0.1:8787/mcp`. It prints a token for Ola (receptionist), Dr Sam Reyes
 (vet) and Joon Park (clinical director). A token is a short secret string that says who you are.
 
-If a command fails, see [troubleshooting](00-orientation/troubleshooting.md). Find the message you see, then do its fix.
+If a command fails, see [troubleshooting](00-orientation/troubleshooting.md). Find the message you see. Then do its fix.
 
 ## What you build
 
@@ -137,7 +137,7 @@ It needs real roles and a risky action, like cancelling.
 
 ## How the course works
 
-Each step follows one loop. You read, you build, and the check tells you what is left.
+Each step follows one loop. You read. You build. The check tells you what is left.
 
 ```mermaid
 flowchart LR
