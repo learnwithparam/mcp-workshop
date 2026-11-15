@@ -17,5 +17,5 @@ answer: {"id":"ORD-1041","status":"packed","items":2}
 
 ## What I left out
 
-- `POST /refunds`: it moves money, and a model should not do that without a person in the loop.
-- `GET /customers`: it lists every customer, and a model does not need that to answer an order question.
+- `POST /refunds`: it moves money. A model should not do that without a person in the loop.
+- `GET /customers`: it lists every customer. A model does not need that to answer an order question.
