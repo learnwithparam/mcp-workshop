@@ -54,7 +54,7 @@ the model cut one task from 150,000 tokens to 2,000. That is a saving of 98.7%
 
 Invariant Labs publish working attack servers in
 [mcp-injection-experiments](https://github.com/invariantlabs-ai/mcp-injection-experiments). They show tool
-poisoning, shadowing and rug pulls. (A rug pull is a tool that is safe at first and changes later.) Your pin check
+poisoning, shadowing and rug pulls. A rug pull is a tool that is safe at first and changes later. Your pin check
 must catch these attacks.
 
 The diagram shows the three legs. You cut one of them.
@@ -157,4 +157,4 @@ You now have a server that is defended and live:
 For example, the reworded release of the insurance server now stops at `CHANGED submit_claim`. It never reaches the model.
 
 Next, in `grow-the-server`, the clinic adds a lab-results service. You put both servers behind one proxy. The proxy
-lets through only the lab tools that match your pins, so the pin check from this part guards it.
+lets through only the lab tools that match your pins. The pin check from this part guards it.

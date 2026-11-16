@@ -9,7 +9,8 @@ import { ROOT } from "./structure";
 
 // A course for everyone (no code) can lower this in package.json: "plainEnglish": { "grade": 6 }.
 const DEFAULT_READING_GRADE = 6;
-const LONGEST_SENTENCE = 25;
+// Same limit as teach's doc-check, so a course page and a teaching note read to one standard.
+const LONGEST_SENTENCE = 20;
 
 const SKIPPED_FOLDERS = new Set([
   "node_modules",
@@ -18,6 +19,9 @@ const SKIPPED_FOLDERS = new Set([
   "recordings",
   "research",
   "fixtures",
+  // Sample answers and deliberately wrong answers: not written for learners to read as the course.
+  "solution",
+  "wrong",
 ]);
 
 // Pages for the people who build the course, not for learners.
@@ -270,6 +274,33 @@ function hardWordProblems(file: string, prose: string): Problem[] {
   return problems;
 }
 
+// Punctuation that makes a sentence hard to follow. Use a full stop or a comma instead.
+function punctuationProblems(file: string, prose: string): Problem[] {
+  const problems: Problem[] = [];
+  if (prose.includes("—")) {
+    problems.push({ file, message: "em dash: use a full stop or a comma" });
+  }
+  if (prose.includes(";")) {
+    problems.push({ file, message: "semicolon: split it into two sentences" });
+  }
+  return problems;
+}
+
+// A step page shows the picture before the challenge, so the learner sees the goal first.
+function pictureProblems(file: string, markdown: string): Problem[] {
+  if (!/\/problem\/README\.md$/.test(file)) return [];
+  const challenge = markdown.search(/^## Your turn\s*$/m);
+  if (challenge < 0) return [];
+  const beforeChallenge = markdown.slice(0, challenge);
+  if (/^```mermaid\s*$/m.test(beforeChallenge) || /^!\[/m.test(beforeChallenge)) return [];
+  return [
+    {
+      file,
+      message: "no picture before the challenge: add a Mermaid diagram or image above ## Your turn",
+    },
+  ];
+}
+
 function sentenceProblems(file: string, sentences: string[]): Problem[] {
   const problems: Problem[] = [];
   for (const sentence of sentences) {
@@ -288,6 +319,8 @@ export function problemsIn(file: string, markdown: string, gradeLimit: number): 
   const problems = [
     ...hardWordProblems(file, prose),
     ...sentenceProblems(file, sentences),
+    ...punctuationProblems(file, prose),
+    ...pictureProblems(file, markdown),
     ...backtickProblems(file, markdown),
     ...minutesProblems(file, markdown),
     ...versionProblems(file, markdown),
