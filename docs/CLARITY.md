@@ -34,25 +34,25 @@ it with `/mcp`."
 
 **Pair 3 (rules 1 and 2).**
 
-Before: "The PIMS (practice management system) is the clinic's main record system. It holds the diary, patients and
-owners, and it is the system the front desk uses every day to book visits, move visits and take payment."
+Before: "The PIMS (practice management system) is the clinic's main record system, which holds the diary, patients and
+owners."
 
 After: "The PIMS is the clinic's main record system. Its full name is practice management system. It holds the diary,
 the patients and the owners."
 
 ## Words replaced
 
-| Avoid | Use instead |
-| --- | --- |
-| utilise, leverage | use |
-| in order to | to |
-| prior to | before |
-| ensure | make sure |
-| subsequently | then, after that |
-| approximately | about |
-| simply, just | (cut it) |
-| obviously, clearly | (cut it) |
-| functionality | feature, or say what it does |
+| Avoid              | Use instead                  |
+| ------------------ | ---------------------------- |
+| utilise            | use                          |
+| in order to        | to                           |
+| prior to           | before                       |
+| ensure             | make sure                    |
+| subsequently       | then, after that             |
+| approximately      | about                        |
+| simply, just       | (cut it)                     |
+| obviously, clearly | (cut it)                     |
+| functionality      | feature, or say what it does |
 
 ## Check before you finish
 

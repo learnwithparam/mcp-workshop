@@ -23,29 +23,29 @@ flowchart TD
 For example, you run `bun run try find_free_slots '{site:millbrook}'` and see the message: the arguments are not valid JSON.
 The fix is to write the JSON with double quotes inside single quotes: `'{"site":"millbrook"}'`.
 
-| What you see | What it means | Fix |
-| --- | --- | --- |
-| `bun: command not found` | Bun is not installed. | Install it from bun.sh. Then open a new terminal. |
-| `There is no step called "..."` | The step name is misspelled. | Copy a name from the list the command prints. |
-| `There is no part called "..."` | The part name is misspelled. | Copy a name from the list the command prints, for example `give-the-diary`. |
-| `ERROR the check for ... could not load` | The check itself is broken, not your work. | Open an issue with the full output. |
-| `FAIL` and `Try next: ...` | One rule of the step does not hold yet. | Do what the `Try next` line says. Then run the check again. |
-| The checker says the server did not answer in time | Your server started, but it never spoke MCP. Or it waits for something. | Run `bun server.ts` in the folder. It should print its banner to stderr and wait. |
-| `The checker saw: Connection closed Server said: ...` | Your server crashed on start. The end of its error follows. | Run `bun server.ts` in the folder. Fix the first error. |
-| `Client.listTools() called but server does not advertise tools capability` | The server has no tools yet. | Register a tool with `server.registerTool`. |
-| `Could not connect: ...` from `bun run try` | The server in `--server <folder>` did not start. | Run `bun server.ts` in that folder. Read its error. |
-| `The server broke the MCP rules: Tool ... not found` | The server has no tool by that name. Or your role cannot see it. | Run `bun run try` with no tool name to list the tools. Or add `--as sam` or `--as joon`. |
-| The server broke the MCP rules, from `bun run try --server` | That server has no tools yet, so it cannot answer `tools/call`. | Register a tool. A new starter has none. |
-| The message says the arguments are not valid JSON | The tool arguments are not JSON. | Wrap them in single quotes: `'{"site":"millbrook"}'`. |
-| `Tool error from ...` | The tool refused the call and says why. | Read the message. It names the field and the fix. |
-| `There is no recorded reply for "..."` | With `LLM_PROVIDER=replay`, only recorded questions have answers. | Run `bun run ask` with no question to list them. Or set a provider and key in `.env`. |
-| `... is not set. Add it to .env (see .env.example), or use LLM_PROVIDER=replay.` | You chose a live provider without its key. | Add the key to `.env`. Or set `LLM_PROVIDER=replay`. |
-| `LLM_PROVIDER="..." is not one of replay, anthropic, openrouter, openai, ollama` | The provider name is misspelled. | Use one of the five names. |
-| `FAIL  provider ..., role ...` from `bun run models` | The provider rejected the call or the key. | Check the key and the provider's status page. The line shows its error. |
-| `The agent failed: ...` | The live model or a tool call broke mid-conversation. | Run it again. If it happens again, run `bun run models`. |
-| `The diary has changed since the seed. Run: bun run world reset` | Bookings you made while you tried tools are still in the diary. | Run `bun run world reset`. |
-| `EADDRINUSE` from `bun run finished` or `bun http.ts` | Port 8787 is in use. A server you started earlier is often still running. | Stop that server with Ctrl+C. Or set `MCP_PORT` in `.env` to a free port. |
-| `The browser could not run.` from `bun run shots` | Playwright's Chromium is missing. | Run `bunx playwright install chromium`. |
-| The gateway never answered on port 3000 | The gateway did not start, or the config has an error. | Run `docker compose -f assignment/compose.yml logs gateway`. Fix the first error. |
-| `docker compose could not start` | Docker is off, or port 3000 is busy. | Start Docker. Stop other stacks with `docker compose -f assignment/compose.yml down -v`. |
-| The gateway log says it failed to write a session key | The config file is mounted read-only. | Ignore it. The gateway still works. Session ids are not encrypted, which is fine on your laptop. |
+| What you see                                                                     | What it means                                                             | Fix                                                                                              |
+| -------------------------------------------------------------------------------- | ------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| `bun: command not found`                                                         | Bun is not installed.                                                     | Install it from bun.sh. Then open a new terminal.                                                |
+| `There is no step called "..."`                                                  | The step name is misspelled.                                              | Copy a name from the list the command prints.                                                    |
+| `There is no part called "..."`                                                  | The part name is misspelled.                                              | Copy a name from the list the command prints, for example `give-the-diary`.                      |
+| `ERROR the check for ... could not load`                                         | The check itself is broken, not your work.                                | Open an issue with the full output.                                                              |
+| `FAIL` and `Try next: ...`                                                       | One rule of the step does not hold yet.                                   | Do what the `Try next` line says. Then run the check again.                                      |
+| The checker says the server did not answer in time                               | Your server started, but it never spoke MCP. Or it waits for something.   | Run `bun server.ts` in the folder. It should print its banner to stderr and wait.                |
+| `The checker saw: Connection closed Server said: ...`                            | Your server crashed on start. The end of its error follows.               | Run `bun server.ts` in the folder. Fix the first error.                                          |
+| `Client.listTools() called but server does not advertise tools capability`       | The server has no tools yet.                                              | Register a tool with `server.registerTool`.                                                      |
+| `Could not connect: ...` from `bun run try`                                      | The server in `--server <folder>` did not start.                          | Run `bun server.ts` in that folder. Read its error.                                              |
+| `The server broke the MCP rules: Tool ... not found`                             | The server has no tool by that name. Or your role cannot see it.          | Run `bun run try` with no tool name to list the tools. Or add `--as sam` or `--as joon`.         |
+| The server broke the MCP rules, from `bun run try --server`                      | That server has no tools yet, so it cannot answer `tools/call`.           | Register a tool. A new starter has none.                                                         |
+| The message says the arguments are not valid JSON                                | The tool arguments are not JSON.                                          | Wrap them in single quotes: `'{"site":"millbrook"}'`.                                            |
+| `Tool error from ...`                                                            | The tool refused the call and says why.                                   | Read the message. It names the field and the fix.                                                |
+| `There is no recorded reply for "..."`                                           | With `LLM_PROVIDER=replay`, only recorded questions have answers.         | Run `bun run ask` with no question to list them. Or set a provider and key in `.env`.            |
+| `... is not set. Add it to .env (see .env.example), or use LLM_PROVIDER=replay.` | You chose a live provider without its key.                                | Add the key to `.env`. Or set `LLM_PROVIDER=replay`.                                             |
+| `LLM_PROVIDER="..." is not one of replay, anthropic, openrouter, openai, ollama` | The provider name is misspelled.                                          | Use one of the five names.                                                                       |
+| `FAIL  provider ..., role ...` from `bun run models`                             | The provider rejected the call or the key.                                | Check the key and the provider's status page. The line shows its error.                          |
+| `The agent failed: ...`                                                          | The live model or a tool call broke mid-conversation.                     | Run it again. If it happens again, run `bun run models`.                                         |
+| `The diary has changed since the seed. Run: bun run world reset`                 | Bookings you made while you tried tools are still in the diary.           | Run `bun run world reset`.                                                                       |
+| `EADDRINUSE` from `bun run finished` or `bun http.ts`                            | Port 8787 is in use. A server you started earlier is often still running. | Stop that server with Ctrl+C. Or set `MCP_PORT` in `.env` to a free port.                        |
+| `The browser could not run.` from `bun run shots`                                | Playwright's Chromium is missing.                                         | Run `bunx playwright install chromium`.                                                          |
+| The gateway never answered on port 3000                                          | The gateway did not start, or the config has an error.                    | Run `docker compose -f assignment/compose.yml logs gateway`. Fix the first error.                |
+| `docker compose could not start`                                                 | Docker is off, or port 3000 is busy.                                      | Start Docker. Stop other stacks with `docker compose -f assignment/compose.yml down -v`.         |
+| The gateway log says it failed to write a session key                            | The config file is mounted read-only.                                     | Ignore it. The gateway still works. Session ids are not encrypted, which is fine on your laptop. |
