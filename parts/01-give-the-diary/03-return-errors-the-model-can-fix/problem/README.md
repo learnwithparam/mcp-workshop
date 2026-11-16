@@ -34,7 +34,7 @@ This is real output from the check:
 1 of 7 rules pass. Fix the FAIL lines and run it again.
 ```
 
-The sample solution replies like this. The check ends with `Done. All 7 rules pass.`
+The sample solution replies like this.
 
 ```text
 Tool error from book_appointment:
@@ -67,7 +67,7 @@ For the length, put the message on the Zod rule. Use `.multipleOf(10, { error: "
 
 - Four bad calls each get the error in the table: an unknown patient, a past start, an opening-hours miss and a length of 25.
 - A clash names the vet and lists real free slots after "Free slots:".
-- None of the five bad calls writes to the diary. A good booking still adds one row.
+- None of the five bad calls (the four above and the clash) writes to the diary. A good booking still adds one row.
 
 ```bash
 bun run verify return-errors-the-model-can-fix

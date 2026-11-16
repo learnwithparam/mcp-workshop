@@ -34,7 +34,7 @@ Expect: `Done. All 3 rules pass.`
 
 `test/server.test.ts` joins a client to `createServer()` with `InMemoryTransport` and has two tests. Add three.
 
-1. Booking a free slot works. Use `freeSlotForDrEvans()` so it is true on any diary.
+1. Booking a free slot works. Use `freeSlotForDrEvans()`. It asks the server for Dr Rhys Evans's first free slot at Eastgate, so the test is true on any diary.
 2. Booking the same time twice is refused with `isError: true`.
 3. Booking patient `P-9999` is refused with `isError: true`.
 
