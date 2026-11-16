@@ -4,7 +4,8 @@
 
 Your server refuses bad bookings. But the error only says "Clash". The model then has to guess.
 
-For example, Biscuit at 10:40 with Dr Reyes fails. The model guesses 10:50, and that fails too. Each wrong guess costs a tool call, tokens and a receptionist's wait.
+For example, Biscuit at 10:40 with Dr Reyes fails. The model guesses 10:50. That fails too. Each wrong guess costs a
+tool call, tokens and a receptionist's wait.
 
 ```mermaid
 flowchart LR
@@ -51,7 +52,7 @@ bun run try book_appointment '{"patientId":"P-0001","vetId":"S-05","start":"10:4
 
 Expect: an error that names Dr Sam Reyes and lists free times.
 
-3. Handle the other four bad calls before the clash check. Each error must contain the text in this table.
+3. Before the clash check, handle the other four bad calls. Each error must contain the text in this table.
 
 | Bad call                 | Your error must contain                                 |
 | ------------------------ | ------------------------------------------------------- |
@@ -64,11 +65,12 @@ For the length, put the message on the Zod rule. Use `.multipleOf(10, { error: "
 
 ## Do it on your work
 
-Take one refusal in your own tool. Rewrite it so it names the field. Say what is wrong. Offer a real next step from live data. A good error is one that a stranger could act on without asking you.
+Take one refusal in your own tool. Rewrite it so it names the field. Say what is wrong. Offer a real next step from live
+data. A good error is one that a stranger could act on without asking you.
 
 ## Done when
 
-- An unknown patient, a past start, an opening-hours miss and a length of 25 each get the error in the table.
+- Four bad calls each get the error in the table: an unknown patient, a past start, an opening-hours miss and a length of 25.
 - A clash names the vet and lists real free slots after "Free slots:".
 - None of the five bad calls writes to the diary. A good booking still adds one row.
 

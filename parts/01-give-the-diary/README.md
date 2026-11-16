@@ -10,11 +10,14 @@ A working stdio server with `find_free_slots` and `book_appointment`. You also g
 
 ## The problem
 
-The Millbrook front desk spends a lot of time on the phone. Staff book and move appointments all day. They want to ask Claude, "Who can see Biscuit?" and have it book the slot.
+The Millbrook front desk spends a lot of time on the phone. Staff book and move appointments all day. They want to ask
+Claude, "Who can see Biscuit?" They also want Claude to book the slot.
 
-A model cannot use an API it has never seen. The PIMS (the clinic's record system) also double-books a vet if you let the model write freely.
+A model cannot use an API it has never seen. If the model writes freely, the PIMS (the clinic's record system) will
+double-book a vet.
 
-Anthropic's tool-writing guide shows one idea in two forms. The detailed version takes 206 tokens. The short version takes 72. A token is a small piece of text that a model reads. In this part, you build the first safe bridge.
+Anthropic's tool-writing guide shows one idea in two forms. The detailed version takes 206 tokens. The short version
+takes 72. A token is a small piece of text that a model reads. In this part, you build the first safe bridge.
 
 For example, a bad booking for Biscuit at 10:40 gets this reply. The model then books 11:40 next.
 
@@ -40,7 +43,8 @@ flowchart LR
 | `return-errors-the-model-can-fix` | errors that name the field and the fix | five planted bad calls, the free slots in the diary                                          |
 | `connect-claude`                  | `.mcp.json` and Claude's answer        | the server started from your config, every time in the answer                                |
 
-Each step starts from the sample solution of the step before it. So you can start any step fresh. You can also keep your own code. To do that, copy your `server.ts` into the next step's `problem/` folder.
+Each step starts from the sample solution of the step before it. So you can start any step fresh. You can also keep your
+own code. To do that, copy your `server.ts` into the next step's `problem/` folder.
 
 ## Walkthrough
 
@@ -71,4 +75,6 @@ Expect: `Part give-the-diary is done: 4/4 steps pass.` once every step passes.
 
 ## Project
 
-Pick one read action and one write action from your own work. Examples are "list open tickets" and "add a ticket". Write the tool names, their arguments, and the one refusal message the write tool needs. Save them in a file called `my-tools.md`.
+Pick one read action and one write action from your own work. For example, "list open tickets" and "add a ticket".
+Write the tool names, their arguments and the refusal message the write tool needs. Save them in a file called
+`my-tools.md`.

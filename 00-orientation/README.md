@@ -1,11 +1,11 @@
 # Start here
 
-In this page you set up the repo and meet Harrow Lane Veterinary. Then you run the finished server and see the
-goal. It takes a short while, and you need no API key.
+On this page, you set up the repo and meet Harrow Lane Veterinary. Then you run the finished server and see the goal.
+It takes a short while. You need no API key.
 
 ## Set up
 
-Install [Bun](https://bun.sh). Bun runs TypeScript and installs packages. Then, in the repo folder, run:
+Install [Bun](https://bun.sh). Bun runs TypeScript and installs packages. In the repo folder, run:
 
 ```bash
 bun install
@@ -15,12 +15,12 @@ Expect: `bun install` ends with no errors.
 
 ## Meet the world
 
-Harrow Lane Veterinary is a made-up group of three clinics for small animals: Harrow Lane, Millbrook and Eastgate.
-Its practice system is called the PIMS. The PIMS holds the diary, 600 patients and their owners. It also holds
-clinical notes, vaccines and the controlled-drugs register (the log of strong drugs the law tracks).
+Harrow Lane Veterinary is a made-up group of three small-animal clinics. They are Harrow Lane, Millbrook and Eastgate.
+Its practice system is called the PIMS. The PIMS holds the diary, 600 patients and their owners. It also holds clinical
+notes, vaccines and the controlled-drugs register. The register is the log of strong drugs that the law tracks.
 
-The PIMS lives in `world/`. The file `world/clinic.ts` is the PIMS's API: the functions your server calls. The data
-is a SQLite file built from a fixed seed. So every learner sees the same diary.
+The PIMS lives in `world/`. The file `world/clinic.ts` is the PIMS API. It holds the functions your server calls. The data
+is a SQLite file, built from a fixed seed. So every learner sees the same diary.
 
 ```bash
 bun run world
@@ -29,7 +29,7 @@ bun run world
 Expect: `Harrow Lane Veterinary: 3 sites, 12 staff, 400 owners, 600 patients.` and a line that ends `6 free 20-minute slots.`
 
 For example, the last line of that output reads: `Biscuit (P-0001, Labrador, Millbrook) has a booster due.` You
-meet Biscuit again in many steps. The clinic clock is fixed at 2026-11-16 08:00, so "today" never changes.
+meet Biscuit again in many steps. The clinic clock is fixed at 2026-11-16 08:00. So "today" never changes.
 
 You meet three people:
 
@@ -37,13 +37,13 @@ You meet three people:
 - Dr Sam Reyes, vet at Millbrook. A vet reads notes only for the patients at their own site.
 - Joon Park, clinical director. Only Joon reads the controlled-drugs register.
 
-You can change the diary while you try things. `bun run world reset` puts it back.
+You can change the diary while you try things. Run `bun run world reset` to put it back.
 
 ## Run the finished system and see the goal
 
-The first step is `meet-the-clinic`. In it you run the finished server and write down three facts. Its README is
+The first step is `meet-the-clinic`. In it, you run the finished server and write down three facts. Its README is
 [parts/00-start-here/01-meet-the-clinic/problem/README.md](../parts/00-start-here/01-meet-the-clinic/problem/README.md).
-Before you start, run its check once to see what a first run looks like:
+Before you start, run its check once. This shows what a first run looks like.
 
 ```bash
 bun run verify meet-the-clinic
@@ -53,8 +53,8 @@ Expect: four `FAIL` lines, each with a `Try next:` line. Every step starts faili
 
 ![Your first run: the world, then every rule failing with what to try next](images/first-run.png)
 
-For example, one line starts with Try next and ends with the command `bun run try find_free_slots '{"site":"millbrook"}'`. Run that command
-and the answer starts to appear.
+For example, one line starts with Try next. It ends with the command `bun run try find_free_slots '{"site":"millbrook"}'`.
+Run that command. The answer starts to appear.
 
 ## If you are a product manager
 
@@ -70,6 +70,6 @@ The course works with no model key. To try a live model:
 2. Set `LLM_PROVIDER` to `anthropic`, `openrouter`, `openai` or `ollama`.
 3. Fill in the key for that one provider.
 
-Then run `bun run models`. It makes one tiny call for each role and prints pass or fail. The checks never need a key.
+Then run `bun run models`. It makes one tiny call for each role. It prints pass or fail. The checks never need a key.
 
 When a command prints something you do not expect, look it up in [troubleshooting.md](troubleshooting.md).

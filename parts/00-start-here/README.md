@@ -10,9 +10,10 @@ An `answers.md` file with three facts you read from the finished system.
 
 ## The problem
 
-You are the only engineer at Harrow Lane Veterinary, a group of three small-animal clinics. Your boss asks you to let
-the team use Claude with the diary and the records, without anyone seeing what they should not. For example, Ola the receptionist may book visits but not read notes. Before you build
-anything, you need to see the clinic's data, the finished server, and what "done" looks like.
+You are the only engineer at Harrow Lane Veterinary. It is a group of three small-animal clinics. Your boss wants the
+team to use Claude with the diary and the records. But nobody may see what they should not see. For example, Ola the
+receptionist may book visits. She may not read notes. Before you build anything, you need to see three things. You need
+the clinic's data, the finished server, and what "done" looks like.
 
 The diagram shows the two ways you talk to the finished server. `bun run ask` goes through an agent and a model.
 `bun run try` calls one tool directly.
@@ -51,5 +52,5 @@ Expect: `Done. All 4 rules pass.` once `answers.md` holds your three answers. Be
 
 ## Project
 
-Pick one real system you use at work, such as a diary, a ticket list or a shared sheet. Write three facts about it in
-a file called `my-system.md`: what it holds, who may see it, and one question a person asks it every day.
+Pick one real system you use at work. For example, a diary, a ticket list or a shared sheet. Write three facts in a
+file called `my-system.md`. The facts say what it holds, who may see it, and one question people ask it every day.

@@ -2,9 +2,11 @@
 
 ## The problem
 
-Ola works at the Millbrook desk. She does not type JSON into a terminal. She asks Claude, which is a host. A host is the app a person talks to.
+Ola works at the Millbrook desk. She does not type JSON into a terminal. She asks Claude, which is a host. A host is the
+app a person talks to.
 
-For example, Ola asks, "Who can see Biscuit?" This works only if the host has one file. The file says how to start your server.
+For example, Ola asks, "Who can see Biscuit?" That works only if the host has one file. The file says how to start your
+server.
 
 ## Watch it done
 
@@ -43,7 +45,7 @@ cd parts/01-give-the-diary/04-connect-claude/problem && bun server.ts
 
 Expect: one line that says the server is running on stdio, then nothing. Press Ctrl+C to stop it.
 
-3. Connect a host. In Claude Code, open a terminal in this folder. Run `claude`, approve `harrow-lane`, and check it with `/mcp`. Claude Desktop needs the same entry in its own config, with full paths.
+3. Connect a host. In Claude Code, open a terminal in this folder. Run `claude`. Approve `harrow-lane`, and check it with `/mcp`. Claude Desktop needs the same entry in its own config. Use full paths there.
 4. Ask: "Who can see Biscuit at Millbrook?"
 5. Paste the whole answer after `Answer:` in `notes/connect-claude.md`.
 
@@ -51,7 +53,9 @@ Expect: Claude calls `find_free_slots`. It names Dr Sam Reyes and Dr Hannah Cole
 
 ## Do it on your work
 
-Write the same `.mcp.json` entry for your own server from the project in the part README. Ask one real question of your own system. A good result is one where the host starts your server by itself. Every fact in the answer also matches the live system.
+Write the same `.mcp.json` entry for your own server. Use the project in the part README.
+Ask one real question of your own system. A good result is one where the host starts your server by itself.
+Every fact in the answer also matches the live system.
 
 ## Done when
 
@@ -78,7 +82,8 @@ The finished state is a `.mcp.json` and a notes file. See `solution/server.ts` a
 
 ## Go further
 
-Claude Desktop does not start in this folder. Use full paths in `"args"`. If it cannot find `bun`, put the path that `which bun` prints in `"command"`. Any MCP host works. The check reads only `.mcp.json` and your notes.
+Claude Desktop does not start in this folder. So use full paths in `"args"`. If it cannot find `bun`, put the path that
+`which bun` prints in `"command"`. Any MCP host works. The check reads only `.mcp.json` and your notes.
 
 ## Words you will use
 

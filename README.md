@@ -1,17 +1,18 @@
 # Build an MCP server a vet clinic can trust
 
-This course is for engineers who connect AI to company records. It is also for product managers who judge MCP projects. MCP stands for Model Context Protocol. It is a standard way for an AI model to call tools on your server.
+This course is for engineers who connect AI to company records. It is also for product managers who judge MCP projects.
+MCP means Model Context Protocol. It is a standard way for an AI model to call tools on your server.
 
 You build one MCP server for Harrow Lane Veterinary. It is a group of three clinics. You build it one step at a time.
-The model learns to pick the right tool. It reads errors it can fix. Each role sees only what it should see. The course
-catches bad third-party tools. Then you deploy the server.
+Your server teaches the model to pick the right tool. It gives clear errors the model can fix. Each role sees only what it
+should see. The course catches bad third-party tools. At the end, you deploy the server.
 
-Every step ends in a check. The check talks to your server like a real MCP client. You finish with proof that your
+Every step ends in a check. The check talks to your server like a real MCP client. At the end, you have proof that your
 server works.
 
-For example, a receptionist asks "Can Biscuit get her booster at Millbrook?". The finished server finds Biscuit
-(patient P-0001), sees her DHP and Lepto vaccines are due, and lists free times. Dr Sam Reyes is free at 10:20,
-11:40 and 15:00. You build that server yourself.
+For example, a receptionist asks, "Can Biscuit get her booster at Millbrook?" The finished server finds Biscuit
+(patient P-0001). It sees that her DHP and Lepto vaccines are due. Then it lists free times. Dr Sam Reyes is free at
+10:20, 11:40 and 15:00. You build that server yourself.
 
 When you finish, you can:
 
@@ -19,13 +20,12 @@ When you finish, you can:
 - Build tools around jobs, with structured results and tests.
 - Score how well the model picks tools. Then improve the score by changing the tools.
 - Serve the server over Streamable HTTP. Check each token's audience and scope.
-- Keep the server from passing a token on. Ask for a yes before any action you cannot undo.
+- Stop the server from passing a token on. Ask for a yes before any action you cannot undo.
 - Pin third-party tools. Keep owner contact details away from the model. Deploy and hand over the server.
 
 ## Run the finished system first
 
-You need [Bun](https://bun.sh) and nothing else. You need no API key: the model replays answers that were recorded
-earlier.
+You need [Bun](https://bun.sh). You do not need an API key. The model replays answers that were recorded earlier.
 
 ```bash
 bun install
@@ -54,7 +54,7 @@ Expect: `Answer (as ola, provider replay): I can't open clinical notes: with you
 
 ![The finished server answering Ola, the Millbrook receptionist, and refusing her the clinical notes](images/finished-system.png)
 
-Ola is a receptionist, so the server gives her no notes tool. The model cannot open what it cannot see.
+Ola is a receptionist. So the server gives her no notes tool. The model cannot open what it cannot see.
 
 ```bash
 bun run models
@@ -66,14 +66,15 @@ or fail for each role.
 
 To use the finished server from a real host, run `bun run finished`. A host is the app the model runs in, such as
 Claude Code. The command serves `http://127.0.0.1:8787/mcp`. It prints a token for Ola (receptionist), Dr Sam Reyes
-(vet) and Joon Park (clinical director). A token is a short secret string that says who you are.
+(vet) and Joon Park (clinical director). A token is a short secret string. It says who you are.
 
-If a command fails, see [troubleshooting](00-orientation/troubleshooting.md). Find the message you see. Then do its fix.
+If a command fails, read the [troubleshooting page](00-orientation/troubleshooting.md). Find the message you see. Then
+follow its fix.
 
 ## What you build
 
-The model lives in the host. It talks MCP to your server, and your server reads the clinic's PIMS. The PIMS
-(practice management system) is the clinic's main record system.
+The model lives in the host. It talks MCP to your server. Your server reads the clinic's PIMS. The PIMS (practice
+management system) is the clinic's main record system.
 
 ```mermaid
 flowchart LR
@@ -104,10 +105,10 @@ flowchart LR
 | Grow the server (extension)                      | [parts/05-grow-the-server](parts/05-grow-the-server/README.md)                                             | 7     | 145     | two servers behind one front              |
 | Route tool calls through agentgateway (optional) | [parts/06-route-tool-calls-through-agentgateway](parts/06-route-tool-calls-through-agentgateway/README.md) | 1     | 25      | both servers behind a ready-made gateway  |
 
-Every step has one command: `bun run verify <step-name>`. It prints each rule as PASS or FAIL. For each FAIL, it
-adds a `Try next:` line that tells you what to do. `PARTS.md` lists every step and what its check reads.
-`schedules.toml` fits the parts into different formats. One format is one long sitting. Another is a group that
-meets several times.
+Each step has one command: `bun run verify <step-name>`. It prints each rule as PASS or FAIL. For each FAIL, it prints
+a `Try next:` line. That line tells you what to do. `PARTS.md` lists every step and what its check reads.
+`schedules.toml` fits the parts into different formats. One format is one long sitting. Another is a group that meets
+several times.
 
 ## The project
 
@@ -118,20 +119,20 @@ At the end you have a deployed Harrow Lane server. Its URL passes the course's r
 - No notes tool for a receptionist.
 - Nothing cancelled without a yes.
 
-Next to it you have three more things. You have the eval score before and after your tool redesign. You have the
-pin check that catches both poisoned versions of the insurance server. You have a `HANDOVER.md`. The checker matches
-its numbers against your eval results.
+You also have three more things. You have the eval score before and after your tool redesign. You have the pin check
+that catches both poisoned versions of the insurance server. You have a `HANDOVER.md`. The checker matches its numbers
+against your eval results.
 
-You can reuse all of this. Swap the seed data and the tool contract, and the same checks work for another business.
-It needs real roles and a risky action, like cancelling.
+You can reuse all of this. Swap the seed data and the tool contract. The same checks then work for another business.
+You need real roles and a risky action, like cancelling.
 
 ## Read before you start
 
 1. [Writing effective tools for agents](https://www.anthropic.com/engineering/writing-tools-for-agents), Anthropic
    Engineering. You design tools and you measure them. Part 2 grades exactly this.
 2. [The current MCP specification revision](https://blog.modelcontextprotocol.io/posts/2026-07-28/), the MCP maintainers.
-   It lists what changed: no `initialize`, `server/discover` in its place, and requests that take more than one round
-   trip. Read it if you learned MCP from an older tutorial.
+   It lists what changed. For example, `initialize` is gone, and `server/discover` takes its place. Read it if you
+   learned MCP from an older tutorial.
 3. [Security Best Practices](https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/docs/docs/2026-07-28/tutorials/security/security_best_practices.mdx),
    the MCP maintainers. Before Part 3, read the sections on the confused deputy and token passthrough.
 
@@ -149,6 +150,7 @@ flowchart LR
 
 1. Start in [00-orientation](00-orientation/README.md).
 2. Each part opens with a real problem and a number from a real source. Then it shows a diagram.
-3. Each step has a challenge, a Done when list and one check. The sample answer is in `solution/`. Read it when you are stuck, not before.
+3. Each step has a challenge, a Done when list and one check. The sample answer is in `solution/`. Read it when you are
+   stuck, not before.
 
 Every course repo follows the same rules. [STANDARD.md](STANDARD.md) lists them, with the check behind each one.

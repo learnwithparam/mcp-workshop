@@ -2,13 +2,14 @@
 
 ## The problem
 
-The Millbrook front desk gets calls all day. Callers ask, "When can you see my dog?" Staff open the PIMS, pick a vet and scan the diary. Claude cannot see the diary yet.
+The Millbrook front desk gets calls all day. Callers ask, "When can you see my dog?" Staff open the PIMS, pick a vet and
+scan the diary. Claude cannot see the diary yet.
 
-For example, the PIMS search `clinic.freeSlots` finds 6 free slots for Millbrook. A model cannot call that search today.
+For example, the PIMS search `clinic.freeSlots` finds 6 free slots for Millbrook. But a model cannot call that search yet.
 
 ## Watch it done
 
-The starter has no tool. This is real output from the check:
+The starter has no tool. This is real output:
 
 ```text
   FAIL  tools/list has a tool called find_free_slots
@@ -29,8 +30,8 @@ The sample solution ends with `Done. All 8 rules pass.` It answers like this:
 2. Register `find_free_slots` with `server.registerTool(name, { description, inputSchema }, handler)`.
 3. Give it a Zod object. It has `site` (`harrow-lane`, `millbrook` or `eastgate`), an optional `date`, and a `length`. The length defaults to 20.
 4. Add `.describe("...")` to every field.
-5. In the handler, call `clinic.freeSlots({ site, date, length })` on every call. Return each time and vet as text. If there is no `date`, use `clinic.clock().date`.
-6. Log only with `console.error`. Over stdio, stdout belongs to the protocol.
+5. On every call, the handler calls `clinic.freeSlots({ site, date, length })`. It returns each time and vet as text. If there is no `date`, use `clinic.clock().date`.
+6. Log only with `console.error`. Stdout belongs to the protocol.
 7. Try it the way a client does.
 
 ```bash
@@ -42,7 +43,8 @@ Expect: six start times, three for Dr Sam Reyes and three for Dr Hannah Cole. Th
 
 ## Do it on your work
 
-Do the same for one read action in your own system, such as "list open tickets". A good tool has a clear description. Each argument has its own description. It reads the answer live each time. It never copies an old answer.
+Do the same for one read action in your own system, such as "list open tickets". A good tool has a clear description,
+and each argument has its own. It reads the answer live each time. It never copies an old answer.
 
 ## Done when
 
@@ -69,7 +71,7 @@ The finished state is a `server.ts` with one registered tool. See `solution/serv
 
 ## Go further
 
-The check reads stdout before any request. A banner printed there passes the SDK client. But it breaks other hosts.
+The check reads stdout before any request. A banner printed to stdout passes this check. But it breaks other hosts.
 
 ## Words you will use
 

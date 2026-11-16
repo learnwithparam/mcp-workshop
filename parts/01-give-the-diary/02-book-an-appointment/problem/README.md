@@ -2,13 +2,30 @@
 
 ## The problem
 
-Reading the diary is safe. Writing to it is not. The PIMS lets staff double-book a vet on purpose. So `clinic.createAppointment` writes whatever it gets.
+Reading the diary is safe. Writing to it is not. The PIMS lets staff double-book a vet on purpose. So
+`clinic.createAppointment` writes whatever it gets.
 
-For example, Claude books Biscuit at 10:20. Dr Reyes already sees a dog at that time. Now two owners arrive for one slot. A cancelled row stays in the diary, but its time is free again.
+For example, Claude books Biscuit at 10:20. But Dr Reyes already sees a dog at that time. Now two owners arrive for one
+slot. A cancelled row stays in the diary. Its time is free again.
+
+```mermaid
+sequenceDiagram
+  participant H as Host (Claude)
+  participant S as Your server
+  participant P as PIMS
+  H->>S: tools/call book_appointment
+  S->>P: appointments({ vetId, date })
+  alt overlaps a booked or arrived row
+    S-->>H: isError: true, no write
+  else free
+    S->>P: createAppointment(...)
+    S-->>H: Booked A-01962
+  end
+```
 
 ## Watch it done
 
-The starter has no booking tool. This is real output from the check:
+The starter has no booking tool. This is real output:
 
 ```text
   FAIL  tools/list has book_appointment with patientId, vetId, start and reason
@@ -39,7 +56,8 @@ Expect: first `Booked A-01962: 10:20 on 2026-11-16.`, then a tool error that say
 
 ## Do it on your work
 
-Do the same for one write action in your own system. First, list what would make a write wrong, such as a double booking. A good write tool has a check before the write. It refuses a clash and writes nothing. It also has a test for a partial overlap.
+Do the same for one write action in your own system. List what would make a write wrong, such as a double
+booking. A good write tool checks before it writes, and it refuses a clash.
 
 ## Done when
 
@@ -65,20 +83,7 @@ The finished state is `server.ts` with a second tool. It has a clash check befor
 
 ## Go further
 
-```mermaid
-sequenceDiagram
-  participant H as Host (Claude)
-  participant S as Your server
-  participant P as PIMS
-  H->>S: tools/call book_appointment
-  S->>P: appointments({ vetId, date })
-  alt overlaps a booked or arrived row
-    S-->>H: isError: true, no write
-  else free
-    S->>P: createAppointment(...)
-    S-->>H: Booked A-01962
-  end
-```
+Read the picture above again after you write your code.
 
 ## Words you will use
 
