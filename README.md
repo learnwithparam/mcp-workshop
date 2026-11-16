@@ -7,7 +7,7 @@ You build one MCP server for Harrow Lane Veterinary. It is a group of three clin
 
 Your server teaches the model to pick the right tool. It gives clear errors the model can fix.
 
-Each role sees only what its job allows. The course catches bad third-party tools. At the end, you deploy the server.
+A receptionist, a vet and a director each see different data. The course catches bad third-party tools. At the end, you deploy the server.
 
 Every step ends in a check. The check talks to your server like a real MCP client. At the end, you have proof that your
 server works.
@@ -68,7 +68,7 @@ or fail for each role.
 
 To use the finished server from a real host, run `bun run finished`. A host is the app the model runs in, such as Claude Code.
 
-The command serves `http://127.0.0.1:8787/mcp`. It prints a token for Ola (receptionist), Dr Sam Reyes (vet) and Joon Park (clinical director). A token is a short secret string. It says who you are.
+The command serves `http://127.0.0.1:8787/mcp`. It prints one token each for Ola (receptionist), Dr Sam Reyes (vet) and Joon Park (clinical director). A token is a short secret string. It proves who you are.
 
 If a command fails, read the [troubleshooting page](00-orientation/troubleshooting.md). Find the message you see. Then
 follow its fix.

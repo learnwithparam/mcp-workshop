@@ -101,7 +101,7 @@ Expect: `Done. All 10 rules pass.` once your work meets every Done when line. Be
 
 Wrap your own API, with your own evidence: `bun run verify wrap-your-own-api`. Expect: `Done. All 8 rules pass.`
 
-Make the client safe to trust a server: `bun run verify secure-the-client`. Expect: `Done. All 4 rules pass.`
+Make the client refuse unsafe servers: `bun run verify secure-the-client`. Expect: `Done. All 4 rules pass.`
 
 ```bash
 bun run verify part grow-the-server

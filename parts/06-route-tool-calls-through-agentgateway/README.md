@@ -56,13 +56,6 @@ flowchart LR
 - How to write an allow-list, so a caller sees only the tools you name.
 - How to prove it with a check that calls the gateway as a client.
 
-## What we teach
-
-- How to list two servers as targets behind one address.
-- How to require a signed token, and send each server a token made for it.
-- How to write an allow-list, so a caller sees only the tools you name.
-- How to prove it with a check that calls the gateway as a client.
-
 ## Walkthrough
 
 Put both servers behind the gateway:
