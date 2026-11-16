@@ -2,7 +2,7 @@
 
 ## The problem
 
-Your server works with the course client, which does not prove it works with every host. The MCP project ships a strict test client, the conformance suite, with over a hundred checks. For example, a developer hid the dashboard's 400 and 404 errors by answering 200 to every bad request. The dashboard
+Your server works with the course client, which does not prove it works with every host. The MCP project ships a strict test client, the conformance suite, with over a hundred checks. For example, Kofi hid the dashboard's 400 and 404 noise by answering 200 to every bad request. The dashboard
 is quiet. The server is now wrong.
 
 ```mermaid

@@ -34,7 +34,7 @@ This is real output from the check:
 1 of 7 rules pass. Fix the FAIL lines and run it again.
 ```
 
-The sample solution replies like this.
+The sample solution replies like this. The check ends with `Done. All 7 rules pass.`
 
 ```text
 Tool error from book_appointment:
@@ -65,7 +65,7 @@ For the length, put the message on the Zod rule. Use `.multipleOf(10, { error: "
 
 ## Done when
 
-- Four bad calls each get the error in the table: an unknown patient, a past start, an opening-hours miss and a length of 25.
+- Four bad calls each get the error in the table.
 - A clash names the vet and lists real free slots after "Free slots:".
 - None of the five bad calls (the four above and the clash) writes to the diary. A good booking still adds one row.
 

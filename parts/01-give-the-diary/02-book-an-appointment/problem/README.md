@@ -5,7 +5,7 @@
 Reading the diary is safe. Writing is not. The PIMS lets staff double-book a vet on purpose. So
 `clinic.createAppointment` writes whatever it gets.
 
-For example, Claude books Biscuit at 10:20. Dr Reyes already has a dog at 10:20. Without a check, the diary shows two bookings in one slot. The check stops the second one.
+For example, Claude books Biscuit at 10:20. But Dr Reyes already sees a dog at that time. Now two owners arrive for one slot. A cancelled row stays in the diary. Its time is free again.
 
 ```mermaid
 sequenceDiagram

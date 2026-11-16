@@ -5,8 +5,8 @@
 Ola works at the Millbrook desk. She does not type JSON into a terminal. She asks Claude, which is a host. A host is the
 app a person talks to.
 
-For example, Ola asks, "Who can see Biscuit at Millbrook?" For this to work, the host needs one file. That file says how
-to start your server.
+For example, Ola asks, "Who can see Biscuit?" That works only if the host has one file. The file says how to start your
+server.
 
 ## Watch it done
 
