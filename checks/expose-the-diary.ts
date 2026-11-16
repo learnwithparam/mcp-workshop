@@ -97,7 +97,7 @@ export default [
       "the description is the only help the model gets for that argument",
   ),
   rule(
-    "For Millbrook and 20 minutes it returns exactly the free slots in the diary",
+    "For Millbrook and one visit length it returns exactly the free slots in the diary",
     async (dir) => {
       const outcome = await ok(dir);
       if (!outcome?.first || outcome.first.isError) return false;

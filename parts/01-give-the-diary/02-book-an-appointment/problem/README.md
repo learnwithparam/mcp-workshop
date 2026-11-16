@@ -84,4 +84,3 @@ sequenceDiagram
 
 - **Tool error**: a reply with `isError: true`. Its text explains the failure to the model.
 - **Clash**: two appointments for one vet whose times overlap.
-- **System of record**: the place the clinic trusts for the truth. Here, that is the PIMS diary.

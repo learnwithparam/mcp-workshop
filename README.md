@@ -100,8 +100,8 @@ flowchart LR
 | Give the diary to the model                      | [parts/01-give-the-diary](parts/01-give-the-diary/README.md)                                               | 4     | 50      | Claude booking from your stdio server     |
 | Pick the right tool                              | [parts/02-pick-the-right-tool](parts/02-pick-the-right-tool/README.md)                                     | 6     | 65      | an eval score before and after a redesign |
 | Open the server safely                           | [parts/03-open-the-server-safely](parts/03-open-the-server-safely/README.md)                               | 6     | 70      | a receptionist's token refused the notes  |
-| Defend and ship                                  | [parts/04-defend-and-ship](parts/04-defend-and-ship/README.md)                                             | 4     | 55      | a poisoned tool caught, a deployed URL    |
-| Grow the server (extension)                      | [parts/05-grow-the-server](parts/05-grow-the-server/README.md)                                             | 5     | 95      | two servers behind one front              |
+| Defend and ship                                  | [parts/04-defend-and-ship](parts/04-defend-and-ship/README.md)                                             | 6     | 90      | a poisoned tool caught, a deployed URL    |
+| Grow the server (extension)                      | [parts/05-grow-the-server](parts/05-grow-the-server/README.md)                                             | 7     | 145     | two servers behind one front              |
 | Route tool calls through agentgateway (optional) | [parts/06-route-tool-calls-through-agentgateway](parts/06-route-tool-calls-through-agentgateway/README.md) | 1     | 25      | both servers behind a ready-made gateway  |
 
 Every step has one command: `bun run verify <step-name>`. It prints each rule as PASS or FAIL. For each FAIL, it

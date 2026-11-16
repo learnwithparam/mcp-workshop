@@ -7,13 +7,15 @@
     "#clinic": "./world/clinic.ts"
   },
   "scripts": {
-    "check": "bun scripts/readable.ts && bun scripts/plain-english.ts && bun scripts/check.ts && bun scripts/verify.ts --all && bun scripts/text-audit.ts && bun test scripts/prose.test.ts && bun test scripts/dates.test.ts && bun scripts/capstone.ts && bun test scripts/shape.test.ts && bun scripts/picks.ts && bun scripts/ladder.ts && bun test scripts/workfiles.test.ts scripts/picks.test.ts scripts/ladder.test.ts scripts/changed.test.ts",
+    "check": "bun scripts/readable.ts && bun scripts/plain-english.ts && bun scripts/check.ts && bun scripts/verify.ts --all && bun scripts/text-audit.ts && bun test scripts/prose.test.ts && bun test scripts/dates.test.ts && bun scripts/capstone.ts && bun test scripts/shape.test.ts && bun scripts/picks.ts && bun scripts/ladder.ts && bun test scripts/workfiles.test.ts scripts/picks.test.ts scripts/ladder.test.ts scripts/changed.test.ts && bun scripts/parts.ts --check",
     "readable": "bun scripts/readable.ts",
     "format": "biome check --write .",
     "verify": "bun scripts/verify.ts",
     "plain-english": "bun scripts/plain-english.ts",
     "world": "bun world/cli.ts",
     "finished": "bun world/finished/http.ts",
+    "reference": "bun run finished",
+    "parts": "bun scripts/parts.ts",
     "ask": "bun world/ask.ts",
     "try": "bun world/try.ts",
     "token": "bun world/token.ts",

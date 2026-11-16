@@ -1,7 +1,7 @@
 # Parts mapped onto formats. This is the only file that talks about time.
 # Part minutes (from each step.toml, and from PARTS.md for parts still waiting for their session):
 # start-here 15, give-the-diary 50, pick-the-right-tool 65, open-the-server-safely 70, defend-and-ship 90,
-# grow-the-server 145, route-tool-calls-through-agentgateway 25 (optional). Core 255, extension 145, total 400 plus the optional 25. Session minutes include breaks and review.
+# grow-the-server 145, route-tool-calls-through-agentgateway 25 (optional). Core 290, extension 145, total 435 plus the optional 25, which is 460 in all. Session minutes include breaks and review.
 
 [one-day]
 # 09:00 to 17:00 with a 60-minute lunch after the second session. 420 teaching minutes plus lunch = 480.

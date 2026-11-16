@@ -77,7 +77,7 @@ The after state is a server without `send_email`. A tool that takes only an appo
 
 ## Go further
 
-Cut the other leg: make `owner_contact` return a stand-in such as `[phone-O-0042]`. The email address is contact data too. Anthropic shows this pattern in [Code execution with MCP](https://www.anthropic.com/engineering/code-execution-with-mcp). In that pattern, the client swaps names, emails and phone numbers for stand-ins. The model never sees them.
+Cut the other leg: make `owner_contact` return a stand-in such as `[phone-O-0042]`. The email address is contact data too. Anthropic shows this pattern in [Code execution with MCP](https://www.anthropic.com/engineering/code-execution-with-mcp). The client swaps names, emails and phone numbers for stand-ins. The model never sees them.
 
 ## If you get stuck
 

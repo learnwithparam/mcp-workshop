@@ -14,7 +14,7 @@ The starter has no tool. This is real output from the check:
   FAIL  tools/list has a tool called find_free_slots
   FAIL  Its description is one to three sentences of at least 8 words
   FAIL  It takes site and length, and every argument has a description
-  FAIL  For Millbrook and 20 minutes it returns exactly the free slots in the diary
+  FAIL  For Millbrook and one visit length it returns exactly the free slots in the diary
   FAIL  It reads the live diary: a slot booked behind its back disappears from the next answer
 3 of 8 rules pass. Fix the FAIL lines and run it again.
 ```
@@ -49,7 +49,7 @@ Do the same for one read action in your own system, such as "list open tickets".
 - The server starts over stdio. It writes nothing to stdout before a request. It answers `server/discover`.
 - `tools/list` has `find_free_slots`. Its description is one to three sentences.
 - It takes `site` and `length`. Every argument has a description.
-- For Millbrook and 20 minutes, it returns exactly the free slots in the diary. A slot booked behind its back disappears.
+- For Millbrook and one visit length, it returns exactly the free slots in the diary. A slot booked behind its back disappears.
 
 ```bash
 bun run verify expose-the-diary
