@@ -15,9 +15,9 @@ const exampleFiles = (folder: string) =>
     }
   ).example_files;
 
-test("a long problem and a missing Do it on your work fail a step", () => {
+test("a long problem and a missing If you get stuck fail a step", () => {
   const problems = stepShapeProblems(page("bad-step")).join("\n");
-  expect(problems).toContain("Do it on your work");
+  expect(problems).toContain("If you get stuck");
   expect(problems).toContain("keep it to 60 or fewer");
 });
 

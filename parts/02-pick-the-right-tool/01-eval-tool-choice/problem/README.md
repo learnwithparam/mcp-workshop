@@ -27,7 +27,7 @@ Expect: `Done. All 7 rules pass.`
 
 ![The eval report for the API mirror: 12 of 20 tasks pass](../images/expected.png)
 
-## Your turn
+## Your challenge
 
 1. Run the eval on the 14-tool API mirror and save the report. This saved score is your baseline, the number you start from.
 
@@ -49,10 +49,6 @@ Expect: the `expected` column names a job tool. The mirror has no tool with that
 
 With no key, the eval replays recorded choices, so the score is the same every time.
 
-## Do it on your work
-
-Write 10 or more tasks for your own server, each with the tool and key inputs a good answer uses. Run them and save the score. Good looks like a number you can compare after every change.
-
 ## Done when
 
 - `evals/baseline.json` holds a result for each of the 20 tasks.
@@ -66,6 +62,15 @@ bun run verify eval-tool-choice
 
 Expect: `Done. All 7 rules pass.`
 
+## If you get stuck
+
+- No recording found: run the eval on `api-mirror`, not on your own server.
+- Every run uses a fresh copy of the diary, so your own diary never changes.
+
+## Do it on your work
+
+Write 10 or more tasks for your own server, each with the tool and key inputs a good answer uses. Run them and save the score. Good looks like a number you can compare after every change.
+
 ## Solution
 
 The after state is a saved baseline and filled-in notes. See `solution/evals/baseline.json` and `solution/evals/notes.md`.
@@ -73,11 +78,6 @@ The after state is a saved baseline and filled-in notes. See `solution/evals/bas
 ## Go further
 
 A task passes when one successful call used the expected tool and inputs. Look at T05: the model called the right write tool with the owner's id, so it fails.
-
-## If you get stuck
-
-- No recording found: run the eval on `api-mirror`, not on your own server.
-- Every run uses a fresh copy of the diary, so your own diary never changes.
 
 ## Words you will use
 

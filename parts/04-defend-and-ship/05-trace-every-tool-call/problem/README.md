@@ -30,7 +30,7 @@ After, the solution passes:
 Done. All 7 rules pass.
 ```
 
-## Your turn
+## Your challenge
 
 1. Open `app.ts`, the server from the deploy step.
 2. For each `tools/call`, time the call. Build one span named `tools/call`, a space, and the tool name, such as `tools/call find_patient`.
@@ -47,10 +47,6 @@ bun run verify trace-every-tool-call
 
 Expect: `Done. All 7 rules pass.`
 
-## Do it on your work
-
-Send spans from your own server to any collector. Good looks like finding a slow call by tool name and time, with no private data in sight.
-
 ## Done when
 
 - Each tool call leaves one span named after the method and the tool.
@@ -61,6 +57,15 @@ Send spans from your own server to any collector. Good looks like finding a slow
 - No span holds a pet name, a patient id or any tool argument.
 - A collector that is down does not slow or break a call.
 
+## If you get stuck
+
+- No span arrives: the check sets `OTEL_EXPORTER_OTLP_ENDPOINT`. Post to that address plus `/v1/traces`.
+- A call is slow when the collector is down: you waited for the post. Let it run on its own.
+
+## Do it on your work
+
+Send spans from your own server to any collector. Good looks like finding a slow call by tool name and time, with no private data in sight.
+
 ## Solution
 
 The after state is span code inside the HTTP front. See `solution/app.ts` and `solution/serve.ts`.
@@ -68,11 +73,6 @@ The after state is span code inside the HTTP front. See `solution/app.ts` and `s
 ## Go further
 
 Add a child span for the PIMS call inside each tool. It tells a slow tool from a slow back end.
-
-## If you get stuck
-
-- No span arrives: the check sets `OTEL_EXPORTER_OTLP_ENDPOINT`. Post to that address plus `/v1/traces`.
-- A call is slow when the collector is down: you waited for the post. Let it run on its own.
 
 ## Words you will use
 

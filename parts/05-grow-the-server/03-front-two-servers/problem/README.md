@@ -30,7 +30,7 @@ After, the clinic server's log shows a token made for the clinic:
 
 `bun run verify front-two-servers solution` prints `Done. All 7 rules pass.`
 
-## Your turn
+## Your challenge
 
 1. In `upstream.ts`, find `tokenFor`. It returns `caller.inboundToken`. Delete that line, so it always mints a new token with `audience: upstream.url`.
 2. In `proxy.ts`, find the TODO. Keep only the lab tools whose `fingerprint(tool)` is in `pinned`. Print each dropped tool.
@@ -42,10 +42,6 @@ bun run verify front-two-servers
 
 Expect: `Done. All 7 rules pass.`
 
-## Do it on your work
-
-List two servers you use, and write which tools you would let through from each. Good looks like a short list per server, with every new tool left out until a person has read it. Then name the audience each server should trust.
-
 ## Done when
 
 - The proxy refuses a request with no token (401).
@@ -54,19 +50,25 @@ List two servers you use, and write which tools you would let through from each.
 - Calls go through and show real slots and a task.
 - Each upstream received only tokens made for its own address, and never one made for the proxy.
 
+## If you get stuck
+
+- Listing works but calls fail: calls still pass Joon's token on.
+
+## Do it on your work
+
+List two servers you use, and write which tools you would let through from each. Good looks like a short list per server, with every new tool left out until a person has read it. Then name the audience each server should trust.
+
 ## Solution
 
 The after state mints a token per upstream and filters by pins. See `solution/upstream.ts` and `solution/proxy.ts`.
 
 ## Go further
 
-To run it by hand, use three terminals. Start the clinic upstream with `PORT=8801 bun parts/05-grow-the-server/03-front-two-servers/upstreams/clinic.ts`. Start `lab.ts` the same way on port 8802. Then start the proxy with `PORT=8800`, `CLINIC_URL` and `LAB_URL` set. Expect a line that says the proxy serves 10 tools. The starter serves 11.
+To run it by hand, use three terminals. Start the clinic upstream with `PORT=8801 bun parts/05-grow-the-server/03-front-two-servers/upstreams/clinic.ts`. Start `lab.ts` the same way on port 8802.
+
+Then start the proxy with `PORT=8800`, `CLINIC_URL` and `LAB_URL` set. Expect a line that says the proxy serves 10 tools. The starter serves 11.
 
 In a real clinic, the sign-in server swaps one token for another (token exchange). Here the course's signing key stands in for it.
-
-## If you get stuck
-
-- Listing works but calls fail: calls still pass Joon's token on.
 
 ## Words you will use
 

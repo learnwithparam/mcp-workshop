@@ -2,7 +2,9 @@
 
 ## The problem
 
-Your server has a URL and answers anyone who finds it. For example, a request with no sign-in can still list patients and book appointments. A token fixes that. It is a signed note from the clinic's login service. It says who is asking, such as Ola, a Millbrook receptionist. Your server only reads and checks it.
+Your server has a URL and answers anyone who finds it. For example, a request with no sign-in can still list patients and book appointments.
+
+A token fixes that. It is a signed note from the clinic's login service. It says who is asking, such as Ola, a Millbrook receptionist. Your server only reads and checks it.
 
 ```mermaid
 sequenceDiagram
@@ -29,7 +31,7 @@ bun run verify require-a-token solution
 
 Expect: `Done. All 6 rules pass.`
 
-## Your turn
+## Your challenge
 
 Change `http.ts`. The TODO lines show where.
 
@@ -53,10 +55,6 @@ curl -s -i -X POST http://127.0.0.1:8787/mcp -d '{}'
 
 Expect: `HTTP/1.1 401 Unauthorized` and a `WWW-Authenticate` header that ends with `resource_metadata="http://127.0.0.1:8787/.well-known/oauth-protected-resource/mcp"`. The starter answers 415, because it checks no token.
 
-## Do it on your work
-
-Put the same check in front of your own server. Run `bun run finished` once to copy Ola's token, then send it as `Bearer <token>`. Good looks like 401 with no token and a tool list with Ola's.
-
 ## Done when
 
 - A request with no token gets 401 and a header that names the metadata URL.
@@ -71,6 +69,14 @@ bun run verify require-a-token
 
 Expect: `Done. All 6 rules pass.`
 
+## If you get stuck
+
+- `oauthMetadataResponse` returns undefined for any other path, so it is safe to call first.
+
+## Do it on your work
+
+Put the same check in front of your own server. Run `bun run finished` once to copy Ola's token, then send it as `Bearer <token>`. Good looks like 401 with no token and a tool list with Ola's.
+
 ## Solution
 
 The after state serves the metadata and checks the token. See `solution/http.ts`.
@@ -78,10 +84,6 @@ The after state serves the metadata and checks the token. See `solution/http.ts`
 ## Go further
 
 `requireBearerAuth` reads only the `Authorization` header, so a token never lands in a URL or a log. `readToken` checks the signature, issuer and expiry, but not the audience yet. That is the next step.
-
-## If you get stuck
-
-- `oauthMetadataResponse` returns undefined for any other path, so it is safe to call first.
 
 ## Words you will use
 

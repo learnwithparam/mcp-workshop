@@ -29,7 +29,7 @@ Expect: `Done. All 5 rules pass.`
 
 ![Ola sees six tools, Dr Reyes sees seven, and Ola's call to read_notes gets 403](../images/expected.png)
 
-## Your turn
+## Your challenge
 
 `server.ts` has `Caller`, `callerFrom` and the `TOOL_SCOPES` table. Follow the four TODO lines.
 
@@ -45,10 +45,6 @@ bun parts/03-open-the-server-safely/call-server.ts --as ola
 
 Expect: `As ola, your server lists 6 tool(s):` and no `read_notes` in the list.
 
-## Do it on your work
-
-Write a table of roles and scopes for your own tools. Hide what a role cannot use, and still refuse a direct call. Good looks like a 403 that names the missing scope.
-
 ## Done when
 
 - Ola's tool list has no `read_notes` and no `controlled_drugs_log`.
@@ -62,6 +58,14 @@ bun run verify limit-by-role
 
 Expect: `Done. All 5 rules pass.`
 
+## If you get stuck
+
+- Check the site before you call `clinic.clinicalNotes`. The check reads the world log to see what was read.
+
+## Do it on your work
+
+Write a table of roles and scopes for your own tools. Hide what a role cannot use, and still refuse a direct call. Good looks like a 403 that names the missing scope.
+
 ## Solution
 
 The after state hides tools by scope and checks the site. See `solution/server.ts` and `solution/http.ts`.
@@ -69,10 +73,6 @@ The after state hides tools by scope and checks the site. See `solution/server.t
 ## Go further
 
 A 403 that names the missing scope is called step-up. The client can then ask the person to sign in again with more access. An SDK scope challenge runs only for registered tools, so a hidden tool needs the check in `http.ts`.
-
-## If you get stuck
-
-- Check the site before you call `clinic.clinicalNotes`. The check reads the world log to see what was read.
 
 ## Words you will use
 

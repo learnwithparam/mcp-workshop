@@ -2,9 +2,11 @@
 
 ## The problem
 
-Harrow Lane Veterinary has three clinics and twelve staff. They use one practice system. The front desk wants to ask
-Claude, "Can Biscuit get her booster?" Today they click through five screens to answer. The director wants one promise
-first. Nobody sees what their role should not see. For example, Ola, the receptionist, must not read clinical notes.
+Harrow Lane Veterinary has three clinics and twelve staff. They use one practice system.
+
+The front desk wants to ask Claude, "Can Biscuit get her booster?" Today they click through five screens to answer.
+
+The clinical director wants one promise first. Nobody sees what their role should not see. For example, Ola, the receptionist, must not read clinical notes.
 
 ## Watch it done
 
@@ -22,7 +24,7 @@ With the sample answers, it ends with `Done. All 4 rules pass.` The finished age
 
 ![The front-desk agent answering](../images/expected.png)
 
-## Your turn
+## Your challenge
 
 1. Look at the clinic's data.
 
@@ -51,12 +53,6 @@ Expect: Ola is told she cannot open clinical notes. Sam gets a `read_notes` call
 
 4. Write the three answers in `answers.md` in this folder.
 
-## Do it on your work
-
-Do the same on your own system. Find three things:
-one thing a person can ask it, one thing it must refuse, and one number you can read off it.
-Good answers are facts you can check against the real system.
-
 ## Done when
 
 - `answers.md` has an answer on each of the three lines.
@@ -70,15 +66,21 @@ bun run verify meet-the-clinic
 
 Expect: `Done. All 4 rules pass.` Before that, each `FAIL` line has a `Try next:`.
 
-## Solution
-
-The finished state is one `answers.md` file. It has the three facts. See `solution/answers.md`.
-
 ## If you get stuck
 
 - Add `--as sam` to `bun run try` to see the tools of other staff.
 - The answers come from the diary. So they are the same on every computer. Different answers? Run `bun run world reset`.
 - You need no API key. `bun run ask` replays recorded model turns.
+
+## Do it on your work
+
+Do the same on your own system. Find three things:
+one thing a person can ask it, one thing it must refuse, and one number you can read off it.
+Good answers are facts you can check against the real system.
+
+## Solution
+
+The finished state is one `answers.md` file. It has the three facts. See `solution/answers.md`.
 
 ## Go further
 

@@ -27,7 +27,7 @@ Expect: `Done. All 4 rules pass.`
 
 ![The conformance suite ends with Baseline check passed](../images/expected.png)
 
-## Your turn
+## Your challenge
 
 1. Start the server in one terminal.
 
@@ -51,10 +51,6 @@ Expect: the run ends with the baseline check passed.
 
 Never add a line to `conformance-expected-failures.yml` to make your server pass.
 
-## Do it on your work
-
-Run the suite against your own server. For each failure, change the server, never the list. Good looks like exit code 0 with every excused scenario explained.
-
 ## Done when
 
 - `bun http.ts` answers on the port in `MCP_PORT`.
@@ -68,6 +64,14 @@ bun run verify pass-conformance
 
 Expect: `Done. All 4 rules pass.` The first run downloads the suite, so it needs the internet once.
 
+## If you get stuck
+
+- An HTTP status is part of the protocol. A dashboard should count real errors, not change them.
+
+## Do it on your work
+
+Run the suite against your own server. For each failure, change the server, never the list. Good looks like exit code 0 with every excused scenario explained.
+
 ## Solution
 
 The after state keeps each status as the handler sent it. See `solution/http.ts`.
@@ -75,10 +79,6 @@ The after state keeps each status as the handler sent it. See `solution/http.ts`
 ## Go further
 
 The expected-failures file excuses scenarios. They need the suite's own test tools, or prompts and resources this server does not offer. Read its comments. The `--requirements` flag pins the scenarios to one spec. A newer suite cannot fail you on a rule that did not exist then.
-
-## If you get stuck
-
-- An HTTP status is part of the protocol. A dashboard should count real errors, not change them.
 
 ## Words you will use
 

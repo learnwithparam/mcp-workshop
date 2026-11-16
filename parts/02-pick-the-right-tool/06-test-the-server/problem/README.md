@@ -2,7 +2,11 @@
 
 ## The problem
 
-Soon a colleague edits `server.ts`, and nobody runs the checks. For example, if the clash check breaks, Dr Reyes is double-booked and two owners arrive for one slot. Your server needs its own tests. A test that checks nothing also passes. To find weak tests, break your server on purpose. This is mutation testing. Your tests must notice the break.
+Soon a colleague edits `server.ts`, and nobody runs the checks. For example, if the clash check breaks, Dr Reyes is double-booked and two owners arrive for one slot.
+
+Your server needs its own tests. A test that checks nothing also passes.
+
+To find weak tests, break your server on purpose. This is mutation testing. Your tests must notice the break.
 
 ```mermaid
 flowchart LR
@@ -26,7 +30,7 @@ Expect: `Done. All 3 rules pass.`
 
 ![bun test passing on the solution, then the check's three rules](../images/expected.png)
 
-## Your turn
+## Your challenge
 
 `test/server.test.ts` joins a client to `createServer()` with `InMemoryTransport` and has two tests. Add three.
 
@@ -42,10 +46,6 @@ Expect: `5 pass` and `0 fail`.
 
 Keep the names `findClash` and `unknownPatientError` in `server.ts`, because the check breaks those two.
 
-## Do it on your work
-
-Write one test for the rule that would hurt most if it broke. Remove that rule once and watch the test fail. Good looks like a red test, then green again when you put the rule back.
-
 ## Done when
 
 - `test/` has at least 4 tests, and they all pass.
@@ -58,6 +58,15 @@ bun run verify test-the-server
 
 Expect: `Done. All 3 rules pass.`
 
+## If you get stuck
+
+- The tests use a scratch copy of the diary, so your own diary stays as it is.
+- `expect(result.isError).toBe(true)` catches a missing refusal.
+
+## Do it on your work
+
+Write one test for the rule that would hurt most if it broke. Remove that rule once and watch the test fail. Good looks like a red test, then green again when you put the rule back.
+
 ## Solution
 
 The after state is a test file with five tests. See `solution/test/server.test.ts`.
@@ -65,11 +74,6 @@ The after state is a test file with five tests. See `solution/test/server.test.t
 ## Go further
 
 The tests share one diary, in the order they run. Ask for a free slot in each test, so no test depends on another.
-
-## If you get stuck
-
-- The tests use a scratch copy of the diary, so your own diary stays as it is.
-- `expect(result.isError).toBe(true)` catches a missing refusal.
 
 ## Words you will use
 

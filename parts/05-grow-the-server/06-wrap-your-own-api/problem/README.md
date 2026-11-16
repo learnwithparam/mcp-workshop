@@ -31,10 +31,10 @@ request: GET /orders/ORD-1041
 status: 200
 ```
 
-## Your turn
+## Your challenge
 
 1. Pick an API you can reach with a test key. Never use a real production key.
-2. Open `my-api.json`. Replace every `TODO`. List two endpoints, one a `GET`. Give each a short name such as `get_order`, a method and a path with `{orderId}` where a value goes. Add a description that says when to use it.
+2. Open `my-api.json` and replace every `TODO`. List two endpoints, one a `GET`, with a short name such as `get_order`, a method and a path. Put `{orderId}` where a value goes. Add a description that says when to use it.
 3. Keep `server.ts` as it is. It makes one tool per endpoint and reads `MY_API_URL` and `MY_API_TOKEN`.
 4. Call one tool against your real API.
 
@@ -45,16 +45,6 @@ bun run try --server parts/05-grow-the-server/06-wrap-your-own-api/problem get_o
 Expect: a result from your API, or an error text the model can read.
 
 5. Fill in `EVIDENCE.md`: your API, the real call and one endpoint you left out.
-
-## Do it on your work
-
-Steps 1 to 5 are the work: the files in this folder are yours. Check any folder with the capstone command.
-
-```bash
-bun capstone/check.ts parts/05-grow-the-server/06-wrap-your-own-api/problem
-```
-
-Expect: `Done. All 8 capstone rules pass.` once your own files are done. Good looks like tools you would let a new colleague use.
 
 ## Done when
 
@@ -72,6 +62,22 @@ bun run verify wrap-your-own-api
 
 Expect: `Done. All 8 rules pass.`
 
+## If you get stuck
+
+- The path check fails: every `{name}` in a path needs a value of the same name, with `"in": "path"`.
+- The key check fails: a value called `token` or `key` must not be a tool input.
+- The evidence check fails: the `request:` line starts with the method of the tool you named.
+
+## Do it on your work
+
+Steps 1 to 5 are the work: the files in this folder are yours. Check any folder with the capstone command.
+
+```bash
+bun capstone/check.ts parts/05-grow-the-server/06-wrap-your-own-api/problem
+```
+
+Expect: `Done. All 8 capstone rules pass.` once your own files are done. Good looks like tools you would let a new colleague use.
+
 ## Solution
 
 The after state is three files. See `solution/my-api.json`, `solution/server.ts` and `solution/EVIDENCE.md`. A copy of the starter is in `capstone/template`, and of the solution in `capstone/sample`.
@@ -79,12 +85,6 @@ The after state is three files. See `solution/my-api.json`, `solution/server.ts`
 ## Go further
 
 Add a third endpoint that writes data, and check that its tool is neither read-only nor destructive.
-
-## If you get stuck
-
-- The path check fails: every `{name}` in a path needs a value of the same name, with `"in": "path"`.
-- The key check fails: a value called `token` or `key` must not be a tool input.
-- The evidence check fails: the `request:` line starts with the method of the tool you named.
 
 ## Words you will use
 

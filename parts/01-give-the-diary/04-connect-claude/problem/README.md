@@ -29,7 +29,7 @@ flowchart LR
   H[Host] -- "reads .mcp.json, starts bun server.ts" --> S[Your server] --> P[(PIMS diary)]
 ```
 
-## Your turn
+## Your challenge
 
 1. Create `.mcp.json` in this folder:
 
@@ -45,17 +45,11 @@ cd parts/01-give-the-diary/04-connect-claude/problem && bun server.ts
 
 Expect: one line that says the server is running on stdio, then nothing. Press Ctrl+C to stop it.
 
-3. Connect a host. In Claude Code, open a terminal in this folder. Run `claude`. Approve `harrow-lane`, and check it with `/mcp`. Claude Desktop needs the same entry in its own config. Use full paths there.
+3. Connect a host. In Claude Code, open a terminal in this folder, then run `claude`. Approve `harrow-lane` and check it with `/mcp`. For Claude Desktop, add the same entry to its own config, with full paths.
 4. Ask: "Who can see Biscuit at Millbrook?"
 5. Paste the whole answer after `Answer:` in `notes/connect-claude.md`.
 
 Expect: Claude calls `find_free_slots`. It names Dr Sam Reyes and Dr Hannah Cole with real times.
-
-## Do it on your work
-
-Write the same `.mcp.json` entry for your own server. Use the project in the part README.
-Ask one real question of your own system. A good result is one where the host starts your server by itself.
-Every fact in the answer also matches the live system.
 
 ## Done when
 
@@ -71,14 +65,20 @@ bun run verify connect-claude
 
 Expect: `Done. All 6 rules pass.`
 
-## Solution
-
-The finished state is a `.mcp.json` and a notes file. See `solution/server.ts` and `solution/notes/connect-claude.md`.
-
 ## If you get stuck
 
 - Claude says it cannot see the diary. The server is not connected. In Claude Code, run `/mcp`. In Claude Desktop, open Settings, then Developer, and read the server's log.
 - The answer has times that are not free. You booked some while you tested. Run `bun run world reset`.
+
+## Do it on your work
+
+Write the same `.mcp.json` entry for your own server. Use the project in the part README.
+Ask one real question of your own system. A good result is one where the host starts your server by itself.
+Every fact in the answer also matches the live system.
+
+## Solution
+
+The finished state is a `.mcp.json` and a notes file. See `solution/server.ts` and `solution/notes/connect-claude.md`.
 
 ## Go further
 

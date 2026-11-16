@@ -36,7 +36,7 @@ For the Harrow Lane server, the same client prints `Protocol: 2026-07-28 (modern
 
 ![client.ts against the Part 1 server and the old lab server](../images/expected.png)
 
-## Your turn
+## Your challenge
 
 1. Open `client.ts` in this step's `problem/` folder. Run it on the old lab server.
 
@@ -70,10 +70,6 @@ bun client.ts ../../../01-give-the-diary/01-expose-the-diary/solution/server.ts 
 
 Expect: `Protocol: 2026-07-28 (modern)` and real free slots.
 
-## Do it on your work
-
-Point the same client at a server you built, one that starts with `bun your-server.ts`. Call one read-only tool. Good looks like a protocol line, a tool list and a real answer. If it fails, read the error first: the server may need an environment variable.
-
 ## Done when
 
 - With the Part 1 server, it speaks `2026-07-28`.
@@ -88,6 +84,15 @@ bun run verify build-a-small-client
 
 Expect: `Done. All 5 rules pass.`
 
+## If you get stuck
+
+- The new server shows `2025-11-25`: you left out `versionNegotiation`.
+- The old server fails to connect: you pinned. Use `"auto"`.
+
+## Do it on your work
+
+Point the same client at a server you built, one that starts with `bun your-server.ts`. Call one read-only tool. Good looks like a protocol line, a tool list and a real answer. If it fails, read the error first: the server may need an environment variable.
+
 ## Solution
 
 The after state is a `client.ts` with auto negotiation, the versions line and the tool call. See `solution/client.ts`.
@@ -95,11 +100,6 @@ The after state is a `client.ts` with auto negotiation, the versions line and th
 ## Go further
 
 A `pin` mode set to `2026-07-28` refuses any server that cannot offer it. Use a pin only when you control every server.
-
-## If you get stuck
-
-- The new server shows `2025-11-25`: you left out `versionNegotiation`.
-- The old server fails to connect: you pinned. Use `"auto"`.
 
 ## Words you will use
 

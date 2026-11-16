@@ -30,7 +30,7 @@ After, the solution writes `9/20` and `19/20`, copied from the two files:
 Done. All 6 rules pass.
 ```
 
-## Your turn
+## Your challenge
 
 1. If you have your own `evals/baseline.json` and `evals/designed.json` from `shape-tools-around-jobs`, copy them into `evals/` here. If not, use the samples already there.
 2. List the tools the finished server shows the director.
@@ -51,10 +51,6 @@ bun run verify write-the-handover
 
 Expect: `Done. All 6 rules pass.`
 
-## Do it on your work
-
-Write a one page handover for your own server. Take every number from a file, never from memory. Good looks like a reader who can find a tool, a scope or a score. The reader can also see which attack each defence stops.
-
 ## Done when
 
 - `HANDOVER.md` has the six sections, and no TODO is left.
@@ -63,6 +59,16 @@ Write a one page handover for your own server. Take every number from a file, ne
 - The eval scores match the two JSON files.
 - Threats and defences covers tool poisoning, prompt injection and a token for another server.
 
+## If you get stuck
+
+- The scores rule fails: copy `passed` and `total` from the JSON. Write them as `9/20`.
+- A tool is missing: `cancel_appointment` is the one people forget. It is also the only destructive one.
+- Not sure what to write under a threat? Say what the attack does in one sentence, then which step stops it.
+
+## Do it on your work
+
+Write a one page handover for your own server. Take every number from a file, never from memory. Good looks like a reader who can find a tool, a scope or a score. The reader can also see which attack each defence stops.
+
 ## Solution
 
 The after state is one finished `HANDOVER.md` beside its two eval files. See `solution/HANDOVER.md` and `solution/evals/`.
@@ -70,12 +76,6 @@ The after state is one finished `HANDOVER.md` beside its two eval files. See `so
 ## Go further
 
 Add a runbook line for each threat. Say what you see when it happens, who to call, and the first thing to try. The check reads `passed` and `total`, or counts the `tasks` that have `"pass": true`.
-
-## If you get stuck
-
-- The scores rule fails: copy `passed` and `total` from the JSON. Write them as `9/20`.
-- A tool is missing: `cancel_appointment` is the one people forget. It is also the only destructive one.
-- Not sure what to write under a threat? Say what the attack does in one sentence, then which step stops it.
 
 ## Words you will use
 

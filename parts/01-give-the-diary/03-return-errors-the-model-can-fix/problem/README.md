@@ -41,7 +41,7 @@ Tool error from book_appointment:
 Dr Sam Reyes is booked at 10:40, which clashes with 10:40. Free slots: 10:20, 11:40, 15:00.
 ```
 
-## Your turn
+## Your challenge
 
 1. Start with the clash. Call `clinic.freeSlots` for that vet. Write the times after `Free slots:`. Never type times by hand.
 2. Try it.
@@ -63,11 +63,6 @@ Expect: an error that names Dr Sam Reyes and lists free times.
 
 For the length, put the message on the Zod rule. Use `.multipleOf(10, { error: "length must be 10 to 60 minutes" })`.
 
-## Do it on your work
-
-Take one refusal in your own tool. Rewrite it so it names the field. Say what is wrong. Offer a real next step from live
-data. A good error is one that a stranger could act on without asking you.
-
 ## Done when
 
 - Four bad calls each get the error in the table: an unknown patient, a past start, an opening-hours miss and a length of 25.
@@ -80,13 +75,18 @@ bun run verify return-errors-the-model-can-fix
 
 Expect: `Done. All 7 rules pass.`
 
-## Solution
-
-The finished state is a `server.ts` where every refusal says what is wrong and what to do next. See `solution/server.ts`.
-
 ## If you get stuck
 
 - `clinic.staffMember(vetId)` gives the vet's name. `clinic.patient(id)` is `undefined` for an unknown id.
+
+## Do it on your work
+
+Take one refusal in your own tool. Rewrite it so it names the field. Say what is wrong. Offer a real next step from live
+data. A good error is one that a stranger could act on without asking you.
+
+## Solution
+
+The finished state is a `server.ts` where every refusal says what is wrong and what to do next. See `solution/server.ts`.
 
 ## Go further
 

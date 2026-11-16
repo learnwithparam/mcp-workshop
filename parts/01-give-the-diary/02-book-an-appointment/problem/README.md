@@ -39,7 +39,7 @@ The starter has no booking tool. This is real output:
 
 The sample solution ends with `Done. All 7 rules pass.`
 
-## Your turn
+## Your challenge
 
 1. Add `book_appointment(patientId, vetId, date?, start, length, reason)` to `server.ts`.
 2. Read the vet's rows with `clinic.appointments({ vetId, date })`. Keep only the rows that are `booked` or `arrived`.
@@ -54,11 +54,6 @@ bun run try book_appointment '{"patientId":"P-0001","vetId":"S-05","start":"10:2
 
 Expect: first `Booked A-01962: 10:20 on 2026-11-16.`, then a tool error that says `Clash`. Undo it with `bun run world reset`.
 
-## Do it on your work
-
-Do the same for one write action in your own system. List what would make a write wrong, such as a double
-booking. A good write tool checks before it writes, and it refuses a clash.
-
 ## Done when
 
 - `tools/list` has `book_appointment` with `patientId`, `vetId`, `start` and `reason`.
@@ -72,14 +67,19 @@ bun run verify book-an-appointment
 
 Expect: `Done. All 7 rules pass.`
 
-## Solution
-
-The finished state is `server.ts` with a second tool. It has a clash check before the write. See `solution/server.ts`.
-
 ## If you get stuck
 
 - The check uses a fresh diary. Your test bookings never break it.
 - A tool error (`isError: true`) is a normal result. The model reads it. A protocol error goes to the host's code. The model never sees it.
+
+## Do it on your work
+
+Do the same for one write action in your own system. List what would make a write wrong, such as a double
+booking. A good write tool checks before it writes, and it refuses a clash.
+
+## Solution
+
+The finished state is `server.ts` with a second tool. It has a clash check before the write. See `solution/server.ts`.
 
 ## Go further
 

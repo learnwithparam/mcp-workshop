@@ -32,7 +32,7 @@ After, the solution passes:
 Done. All 4 rules pass.
 ```
 
-## Your turn
+## Your challenge
 
 1. Open `app.ts`. It is the server from the deploy step.
 2. Add the rate limit. Count requests for each client, using the token's subject, `authInfo.clientId`. Read the cap from `RATE_LIMIT_PER_MINUTE`, and use 60 when it is not set.
@@ -51,16 +51,22 @@ bun run verify limit-requests
 
 Expect: `Done. All 4 rules pass.`
 
-## Do it on your work
-
-Pick the busiest tool on your own server. Choose a cap that a person at a desk would never reach. Set a deadline a little above the slowest honest call. Good looks like one client at the cap getting 429 while another is still served.
-
 ## Done when
 
 - The server still answers a normal request.
 - A client that sends too many requests gets 429 and a `Retry-After` header in seconds.
 - The limit is per client, so Ola is served after Joon is limited.
 - A request past the deadline gets 504 and a `Retry-After` header.
+
+## If you get stuck
+
+- Ola is limited too: you counted with one fixed key. Count with the token's subject.
+- The 504 never comes: a deadline of zero must mean no time at all. Do not treat zero as "not set".
+- A late answer slips through: after the race, check the time again and drop an answer that came late.
+
+## Do it on your work
+
+Pick the busiest tool on your own server. Choose a cap that a person at a desk would never reach. Set a deadline a little above the slowest honest call. Good looks like one client at the cap getting 429 while another is still served.
 
 ## Solution
 
@@ -69,12 +75,6 @@ The after state is a counter for each client and a race against a timer. See `so
 ## Go further
 
 A counter in memory resets when the server restarts, and it is not shared by two copies of the server. Say what you would use for a shared count.
-
-## If you get stuck
-
-- Ola is limited too: you counted with one fixed key. Count with the token's subject.
-- The 504 never comes: a deadline of zero must mean no time at all. Do not treat zero as "not set".
-- A late answer slips through: after the race, check the time again and drop an answer that came late.
 
 ## Words you will use
 

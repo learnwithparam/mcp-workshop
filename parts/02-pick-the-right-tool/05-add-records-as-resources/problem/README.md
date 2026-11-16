@@ -23,7 +23,7 @@ bun run verify add-records-as-resources solution
 
 Expect: `Done. All 7 rules pass.`
 
-## Your turn
+## Your challenge
 
 1. Register the template `clinic://patients/{patientId}/summary` with `server.registerResource(...)` and `new ResourceTemplate(...)`. A template is a URI with a blank, so one template serves all patients.
 2. Return JSON with `patientId`, `name`, `species`, `breed`, `homeSite`, `alerts` and `vaccinesDue`. Reuse `latestDueDates`. Leave owner phone and email out.
@@ -37,10 +37,6 @@ bun run verify add-records-as-resources
 
 Expect: `Done. All 7 rules pass.`
 
-## Do it on your work
-
-Pick one record your users look up often. Share it as a resource and leave out anything private. Good looks like a host that can show it with no model call.
-
 ## Done when
 
 - `resources/templates/list` has `clinic://patients/{patientId}/summary`.
@@ -49,6 +45,15 @@ Pick one record your users look up often. Share it as a resource and leave out a
 - `find_patient` returns a `resource_link`.
 - `prompts/list` has `prepare_discharge_note`, and its messages name Biscuit.
 
+## If you get stuck
+
+- `ResourceTemplate` and `ResourceNotFoundError` come from `@modelcontextprotocol/server`.
+- The read callback gets the URI and the filled blanks, such as `patientId` set to `P-0001`.
+
+## Do it on your work
+
+Pick one record your users look up often. Share it as a resource and leave out anything private. Good looks like a host that can show it with no model call.
+
 ## Solution
 
 The after state has the template, the link and the prompt. See `solution/server.ts`.
@@ -56,11 +61,6 @@ The after state has the template, the link and the prompt. See `solution/server.
 ## Go further
 
 List results carry `ttlMs` and `cacheScope`. The SDK sends `ttlMs: 0` and `private` unless you set a hint. Keep that for patient data.
-
-## If you get stuck
-
-- `ResourceTemplate` and `ResourceNotFoundError` come from `@modelcontextprotocol/server`.
-- The read callback gets the URI and the filled blanks, such as `patientId` set to `P-0001`.
 
 ## Words you will use
 

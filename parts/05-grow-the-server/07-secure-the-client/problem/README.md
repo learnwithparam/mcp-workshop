@@ -23,7 +23,7 @@ FAIL  Our client ID document is accepted when it is good and refused when it is 
 
 After, it prints `Done. All 4 rules pass.`
 
-## Your turn
+## Your challenge
 
 1. Open `guards.ts` in this step's `problem/` folder. In `checkFetchUrl`, refuse anything that is not plain https. Refuse an address with a name and password.
 2. Refuse `localhost`, names ending in `.local` or `.internal`, and private or link-local numbers.
@@ -41,16 +41,22 @@ Expect: the `iss` rule and the client ID rule still show `FAIL`.
 
 Expect: `Done. All 4 rules pass.`
 
-## Do it on your work
-
-Find one place where your own code or agent fetches an address that someone else supplied. Write down which of these guards it has. Good looks like a refused private address and a test that proves it.
-
 ## Done when
 
 - A public https address is fetched.
 - An address that points inside, or is not plain https, is refused.
 - The `iss` check accepts a match and refuses a missing, wrong or look-alike one.
 - A good client ID document is accepted, and a bad one refused.
+
+## If you get stuck
+
+- `https://2130706433/` gets through: the URL class turns it into `127.0.0.1`. Check the host it gives you.
+- `https://[::ffff:127.0.0.1]/` gets through: refuse IPv6 addresses that wrap an IPv4 one.
+- A look-alike `iss` gets through: use `!==`, not `startsWith`.
+
+## Do it on your work
+
+Find one place where your own code or agent fetches an address that someone else supplied. Write down which of these guards it has. Good looks like a refused private address and a test that proves it.
 
 ## Solution
 
@@ -59,12 +65,6 @@ The after state is a `guards.ts` with three working guards. See `solution/guards
 ## Go further
 
 Read the OWASP guide on SSRF, and the IETF draft for Client ID Metadata Documents. It says a server must not fetch an address that points to a special-use number. That is the rule you just wrote.
-
-## If you get stuck
-
-- `https://2130706433/` gets through: the URL class turns it into `127.0.0.1`. Check the host it gives you.
-- `https://[::ffff:127.0.0.1]/` gets through: refuse IPv6 addresses that wrap an IPv4 one.
-- A look-alike `iss` gets through: use `!==`, not `startsWith`.
 
 ## Words you will use
 

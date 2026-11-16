@@ -29,7 +29,7 @@ bun run verify serve-over-http solution
 
 Expect: `Done. All 5 rules pass.`
 
-## Your turn
+## Your challenge
 
 `server.ts` is ready. Finish `http.ts`.
 
@@ -52,10 +52,6 @@ curl -s -X POST http://127.0.0.1:8787/mcp -H 'content-type: application/json' -H
 
 Expect: one JSON line that starts `{"result":{"tools":[{"name":"find_patient"`.
 
-## Do it on your work
-
-Serve your own server on a local port the same way. Send one request with a wrong `Host` header. Good looks like a tool list for a local host and a 403 for any other.
-
 ## Done when
 
 - `bun http.ts` answers on the port in `MCP_PORT`.
@@ -70,6 +66,14 @@ bun run verify serve-over-http
 
 Expect: `Done. All 5 rules pass.`
 
+## If you get stuck
+
+- The check starts `bun http.ts` itself on a free port. Read the port from `process.env.MCP_PORT`, because a fixed 8787 fails.
+
+## Do it on your work
+
+Serve your own server on a local port the same way. Send one request with a wrong `Host` header. Good looks like a tool list for a local host and a 403 for any other.
+
 ## Solution
 
 The after state is a short `http.ts`. See `solution/http.ts`.
@@ -77,10 +81,6 @@ The after state is a short `http.ts`. See `solution/http.ts`.
 ## Go further
 
 Older hosts still open with `initialize`, and the new spec has no sessions. `createMcpHandler` serves both by default. Each older request gets a fresh server too, so `GET` and `DELETE` answer 405.
-
-## If you get stuck
-
-- The check starts `bun http.ts` itself on a free port. Read the port from `process.env.MCP_PORT`, because a fixed 8787 fails.
 
 ## Words you will use
 

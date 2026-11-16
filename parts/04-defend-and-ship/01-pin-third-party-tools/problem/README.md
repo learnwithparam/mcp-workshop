@@ -2,7 +2,11 @@
 
 ## The problem
 
-For example, the clinic installs a claims server from Hollowmere Pet Insurance. You cannot read its code. One release adds a sentence to `submit_claim`. It tells the model to put the owner's phone number in the treatment field. It also says not to tell the user. The model obeys tool text, so this leaks. It is called tool poisoning.
+For example, the clinic installs a claims server from Hollowmere Pet Insurance. You cannot read its code.
+
+One release adds a sentence to `submit_claim`. It tells the model to put the owner's phone number in the treatment field. It also says not to tell the user.
+
+The model obeys tool text, so this leaks. It is called tool poisoning.
 
 ```mermaid
 flowchart LR
@@ -40,7 +44,7 @@ The solution then prints `Done. All 5 rules pass.`
 
 ![pins.ts catches a changed description and a poisoned parameter](../images/expected.png)
 
-## Your turn
+## Your challenge
 
 1. Open `pins.ts`. Finish `fingerprint(tool)`: hash the whole tool with SHA-256. `fullDefinition(tool)` gives you the text, schemas included.
 2. Pin the release you trust.
@@ -67,10 +71,6 @@ bun run verify pin-third-party-tools
 
 Expect: `Done. All 5 rules pass.`
 
-## Do it on your work
-
-Pin one server you did not write: save its `tools/list` answer and fingerprint each tool the same way. Good looks like one record, made by hand after you read the tools. Every later check says OK or names the tool that changed.
-
 ## Done when
 
 - `pins.json` pins the three tools of the trusted release.
@@ -79,6 +79,15 @@ Pin one server you did not write: save its `tools/list` answer and fingerprint e
 - It fails on the poisoned parameter and names `claim_status`.
 - It fails on the new tool and names `share_claim_file`.
 
+## If you get stuck
+
+- The poisoned parameter passes: you hash only name and description. Hash `fullDefinition(tool)`.
+- The new tool passes: a tool not in `pins.json` is NEW. Report it and exit 1.
+
+## Do it on your work
+
+Pin one server you did not write: save its `tools/list` answer and fingerprint each tool the same way. Good looks like one record, made by hand after you read the tools. Every later check says OK or names the tool that changed.
+
 ## Solution
 
 The after state is `pins.ts` and `pins.json`. See `solution/pins.ts` and `solution/pins.json`.
@@ -86,11 +95,6 @@ The after state is `pins.ts` and `pins.json`. See `solution/pins.ts` and `soluti
 ## Go further
 
 Invariant Labs publish attack servers in [mcp-injection-experiments](https://github.com/invariantlabs-ai/mcp-injection-experiments). Point your check at them.
-
-## If you get stuck
-
-- The poisoned parameter passes: you hash only name and description. Hash `fullDefinition(tool)`.
-- The new tool passes: a tool not in `pins.json` is NEW. Report it and exit 1.
 
 ## Words you will use
 

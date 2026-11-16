@@ -30,7 +30,7 @@ Expect: `Done. All 7 rules pass.`
 
 ![The server asks before it cancels, and keeps the appointment on a no](../images/expected.png)
 
-## Your turn
+## Your challenge
 
 Follow the three TODO lines in `server.ts`.
 
@@ -47,10 +47,6 @@ Expect: `Cancel Biscuit, 15:40 on 2026-11-16 with Dr Sam Reyes?  (answering no)`
 
 The starter really cancels the appointment. Run `bun run world reset` to get it back.
 
-## Do it on your work
-
-Pick your most harmful tool. Make it ask first, and sign what it asked about. Good looks like no change on a no, a faked yes, or a yes for another record.
-
 ## Done when
 
 - The first call asks, names Biscuit and 15:40, and changes nothing.
@@ -65,6 +61,15 @@ bun run verify confirm-before-cancel
 
 Expect: `Done. All 7 rules pass.`
 
+## If you get stuck
+
+- `context.mcpReq.requestState()` gives the payload you minted. It is undefined on the first call.
+- `verify` refuses a tampered state with error -32602 before your tool runs.
+
+## Do it on your work
+
+Pick your most harmful tool. Make it ask first, and sign what it asked about. Good looks like no change on a no, a faked yes, or a yes for another record.
+
 ## Solution
 
 The after state asks, signs, and cancels only on a matching yes. See `solution/server.ts`.
@@ -72,11 +77,6 @@ The after state asks, signs, and cancels only on a matching yes. See `solution/s
 ## Go further
 
 The middle of the signed state is plain base64 that anyone can read. The signature stops changes. The codec also takes a `bind` function. Bind the state to the caller's staff id. Then a state minted for Ola fails for anyone else.
-
-## If you get stuck
-
-- `context.mcpReq.requestState()` gives the payload you minted. It is undefined on the first call.
-- `verify` refuses a tampered state with error -32602 before your tool runs.
 
 ## Words you will use
 

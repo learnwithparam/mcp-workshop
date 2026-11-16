@@ -34,7 +34,7 @@ Done. All 7 rules pass.
 
 ![The deploy check passing against a running server](../images/expected.png)
 
-## Your turn
+## Your challenge
 
 1. In `app.ts`, read `PUBLIC_URL`. Use it for the resource address, the allowed host names and the token audience.
 2. In `serve.ts`, read `PORT` and listen on `0.0.0.0`. A container takes outside traffic only on that address.
@@ -47,16 +47,6 @@ bun run verify deploy-the-server
 
 Expect: `Done. All 7 rules pass.`
 
-## Do it on your work
-
-Copy your own server from Part 3 into this folder, keeping `serve.ts` as the file the `Dockerfile` starts. Deploy the image to any host that runs a Dockerfile, and set `PUBLIC_URL` to the address it gives you. Then check the live server.
-
-```bash
-bun run verify deploy-the-server --url https://your-server.example/mcp
-```
-
-Expect: `Done. All 7 rules pass.` Good looks like a public address that refuses a missing token and a token minted for another server.
-
 ## Done when
 
 - The `Dockerfile` has `FROM` and a `CMD` that names a real script.
@@ -67,6 +57,22 @@ Expect: `Done. All 7 rules pass.` Good looks like a public address that refuses 
 - A token minted for another server gets 401.
 - Ola's token sees no `read_notes`, and a direct call is refused.
 
+## If you get stuck
+
+- 403 on every request: the Host check does not know the public name. Add `new URL(PUBLIC_URL).hostname`.
+- Joon's token gets 401: use `PUBLIC_URL` as the expected resource.
+- The live server never answers: read the host's logs. Does it listen on `0.0.0.0` and on `PORT`?
+
+## Do it on your work
+
+Copy your own server from Part 3 into this folder, keeping `serve.ts` as the file the `Dockerfile` starts. Deploy the image to any host that runs a Dockerfile, and set `PUBLIC_URL` to the address it gives you. Then check the live server.
+
+```bash
+bun run verify deploy-the-server --url https://your-server.example/mcp
+```
+
+Expect: `Done. All 7 rules pass.` Good looks like a public address that refuses a missing token and a token minted for another server.
+
 ## Solution
 
 The after state is three files. See `solution/Dockerfile`, `solution/serve.ts` and `solution/app.ts`.
@@ -74,12 +80,6 @@ The after state is three files. See `solution/Dockerfile`, `solution/serve.ts` a
 ## Go further
 
 Why not Cloudflare Workers? The clinic's PIMS uses `bun:sqlite`, and Workers cannot run it.
-
-## If you get stuck
-
-- 403 on every request: the Host check does not know the public name. Add `new URL(PUBLIC_URL).hostname`.
-- Joon's token gets 401: use `PUBLIC_URL` as the expected resource.
-- The live server never answers: read the host's logs. Does it listen on `0.0.0.0` and on `PORT`?
 
 ## Words you will use
 

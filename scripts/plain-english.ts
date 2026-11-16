@@ -9,8 +9,10 @@ import { ROOT } from "./structure";
 
 // A course for everyone (no code) can lower this in package.json: "plainEnglish": { "grade": 6 }.
 const DEFAULT_READING_GRADE = 6;
-// Same limit as teach's doc-check, so a course page and a teaching note read to one standard.
-const LONGEST_SENTENCE = 20;
+// The workshop standard (STANDARD.md, Plain English): one idea per sentence, 25 words at most.
+const LONGEST_SENTENCE = 25;
+// The workshop standard: no paragraph has more than 5 sentences.
+const LONGEST_PARAGRAPH = 5;
 
 const SKIPPED_FOLDERS = new Set([
   "node_modules",
@@ -159,7 +161,16 @@ const MINUTES = /\b\d+(?:\s*(?:-|to)\s*\d+)?\s*(?:minutes?|mins?)\b/gi;
 function minutesProblems(file: string, markdown: string): Problem[] {
   const found = textOutsideCode(markdown).match(MINUTES) ?? [];
   const advice = "use a rough word like an evening";
-  return found.map((text) => ({ file, message: `exact minutes "${text}": ${advice}` }));
+  const timings = found.map((text) => ({ file, message: `exact minutes "${text}": ${advice}` }));
+  const column = /^\|[^\n]*\|\s*Minutes\s*\|/im.test(markdown)
+    ? [
+        {
+          file,
+          message: `a "Minutes" column: keep minutes in step.toml and PARTS.md`,
+        },
+      ]
+    : [];
+  return [...timings, ...column];
 }
 
 // Lockfiles already pin versions. A page that repeats one goes out of date.
@@ -231,7 +242,11 @@ export function proseOf(markdown: string): string {
 
 export function sentencesOf(prose: string): string[] {
   const paragraphs = prose.split(/\n\s*\n|\n\s*[-*\d]+[.)]?\s/);
-  const sentences = paragraphs.flatMap((paragraph) => paragraph.split(/(?<=[.!?:])\s+/));
+  // Code spans are not prose: `lab.ts` has a dot but no sentence end.
+  // A colon introduces a point, so it does not end a sentence.
+  const sentences = paragraphs.flatMap((paragraph) =>
+    paragraph.replace(/`[^`\n]*`/g, "code").split(/(?<=[.!?])\s+/),
+  );
   const tidied = sentences.map((sentence) => sentence.replace(/\s+/g, " ").trim());
   return tidied.filter(Boolean);
 }
@@ -289,16 +304,30 @@ function punctuationProblems(file: string, prose: string): Problem[] {
 // A step page shows the picture before the challenge, so the learner sees the goal first.
 function pictureProblems(file: string, markdown: string): Problem[] {
   if (!/\/problem\/README\.md$/.test(file)) return [];
-  const challenge = markdown.search(/^## Your turn\s*$/m);
+  const challenge = markdown.search(/^## Your challenge\s*$/m);
   if (challenge < 0) return [];
   const beforeChallenge = markdown.slice(0, challenge);
   if (/^```mermaid\s*$/m.test(beforeChallenge) || /^!\[/m.test(beforeChallenge)) return [];
   return [
     {
       file,
-      message: "no picture before the challenge: add a Mermaid diagram or image above ## Your turn",
+      message:
+        "no picture before the challenge: add a Mermaid diagram or image above ## Your challenge",
     },
   ];
+}
+
+// A paragraph with more than 5 sentences is a wall of text for a reader in a second language.
+function paragraphProblems(file: string, prose: string): Problem[] {
+  // A list item is its own unit: six bullets are six short points, not one six-sentence paragraph.
+  const paragraphs = prose.split(/\n\s*\n|\n(?=\s*(?:[-*]|\d+[.)])\s)/);
+  return paragraphs.flatMap((paragraph) => {
+    const count = sentencesOf(paragraph).length;
+    if (count <= LONGEST_PARAGRAPH) return [];
+    const words = paragraph.trim().split(/\s+/);
+    const opening = words.slice(0, 6).join(" ");
+    return [{ file, message: `${count}-sentence paragraph "${opening}..."; split it after 5` }];
+  });
 }
 
 function sentenceProblems(file: string, sentences: string[]): Problem[] {
@@ -319,6 +348,7 @@ export function problemsIn(file: string, markdown: string, gradeLimit: number): 
   const problems = [
     ...hardWordProblems(file, prose),
     ...sentenceProblems(file, sentences),
+    ...paragraphProblems(file, prose),
     ...punctuationProblems(file, prose),
     ...pictureProblems(file, markdown),
     ...backtickProblems(file, markdown),

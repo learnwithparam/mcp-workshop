@@ -44,7 +44,7 @@ The server broke the MCP rules: Tool send_email not found.
 Done. All 6 rules pass.
 ```
 
-## Your turn
+## Your challenge
 
 1. Read `../recorded-attack.json`. It holds three attack runs. `{{copy:owner_contact}}` means the model copied what that tool returned.
 2. In `server.ts`, cut one leg. The smallest cut is the way out: remove `send_email`. Keep `find_patient` and `read_notes`, because vets need them.
@@ -65,10 +65,6 @@ bun run verify break-the-lethal-trifecta
 
 Expect: `Done. All 6 rules pass.`
 
-## Do it on your work
-
-List your own agent's tools. Mark each one as private data, untrusted content or a way out. If one agent holds all three, cut one. Good looks like a note that names the leg and why a warning in a description is not a cut.
-
 ## Done when
 
 - A vet can still find Pepper (P-0042) with `find_patient`.
@@ -77,18 +73,24 @@ List your own agent's tools. Mark each one as private data, untrusted content or
 - No message sends the owner's details to anyone but the owner.
 - `notes/trifecta.md` names the leg you cut, and your server matches it.
 
+## If you get stuck
+
+- You blocked `records-export@example.org` and it still fails: run 3 writes to a look-alike address. Do not let the model choose the address.
+- You hid the phone and it still fails: the email address is contact data too.
+
+## Do it on your work
+
+List your own agent's tools. Mark each one as private data, untrusted content or a way out. If one agent holds all three, cut one. Good looks like a note that names the leg and why a warning in a description is not a cut.
+
 ## Solution
 
 The after state is a server without `send_email`. A tool that takes only an appointment id replaces it. See `solution/server.ts` and `solution/notes/trifecta.md`.
 
 ## Go further
 
-Cut the other leg: make `owner_contact` return a stand-in such as `[phone-O-0042]`. The email address is contact data too. Anthropic shows this pattern in [Code execution with MCP](https://www.anthropic.com/engineering/code-execution-with-mcp). The client swaps names, emails and phone numbers for stand-ins. The model never sees them.
+Cut the other leg: make `owner_contact` return a stand-in such as `[phone-O-0042]`. The email address is contact data too.
 
-## If you get stuck
-
-- You blocked `records-export@example.org` and it still fails: run 3 writes to a look-alike address. Do not let the model choose the address.
-- You hid the phone and it still fails: the email address is contact data too.
+Anthropic shows this pattern in [Code execution with MCP](https://www.anthropic.com/engineering/code-execution-with-mcp). The client swaps names, emails and phone numbers for stand-ins. The model never sees them.
 
 ## Words you will use
 

@@ -8,14 +8,10 @@ word word word word word word word word word word word word word word word word 
 
 A screenshot.
 
-## Your turn
+## Your challenge
 
 1. Run it.
 
 ## Done when
 
 - It works.
-
-## Solution
-
-The file.

@@ -10,7 +10,9 @@ A `my-api.json` and a server of tools for your own API, with an `EVIDENCE.md` of
 
 ## The problem
 
-A year later, the clinic group grows. A lab-results service arrives. A second team wants one address for both servers. Blood results take minutes, so a tool cannot wait. For example, Dr Sam Reyes orders a blood panel for Biscuit (P-0001). The tool must return a task id such as `LAB-0001` at once. The client asks again until the task is done.
+A year later, the clinic group grows. A lab-results service arrives. A second team wants one address for both servers.
+
+Blood results take minutes, so a tool cannot wait. For example, Dr Sam Reyes orders a blood panel for Biscuit (P-0001). The tool must return a task id such as `LAB-0001` at once. The client asks again until the task is done.
 
 ## Steps
 

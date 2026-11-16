@@ -2,7 +2,9 @@
 
 ## The problem
 
-You wrote a proxy by hand. Many teams use a ready-made gateway instead. It is a program in front of your servers. It checks who calls and which tools they may use. For example, agentgateway needs no code, only one `config.yaml`. The starter checks no token and knows one server.
+You wrote a proxy by hand. Many teams use a ready-made gateway instead. It is a program in front of your servers.
+
+It checks who calls and which tools they may use. For example, agentgateway needs no code, only one `config.yaml`. The starter checks no token and knows one server.
 
 ```mermaid
 flowchart LR
@@ -26,7 +28,7 @@ Before, the starter config fails five of six rules (this check needs Docker to r
 
 After, the gateway lists two tools, `clinic_find_free_slots` and `lab_blood_panel_status`. A call with no token gets 401. A call to `lab_export_all_results` is refused. The check prints `Done. All 6 rules pass.` On a machine without Docker, the check cannot start the gateway. It fails even on the solution.
 
-## Your turn
+## Your challenge
 
 1. Open `assignment/config.yaml`. Add the lab server as a second target, next to the clinic one:
 
@@ -64,10 +66,6 @@ bun run verify put-servers-behind-agentgateway
 
 Expect: three containers started (`clinic`, `lab`, `gateway`), then `Done. All 6 rules pass.` Stop them with `docker compose -f assignment/compose.yml down -v`.
 
-## Do it on your work
-
-Write a gateway config for two servers you use. List each tool you would allow and why. Good looks like one allowed read-only tool per server. It has a token rule. Every new tool is refused until you add it.
-
 ## Done when
 
 - The gateway image tag is `v1.7.0`.
@@ -77,6 +75,15 @@ Write a gateway config for two servers you use. List each tool you would allow a
 - A tool off the allow-list returns an error.
 - The list shows only the allowed tools.
 
+## If you get stuck
+
+- The list is empty: `mcp.tool.name` is `find_free_slots`, not `clinic_find_free_slots`.
+- Calls fail with a token error: each target needs its own `backendAuth`.
+
+## Do it on your work
+
+Write a gateway config for two servers you use. List each tool you would allow and why. Good looks like one allowed read-only tool per server. It has a token rule. Every new tool is refused until you add it.
+
 ## Solution
 
 The after state is one `config.yaml` with two targets, a token rule, a key per target and an allow-list. See `solution/config.yaml`.
@@ -84,11 +91,6 @@ The after state is one `config.yaml` with two targets, a token rule, a key per t
 ## Go further
 
 The graded homework is in `assignment/README.md`. Run `bun assignment/check.ts` to write `assignment/result.json`.
-
-## If you get stuck
-
-- The list is empty: `mcp.tool.name` is `find_free_slots`, not `clinic_find_free_slots`.
-- Calls fail with a token error: each target needs its own `backendAuth`.
 
 ## Words you will use
 

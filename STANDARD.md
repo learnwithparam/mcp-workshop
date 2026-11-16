@@ -33,7 +33,7 @@ schedules.toml           parts mapped onto formats
 | The root README shows the finished system as a screenshot and a Mermaid diagram; the orientation shows a screenshot. | `check.ts` 2b     | user 12 Nov 2026                                     |
 | Every step shows a picture: a screenshot or a Mermaid diagram.                                                       | `check.ts` 3      | user 12 Nov 2026                                     |
 | Every image a page names exists.                                                                                     | `check.ts` 2b     | user 12 Nov 2026                                     |
-| Every step README has: The problem, Your challenge, Done when, If you get stuck, Words you will use.                 | `check.ts` 3      | epicshop, Carpentries                                |
+| Every step README has: The problem, Your challenge, Done when, If you get stuck. Words you will use is optional.     | `check.ts` 3      | epicshop, Carpentries                                |
 | A step takes 5 to 30 minutes and its README stays under 600 words. Split, never squeeze.                             | `check.ts` 3      | epicshop step sizes                                  |
 | A step whose result is on screen ships `images/expected.png` and shows it.                                           | `check.ts` 3      | Langfuse workshop learner docs                       |
 | The check fails on the starter, fails on every wrong answer, and passes on the solution.                             | `verify.ts --all` | Rustlings, freeCodeCamp #70626 and #67904            |
@@ -82,6 +82,8 @@ function overdueInvoiceIds(invoices: Invoice[]): string[] {
 Learners read every page in their second or third language. So each page uses short sentences, everyday words and a real example.
 
 - One idea per sentence, 25 words at most.
+- No paragraph over 5 sentences. Start a new paragraph at each new idea.
+- No exact minutes on a learner page. Minutes live in `step.toml` and `PARTS.md`, not in a table column.
 - Everyday words: "use", not "utilize". "For example", not "e.g.".
 - Every teaching page (the root README, each part README, each step's problem README) shows one case with "For example".
 - Reading grade 8 or lower. A course for people who do not code sets `"plainEnglish": { "grade": 6 }` in package.json.

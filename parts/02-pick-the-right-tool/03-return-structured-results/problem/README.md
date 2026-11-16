@@ -24,7 +24,7 @@ bun run verify return-structured-results solution
 
 Expect: `Done. All 8 rules pass.`
 
-## Your turn
+## Your challenge
 
 1. Give `find_free_slots` an `outputSchema` with `site`, `date`, `length` and `slots`. Each slot has `vetId`, `vetName` and `start`. Return it as `structuredContent`.
 2. Give `vaccines_due` an `outputSchema` with `patientId`, `name` and `vaccines`. Each vaccine has `vaccine`, `due` and `given`.
@@ -37,10 +37,6 @@ bun run try vaccines_due '{"patientId":"P-0042","detail":"full"}' --server parts
 ```
 
 Expect: a result with both cat flu records, ending `Cat flu due 2026-11-24`.
-
-## Do it on your work
-
-Pick your busiest tool. Write its result as a small JSON shape, then add a short form as the default. Good looks like a short answer under 150 tokens and a full form on request.
 
 ## Done when
 
@@ -56,6 +52,15 @@ bun run verify return-structured-results
 
 Expect: `Done. All 8 rules pass.`
 
+## If you get stuck
+
+- Write the Zod object once and use it as both `outputSchema` and the type of what you return.
+- The eval from the last step still works, because the default detail is concise.
+
+## Do it on your work
+
+Pick your busiest tool. Write its result as a small JSON shape, then add a short form as the default. Good looks like a short answer under 150 tokens and a full form on request.
+
 ## Solution
 
 The after state has both schemas and the `detail` input. See `solution/server.ts`.
@@ -63,11 +68,6 @@ The after state has both schemas and the `detail` input. See `solution/server.ts
 ## Go further
 
 The SDK refuses a result that does not match the schema, as a tool error. Return `length` as a string and see what the model would read.
-
-## If you get stuck
-
-- Write the Zod object once and use it as both `outputSchema` and the type of what you return.
-- The eval from the last step still works, because the default detail is concise.
 
 ## Words you will use
 

@@ -16,8 +16,8 @@ Expect: `bun install` ends with no errors.
 ## Meet the world
 
 Harrow Lane Veterinary is a made-up group of three small-animal clinics. They are Harrow Lane, Millbrook and Eastgate.
-Its practice system is called the PIMS. The PIMS holds the diary, 600 patients and their owners. It also holds clinical
-notes, vaccines and the controlled-drugs register. The register is the log of strong drugs that the law tracks.
+
+Its practice system is called the PIMS. The PIMS holds the diary, 600 patients and their owners. It also holds clinical notes, vaccines and the controlled-drugs register. The register is the log of strong drugs that the law tracks.
 
 The PIMS lives in `world/`. The file `world/clinic.ts` is the PIMS API. It holds the functions your server calls. The data
 is a SQLite file, built from a fixed seed. So every learner sees the same diary.

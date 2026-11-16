@@ -4,8 +4,10 @@ This course is for engineers who connect AI to company records. It is also for p
 MCP means Model Context Protocol. It is a standard way for an AI model to call tools on your server.
 
 You build one MCP server for Harrow Lane Veterinary. It is a group of three clinics. You build it one step at a time.
-Your server teaches the model to pick the right tool. It gives clear errors the model can fix. Each role sees only what it
-should see. The course catches bad third-party tools. At the end, you deploy the server.
+
+Your server teaches the model to pick the right tool. It gives clear errors the model can fix.
+
+Each role sees only what its job allows. The course catches bad third-party tools. At the end, you deploy the server.
 
 Every step ends in a check. The check talks to your server like a real MCP client. At the end, you have proof that your
 server works.
@@ -64,9 +66,9 @@ Expect: `Every role answers on replay.` You can use a live model too. Copy `.env
 `LLM_PROVIDER` and one key for Anthropic, OpenRouter, OpenAI or a local Ollama model. The command then prints pass
 or fail for each role.
 
-To use the finished server from a real host, run `bun run finished`. A host is the app the model runs in, such as
-Claude Code. The command serves `http://127.0.0.1:8787/mcp`. It prints a token for Ola (receptionist), Dr Sam Reyes
-(vet) and Joon Park (clinical director). A token is a short secret string. It says who you are.
+To use the finished server from a real host, run `bun run finished`. A host is the app the model runs in, such as Claude Code.
+
+The command serves `http://127.0.0.1:8787/mcp`. It prints a token for Ola (receptionist), Dr Sam Reyes (vet) and Joon Park (clinical director). A token is a short secret string. It says who you are.
 
 If a command fails, read the [troubleshooting page](00-orientation/troubleshooting.md). Find the message you see. Then
 follow its fix.
@@ -95,20 +97,17 @@ flowchart LR
 
 ## Parts
 
-| Part                                             | Folder                                                                                                     | Steps | Minutes | You can show                              |
-| ------------------------------------------------ | ---------------------------------------------------------------------------------------------------------- | ----- | ------- | ----------------------------------------- |
-| Start here                                       | [parts/00-start-here](parts/00-start-here/README.md)                                                       | 1     | 15      | three facts read off the finished system  |
-| Give the diary to the model                      | [parts/01-give-the-diary](parts/01-give-the-diary/README.md)                                               | 4     | 50      | Claude booking from your stdio server     |
-| Pick the right tool                              | [parts/02-pick-the-right-tool](parts/02-pick-the-right-tool/README.md)                                     | 6     | 65      | an eval score before and after a redesign |
-| Open the server safely                           | [parts/03-open-the-server-safely](parts/03-open-the-server-safely/README.md)                               | 6     | 70      | a receptionist's token refused the notes  |
-| Defend and ship                                  | [parts/04-defend-and-ship](parts/04-defend-and-ship/README.md)                                             | 6     | 90      | a poisoned tool caught, a deployed URL    |
-| Grow the server (extension)                      | [parts/05-grow-the-server](parts/05-grow-the-server/README.md)                                             | 7     | 145     | two servers behind one front              |
-| Route tool calls through agentgateway (optional) | [parts/06-route-tool-calls-through-agentgateway](parts/06-route-tool-calls-through-agentgateway/README.md) | 1     | 25      | both servers behind a ready-made gateway  |
+| Part                                             | Folder                                                                                                     | Steps | You can show                              |
+| ------------------------------------------------ | ---------------------------------------------------------------------------------------------------------- | ----- | ----------------------------------------- |
+| Start here                                       | [parts/00-start-here](parts/00-start-here/README.md)                                                       | 1     | three facts read off the finished system  |
+| Give the diary to the model                      | [parts/01-give-the-diary](parts/01-give-the-diary/README.md)                                               | 4     | Claude booking from your stdio server     |
+| Pick the right tool                              | [parts/02-pick-the-right-tool](parts/02-pick-the-right-tool/README.md)                                     | 6     | an eval score before and after a redesign |
+| Open the server safely                           | [parts/03-open-the-server-safely](parts/03-open-the-server-safely/README.md)                               | 6     | a receptionist's token refused the notes  |
+| Defend and ship                                  | [parts/04-defend-and-ship](parts/04-defend-and-ship/README.md)                                             | 6     | a poisoned tool caught, a deployed URL    |
+| Grow the server (extension)                      | [parts/05-grow-the-server](parts/05-grow-the-server/README.md)                                             | 7     | two servers behind one front              |
+| Route tool calls through agentgateway (optional) | [parts/06-route-tool-calls-through-agentgateway](parts/06-route-tool-calls-through-agentgateway/README.md) | 1     | both servers behind a ready-made gateway  |
 
-Each step has one command: `bun run verify <step-name>`. It prints each rule as PASS or FAIL. For each FAIL, it prints
-a `Try next:` line. That line tells you what to do. `PARTS.md` lists every step and what its check reads.
-`schedules.toml` fits the parts into different formats. One format is one long sitting. Another is a group that meets
-several times.
+Each step has one command: `bun run verify <step-name>`. It prints each rule as PASS or FAIL. For each FAIL, it prints a `Try next:` line, which tells you what to do. `PARTS.md` lists every step and what its check reads.
 
 ## The project
 

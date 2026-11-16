@@ -10,7 +10,11 @@ A remote server passes the official conformance suite. It checks every token, hi
 
 ## The problem
 
-Three sites and twelve staff cannot share a stdio server on one laptop, so the server needs a URL. Once it has one, anyone who finds it can try it. For example, the `mcp-remote` package let a bad server run commands on a user's machine through a crafted login URL. That flaw is CVE-2025-6514, rated critical at 9.6 ([advisory](https://github.com/advisories/GHSA-6xpm-ggf7-wc3p)). OAuth is the standard way a user signs in and the client gets a token. Every field in that flow comes from someone else, so you cannot trust it.
+Three sites and twelve staff cannot share a stdio server on one laptop, so the server needs a URL. Once it has one, anyone who finds it can try it.
+
+For example, the `mcp-remote` package let a bad server run commands on a user's machine through a crafted login URL. That flaw is CVE-2025-6514, rated critical at 9.6 ([advisory](https://github.com/advisories/GHSA-6xpm-ggf7-wc3p)).
+
+OAuth is the standard way a user signs in and the client gets a token. Every field in that flow comes from someone else, so you cannot trust it.
 
 ```mermaid
 sequenceDiagram

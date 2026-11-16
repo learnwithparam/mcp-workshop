@@ -24,7 +24,7 @@ The sample solution ends with `Done. All 8 rules pass.` It answers like this:
 
 ![The tool answering for Millbrook](../images/expected.png)
 
-## Your turn
+## Your challenge
 
 1. In `server.ts`, import `z` from `zod/v4`. Import `clinic` from `#clinic`. That path points to `world/clinic.ts`.
 2. Register `find_free_slots` with `server.registerTool(name, { description, inputSchema }, handler)`.
@@ -41,11 +41,6 @@ bun run try find_free_slots '{"site":"millbrook"}' --server parts/01-give-the-di
 Expect: six start times, three for Dr Sam Reyes and three for Dr Hannah Cole. The starter says
 `The server broke the MCP rules: Method not found.`
 
-## Do it on your work
-
-Do the same for one read action in your own system, such as "list open tickets". A good tool has a clear description,
-and each argument has its own. It reads the answer live each time. It never copies an old answer.
-
 ## Done when
 
 - The server starts over stdio. It writes nothing to stdout before a request. It answers `server/discover`.
@@ -59,15 +54,20 @@ bun run verify expose-the-diary
 
 Expect: `Done. All 8 rules pass.`
 
-## Solution
-
-The finished state is a `server.ts` with one registered tool. See `solution/server.ts`.
-
 ## If you get stuck
 
 - You write only one schema, `inputSchema`. The SDK checks every call against it.
 - Old tutorials use `server.tool(...)` and `@modelcontextprotocol/sdk`. That is the old SDK. Use `registerTool` from `@modelcontextprotocol/server`.
 - Guide: [Build your first server](https://ts.sdk.modelcontextprotocol.io/v2/get-started/first-server).
+
+## Do it on your work
+
+Do the same for one read action in your own system, such as "list open tickets". A good tool has a clear description,
+and each argument has its own. It reads the answer live each time. It never copies an old answer.
+
+## Solution
+
+The finished state is a `server.ts` with one registered tool. See `solution/server.ts`.
 
 ## Go further
 

@@ -32,7 +32,7 @@ Ordered a blood panel for Biscuit. Task LAB-0001 is working. Ask blood_panel_sta
 
 `bun run verify report-lab-results-later solution` prints `Done. All 5 rules pass.`
 
-## Your turn
+## Your challenge
 
 1. Run the starter and watch it wait.
 
@@ -50,10 +50,6 @@ Expect: a pause, then the full panel.
 
 Expect: the "Ordered a blood panel" text with a task id, with no wait.
 
-## Do it on your work
-
-Pick one slow job in your own server, such as a report or an export. Return an id at once and add one status tool. Good looks like a first answer in under a second, and a status that moves from working to done.
-
 ## Done when
 
 - `order_blood_panel` answers in under one second.
@@ -68,6 +64,15 @@ bun run verify report-lab-results-later
 
 Expect: `Done. All 5 rules pass.`
 
+## If you get stuck
+
+- The order is still slow: you call `lab.waitForResults`. Call `lab.orderBloodPanel` and return.
+- A cancelled task turns completed: your tool never calls `lab.cancel`.
+
+## Do it on your work
+
+Pick one slow job in your own server, such as a report or an export. Return an id at once and add one status tool. Good looks like a first answer in under a second, and a status that moves from working to done.
+
 ## Solution
 
 The after state is one `server.ts` with three tools. See `solution/server.ts`.
@@ -75,11 +80,6 @@ The after state is one `server.ts` with three tools. See `solution/server.ts`.
 ## Go further
 
 The newest protocol moved tasks to an extension, `@modelcontextprotocol/ext-tasks`, with `tasks/get` and `tasks/cancel`. The server SDK used here has no server side for it yet. So this step builds the same idea with tools, and any client can use them.
-
-## If you get stuck
-
-- The order is still slow: you call `lab.waitForResults`. Call `lab.orderBloodPanel` and return.
-- A cancelled task turns completed: your tool never calls `lab.cancel`.
 
 ## Words you will use
 

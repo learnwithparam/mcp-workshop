@@ -26,7 +26,7 @@ bun run verify check-the-audience solution
 
 Expect: `Done. All 4 rules pass.`
 
-## Your turn
+## Your challenge
 
 Change `verifyAccessToken` in `http.ts`.
 
@@ -42,16 +42,21 @@ bun run verify check-the-audience
 
 Expect: `Done. All 4 rules pass.` The check calls `find_patient` as Ola, then reads the world log, where no part of her token may appear.
 
-## Do it on your work
-
-Find where your server learns the token's audience. Compare the whole URL, never only "has an audience". Good looks like 401 for a token made for any other server.
-
 ## Done when
 
 - Ola's token for this server still lists the tools.
 - A token made for the lab-results server gets 401.
 - An expired token gets 401.
 - The caller's token never reaches the practice system.
+
+## If you get stuck
+
+- `RESOURCE` comes from `"../../clinic-login"`. It follows `MCP_PORT`, so it is right on the check's port too.
+- A test for "starts with http" lets the lab token in.
+
+## Do it on your work
+
+Find where your server learns the token's audience. Compare the whole URL, never only "has an audience". Good looks like 401 for a token made for any other server.
 
 ## Solution
 
@@ -60,11 +65,6 @@ The after state refuses a token for another server. See `solution/http.ts`.
 ## Go further
 
 The SDK can do the same check. Give `requireBearerAuth` an `expectedResource`, and set `resource` in the `AuthInfo` from the token's audience.
-
-## If you get stuck
-
-- `RESOURCE` comes from `"../../clinic-login"`. It follows `MCP_PORT`, so it is right on the check's port too.
-- A test for "starts with http" lets the lab token in.
 
 ## Words you will use
 

@@ -71,14 +71,9 @@ export function findStep(name: string, root: string = ROOT): Step | undefined {
 }
 
 // Shape rules (standard sections 1 to 3). Pure functions, so the fixtures can test them.
-export const STEP_SECTIONS = [
-  "The problem",
-  "Watch it done",
-  "Your turn",
-  "Do it on your work",
-  "Done when",
-  "Solution",
-];
+// The same four headings, in this order, as courses/_student_template in teach.
+// Extra sections may follow.
+export const STEP_SECTIONS = ["The problem", "Your challenge", "Done when", "If you get stuck"];
 export const PART_SECTIONS = [
   "After this part you can",
   "You leave with",
